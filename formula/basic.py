@@ -1,0 +1,1 @@
+beta = lambda w_sigma: w_sigma ** 2 / 4

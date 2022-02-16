@@ -1,7 +1,9 @@
-import numpy as np
-from scipy.integrate import quad
-from scipy.special import erfc
 import matplotlib.pyplot as plt
+
+from formula.ber_from_w_sigma import *
+
+# plt.rcParams['axes.prop_cycle'] = ("cycler('color', list('rbgk')) +"
+#                                    "cycler('linestyle', ['-', '--', ':', '-.'])")
 
 plot_dir = "../../Plots"
 filename = "BER_w_sigma.pdf"
@@ -11,15 +13,9 @@ BER = 0.5 * erfc(Q / np.sqrt(2))
 ber_dict = {
     5: [],
     10: [],
-    20: [],
-    40: []
+    25: [],
+    100: []
 }
-
-
-def average_BER(Q, w_sigma):
-    beta = w_sigma ** 2 / 4
-    integral = quad(lambda I: I ** (beta - 1) * erfc(I * Q * (beta + 1) / (np.sqrt(2) * beta)), 0, 1)
-    return (Q * (beta + 1)) / 2 * integral[0]
 
 for w_sigma in ber_dict.keys():
     bers = []
@@ -29,9 +25,9 @@ for w_sigma in ber_dict.keys():
 
 plt.plot(Q, 10 * np.log10(BER), label="no jitter")
 for w_sigma, ber in ber_dict.items():
-    plt.plot(Q, 10 * np.log10(ber), label=r"$w_0/\sigma=$"+str(w_sigma))
+    plt.plot(Q, 10 * np.log10(ber), label=r"$w_0/\sigma=$" + str(w_sigma))
 plt.xlabel(r'$Q$ [-]')
 plt.ylabel(r'BER [dB]')
 plt.legend(loc="best")
-# plt.show()
-plt.savefig(f"{plot_dir}/{filename}")
+plt.show()
+# plt.savefig(f"{plot_dir}/{filename}")

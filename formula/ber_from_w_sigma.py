@@ -4,6 +4,8 @@ from scipy.special import erfc
 
 from formula.basic import beta
 
+BER = lambda Q: 0.5 * erfc(Q / np.sqrt(2))
+
 
 def average_BER(Q, w_sigma):
     integral = quad(

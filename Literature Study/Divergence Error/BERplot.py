@@ -1,4 +1,5 @@
 import matplotlib.pyplot as plt
+import numpy as np
 
 from formula.ber_from_w_sigma import *
 
@@ -9,7 +10,6 @@ plot_dir = "../../Plots"
 filename = "BER_w_sigma.pdf"
 
 Q = np.linspace(0.01, 8, 101)
-BER = 0.5 * erfc(Q / np.sqrt(2))
 ber_dict = {
     5: [],
     10: [],
@@ -23,7 +23,7 @@ for w_sigma in ber_dict.keys():
         bers.append(average_BER(q, w_sigma))
     ber_dict[w_sigma] = bers
 
-plt.plot(Q, 10 * np.log10(BER), label="no jitter")
+plt.plot(Q, 10 * np.log10(BER(Q)), label="no jitter")
 for w_sigma, ber in ber_dict.items():
     plt.plot(Q, 10 * np.log10(ber), label=r"$w_0/\sigma=$" + str(w_sigma))
 plt.xlabel(r'$Q$ [-]')

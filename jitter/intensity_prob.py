@@ -1,5 +1,4 @@
-from dataclasses import dataclass
-from typing import Any
+from dataclasses import dataclass, field
 
 import numpy as np
 from matplotlib import pyplot as plt
@@ -9,12 +8,12 @@ from scipy.stats import beta
 @dataclass
 class IntensityDistribution:
     intensities: np.ndarray
-    w_0: float
+    w_0: float = field(default=1.)
     b: float = 1
 
     @property
     def norm_I(self) -> np.ndarray:
-        return self.intensities / max(self.intensities)
+        return self.intensities / (max(self.intensities) + 1e-3)
 
     def fit(self) -> list:
         return [beta.fit(self.norm_I, fb=1, floc=0, fscale=1)]  # TODO: fix error: Invalid values in `data`.
@@ -31,8 +30,8 @@ class IntensityDistribution:
         return self.fit()[0]
 
     def plot(self):
-        plt.hist(self.norm_I)
-        I = np.linspace(0, 1, 101)
+        plt.hist(self.intensities, density=True, label='data')
+        I = np.linspace(beta.ppf(0.01, self.a, self.b), beta.ppf(0.99, self.a, self.b), 101)
         plt.plot(I, beta.pdf(I, self.a, self.b), 'r-', label='beta pdf')
         plt.legend()
         plt.show()

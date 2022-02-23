@@ -16,8 +16,7 @@ class IntensityDistribution:
         return self.intensities / (max(self.intensities) + 1e-3)
 
     def fit(self) -> list:
-        return [beta.fit(self.norm_I, fb=1, floc=0, fscale=1)]  # TODO: fix error: Invalid values in `data`.
-        # Maximum likelihood estimation with 'beta' requires that 0 < (x - loc)/scale  < 1 for each x in `data`.
+        return [beta.fit(self.norm_I, fb=1, floc=0, fscale=1)]
 
     @property
     def sigma(self) -> float:

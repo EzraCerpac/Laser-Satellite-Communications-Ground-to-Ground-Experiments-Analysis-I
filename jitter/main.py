@@ -1,9 +1,17 @@
-from intensity_prob import IntensityDistribution
-from Data.tests_generated.beta_distibution import sample
+from pathlib import Path
+
+from matplotlib import pyplot as plt
+
+from Data.data import import_data
+from jitter.intensity_prob import IntensityDistribution
 
 
 def main():
-    distribution = IntensityDistribution(sample.intensity)
+    data_folder = Path('../Data/CSV')
+    data1, _ = import_data(data_folder)
+    # data1.plot()
+    # plt.show()
+    distribution = IntensityDistribution(data1.intensity)
     distribution.plot()
     # print(distribution.sigma)
 

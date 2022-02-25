@@ -1,5 +1,6 @@
 from pathlib import Path
 
+import matplotlib.pyplot as plt
 import pandas as pd
 
 starting_values = {
@@ -38,4 +39,23 @@ if __name__ == '__main__':
     folder = Path('CSV')
     data1, data2 = import_data(folder)
     data = split_data(data1, starting_values)
-    print(data['off1'])
+    
+    # data1.plot()
+    # plt.show()
+    
+    info = {}
+    for mode, set in data.items():
+        info[mode] = {
+            'mean': set.irradiance.describe()['mean'],
+            'scintillation': set.irradiance.describe()['std']
+        }
+
+    xx = list(range(len(info.keys()))) # the label locations
+    width = 0.35  # the width of the bars
+
+    fig, ax = plt.subplots()
+    means = ax.bar([x - width/2 for x in xx], [value['mean'] for value in info.values()], width, label='mean')
+    scintillations = ax.bar([x + width/2 for x in xx], [value['scintillation'] for value in info.values()], width, label='scintillation')
+    ax.set_xticks(xx, [mode for mode in info.keys()])
+    ax.legend()
+    plt.show()

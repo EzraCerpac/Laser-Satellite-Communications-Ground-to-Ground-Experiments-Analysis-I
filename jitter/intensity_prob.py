@@ -8,7 +8,7 @@ from scipy.stats import beta
 @dataclass
 class IntensityDistribution:
     intensities: np.ndarray
-    w_0: float = field(default=0.003)
+    w_0: float = field(default=16e-6 / np.pi * 180)
     a: float = 1
 
     @property

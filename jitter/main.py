@@ -32,7 +32,7 @@ def main():
 
     # data1.plot()
     # plt.show()
-    distribution = IntensityDistribution(data.irradiance)
+    distribution = IntensityDistribution(data.irradiance, 16e-6)
     # distribution.plot()
     prob = PointingProbability(distribution.sigma)
     prob.plot()

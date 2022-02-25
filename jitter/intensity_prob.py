@@ -8,7 +8,7 @@ from scipy.stats import beta
 @dataclass
 class IntensityDistribution:
     intensities: np.ndarray
-    w_0: float = field(default=1.)
+    w_0: float = field(default=0.003)
     a: float = 1
 
     @property
@@ -35,7 +35,8 @@ class IntensityDistribution:
 
     def plot(self):
         plt.hist(self.norm_I, density=True, label='data')
-        I = np.linspace(beta.ppf(0.01, self.a, self.b), beta.ppf(0.99, self.a, self.b), 101)
+        # I = np.linspace(beta.ppf(0.01, self.a, self.b), beta.ppf(0.99, self.a, self.b), 101)
+        I = np.linspace(0, 1, 101)
         plt.plot(I, beta.pdf(I, self.a, self.b), 'r-', label='beta pdf')
         # plt.ylim(0, 1)
         plt.legend()

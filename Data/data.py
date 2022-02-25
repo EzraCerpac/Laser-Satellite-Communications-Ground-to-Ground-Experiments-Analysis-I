@@ -18,11 +18,8 @@ starting_values = {
 
 
 def import_data(directory: Path) -> list[pd.DataFrame]:
-    path1 = 'data_11.csv'
-    path2 = 'data_28.csv'
-    d1 = pd.read_csv(directory / path1, names=['time [s]', 'irradiance'], skiprows=1)
-    d2 = pd.read_csv(directory / path2, names=['time [s]', 'irradiance'], skiprows=1)
-    return [d1, d2]
+    paths = ['data_11.csv', 'data18urad']
+    return [pd.read_csv(directory / path, names=['time [s]', 'irradiance'], skiprows=1) for path in paths]
 
 
 def split_data(data: pd.DataFrame, split_dict: dict[str, float] = starting_values) -> dict[str, pd.DataFrame]:
@@ -37,10 +34,10 @@ def split_data(data: pd.DataFrame, split_dict: dict[str, float] = starting_value
 
 if __name__ == '__main__':
     folder = Path('CSV')
-    data1, data2 = import_data(folder)
-    data = split_data(data1, starting_values)
+    data11, data18 = import_data(folder)
+    data = split_data(data11, starting_values)
     
-    # data1.plot()
+    # data11.plot()
     # plt.show()
     
     info = {}

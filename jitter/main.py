@@ -30,7 +30,7 @@ def main():
     data = df_dict['28 modes']
     # data = sample
 
-    # data1.plot()
+    # data11.plot()
     # plt.show()
     distribution = IntensityDistribution(data.irradiance, 16e-6)
     # distribution.plot()

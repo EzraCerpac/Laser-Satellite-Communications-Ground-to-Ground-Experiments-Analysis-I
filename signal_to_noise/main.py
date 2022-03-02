@@ -3,7 +3,7 @@ from pathlib import Path
 import numpy as np
 from matplotlib import pyplot as plt
 
-from Data.data import import_data, split_data
+from Data.data_test import import_data, split_data
 
 
 def sum_squares(array: np.ndarray) -> float:

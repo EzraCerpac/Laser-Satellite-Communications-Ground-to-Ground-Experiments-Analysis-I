@@ -1,9 +1,8 @@
 from pathlib import Path
-
-import matplotlib.pyplot as plt
 import pandas as pd
+import pickle
 
-starting_values = {
+starting_values_11 = {
     'off1': 31.8,
     '2 modes': 55.4,
     'off2': 96.9,
@@ -17,42 +16,34 @@ starting_values = {
 }
 
 
-def import_data(directory: Path) -> list[pd.DataFrame]:
-    paths = ['data_11.csv', 'data18urad']
-    return [pd.read_csv(directory / path, names=['time [s]', 'irradiance'], skiprows=1) for path in paths]
-
-
-def split_data(data: pd.DataFrame, split_dict: dict[str, float] = starting_values) -> dict[str, pd.DataFrame]:
+def split_data(data: pd.DataFrame, split_dict: dict[str, float] = starting_values_11) -> pd.DataFrame:
     timestep = .0004034
     length = 30
-    df = {}
+    df_dict = {}
     for mode, start in split_dict.items():
         begin, end = int(start / timestep), int((start + length) / timestep)
-        df[mode] = data.iloc[begin:end]
+        df_dict[mode] = data.iloc[begin:end].irradiance
+    df = pd.concat(df_dict)
     return df
 
 
 if __name__ == '__main__':
     folder = Path('CSV')
-    data11, data18 = import_data(folder)
-    data = split_data(data11, starting_values)
-    
-    # data11.plot()
-    # plt.show()
-    
-    info = {}
-    for mode, set in data.items():
-        info[mode] = {
-            'mean': set.irradiance.describe()['mean'],
-            'scintillation': set.irradiance.describe()['std']
-        }
 
-    xx = list(range(len(info.keys()))) # the label locations
-    width = 0.35  # the width of the bars
+    data11 = pd.read_csv(folder / 'data_11.csv', names=['time', 'irradiance'], skiprows=1)
+    data11 = split_data(data11)
+    # data18 = pd.read_csv(folder / 'data18urad.csv', names=['sec', 'msec', 'irradiance'], skiprows=1)
+    Cn_df = pd.read_csv(folder / 'Cnprofile.csv')
 
-    fig, ax = plt.subplots()
-    means = ax.bar([x - width/2 for x in xx], [value['mean'] for value in info.values()], width, label='mean')
-    scintillations = ax.bar([x + width/2 for x in xx], [value['scintillation'] for value in info.values()], width, label='scintillation')
-    ax.set_xticks(xx, [mode for mode in info.keys()])
-    ax.legend()
-    plt.show()
+    pickle_dir = Path('DFs')
+    # for mode in starting_values_11.keys():
+    #     print(mode)
+    #     with open(pickle_dir / f"data11/{mode}.pickle", 'wb') as f:
+    #         pickle.dump(data11[mode], f)
+
+    with open(pickle_dir / f"Cn.pickle", 'wb') as f:
+        pickle.dump(Cn_df, f)
+    
+    
+else:
+    folder = Path('../Data/CSV')

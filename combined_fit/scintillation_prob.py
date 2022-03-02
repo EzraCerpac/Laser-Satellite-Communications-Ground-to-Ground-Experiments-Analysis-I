@@ -1,3 +1,5 @@
+from __future__ import annotations
+
 import pickle
 
 import numpy as np
@@ -33,15 +35,13 @@ def calc_probs(I: np.ndarray, ii: np.ndarray) -> np.ndarray:
     return probability_dist(ii, I_0, sigma_I2)  # return array
 
 
-def probability_dist(I:float, I_0:float, sigma_I2:float) -> float:
+def probability_dist(I: float | np.ndarray, I_0: float, sigma_I2: float) -> float | np.ndarray:
     return 1 / (I * sigma_I2 * np.sqrt(2 * np.pi)) * np.exp(
         - (np.log(I / I_0) + 0 + sigma_I2 / 2) ** 2 / (2 * sigma_I2)
     )
 
 
-
-
-k = lambda l: 2 * np.pi / l  # l = lambda
+def k(l): return 2 * np.pi / l  # l = lambda
 
 
 def rytov_index(k, zz: np.ndarray, C_n2: np.ndarray) -> float:

@@ -6,19 +6,39 @@ import numpy as np
 from matplotlib import pyplot as plt
 from scipy import integrate
 
+from formula.normalize import norm_I
+from info_plots.norm_I_hist import norm_I_hist
+
 
 def main():
     with open('../Data/DFs/data11/off1.pickle', 'rb') as f:
         data = pickle.load(f)
     I = np.array(data)
-    ii = np.linspace(0, 1, 1001)
-    probs = calc_probs(I, ii)
+    residu = residu_angular_jitter(I, plot=True)
+    # dist = IntensityDistribution(residu, 16e-6)  # TODO: make working
+    # dist.plot()
+    # plt.show()
 
-    plt.plot(ii, probs)
-    plt.show()
+
+def residu_angular_jitter(I: np.ndarray, plot: bool = False) -> np.ndarray:
+    ii = np.linspace(0, 1, 101)[1:]
+    plt.plot(ii, p_sc := integrate_scint_index(I, ii), label='integrated scintillation')
+    yy = norm_I_hist(I, density=True, bins=101)[1:]
+    residu = yy / p_sc
+    if plot:
+        plt.plot(ii, residu, label='residu angular jitter')
+        plt.legend()
+        plt.show()
+    else:
+        plt.clf()
+    return residu
 
 
-def calc_probs(I: np.ndarray, ii: np.ndarray) -> np.ndarray:
+def integrate_scint_index(I: np.ndarray, ii: np.ndarray | float):
+    return np.array([integrate.quad(lambda I_0: calc_probs(I, i, I_0), 0, 1)[0] for i in ii])
+
+
+def calc_probs(I: np.ndarray, ii: np.ndarray | float, I_0: float = None) -> np.ndarray:
     with open('../Data/DFs/Cn.pickle', 'rb') as f:
         Cn = pickle.load(f)
 
@@ -30,8 +50,7 @@ def calc_probs(I: np.ndarray, ii: np.ndarray) -> np.ndarray:
     sigma_R2 = rytov_index(k(labda), zz, C_n2)
     sigma_I2 = scintillation_index(sigma_R2)
 
-    norm_I = I / max(I)
-    I_0 = norm_I.mean()
+    I_0 = norm_I(I).mean() if not I_0 else I_0
     return probability_dist(ii, I_0, sigma_I2)  # return array
 
 

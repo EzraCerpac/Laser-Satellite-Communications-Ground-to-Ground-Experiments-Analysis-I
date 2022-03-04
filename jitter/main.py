@@ -5,8 +5,7 @@ from matplotlib import pyplot as plt
 from scipy.stats import beta
 
 from Data.data_test import import_data, split_data
-from Data.tests_generated.beta_distibution import sample
-from jitter.intensity_prob import IntensityDistribution
+from combined_fit.angular_jitter_do_not_use import IntensityDistribution
 from jitter.random_pointing_angle import PointingProbability
 
 

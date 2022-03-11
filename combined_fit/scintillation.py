@@ -27,6 +27,7 @@ def calc_probs(I: np.ndarray, ii: np.ndarray | float, I_0: float = None) -> np.n
     sigma_I2 = scintillation_index(sigma_R2)
 
     I_0 = norm_I(I).mean() if not I_0 else I_0
+    I_0 = 0.02
     return probability_dist(ii, I_0, sigma_I2)  # return array
 
 

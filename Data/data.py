@@ -4,17 +4,17 @@ import pickle
 
 from matplotlib import pyplot as plt
 
-starting_values_11 = {
-    'off1': 31.8,
-    '2 modes': 55.4,
-    'off2': 96.9,
-    '28 modes': 135.4,
-    'off3': 180.2,
-    '4 modes': 215.5,
-    'off4': 258.0,
-    '8 modes': 296.7,
-    'off5': 343.6,
-    '16 modes': 275.1
+starting_values_18 = {
+    'off1': 46.3,
+    '2 modes': 100.0,
+    'off2': 172.3,
+    '28 modes': 240.3,
+    'off3': 318.1,
+    '4 modes': 382.0,
+    'off4': 472.9,
+    '8 modes': 527.6,
+    'off5': 603.3,
+    '16 modes': 675.2
 }
 
 

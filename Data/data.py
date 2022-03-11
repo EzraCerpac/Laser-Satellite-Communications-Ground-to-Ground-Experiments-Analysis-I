@@ -2,6 +2,8 @@ from pathlib import Path
 import pandas as pd
 import pickle
 
+from matplotlib import pyplot as plt
+
 starting_values_11 = {
     'off1': 31.8,
     '2 modes': 55.4,
@@ -32,7 +34,7 @@ if __name__ == '__main__':
 
     data11 = pd.read_csv(folder / 'data_11.csv', names=['time', 'irradiance'], skiprows=1)
     data11 = split_data(data11)
-    # data18 = pd.read_csv(folder / 'data18urad.csv', names=['sec', 'msec', 'irradiance'], skiprows=1)
+    data22 = pd.read_csv(folder / 'data22urad.csv', names=['index', 'time', 'irradiance'], skiprows=1)
     Cn_df = pd.read_csv(folder / 'Cnprofile.csv')
 
     pickle_dir = Path('DFs')
@@ -41,8 +43,11 @@ if __name__ == '__main__':
     #     with open(pickle_dir / f"data11/{mode}.pickle", 'wb') as f:
     #         pickle.dump(data11[mode], f)
 
-    with open(pickle_dir / f"Cn.pickle", 'wb') as f:
-        pickle.dump(Cn_df, f)
+    plt.plot(data22.time, data22.irradiance)
+    plt.show()
+
+    # with open(pickle_dir / f"data18.pickle", 'wb') as f:
+    #     pickle.dump(Cn_df, f)
     
     
 else:

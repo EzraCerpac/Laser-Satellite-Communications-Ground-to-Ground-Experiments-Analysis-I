@@ -4,6 +4,8 @@ import numpy as np
 from matplotlib import pyplot as plt
 from scipy.stats import beta
 
+from formula.normalize import norm_I
+
 
 @dataclass
 class IntensityDistribution:
@@ -13,7 +15,7 @@ class IntensityDistribution:
 
     @property
     def norm_I(self) -> np.ndarray:
-        return self.intensities / (max(self.intensities) + 1e-3)
+        return (norm_I(self.intensities) + 1e-10) / (1 + 1e-8)  # weird stuff to make 0 < norm_I < 1
 
     def fit(self) -> list:
         return beta.fit(self.norm_I, fa=1, floc=0, fscale=1)
@@ -32,12 +34,10 @@ class IntensityDistribution:
     def b(self) -> float:
         return self.fit()[1]
 
-
     def plot(self):
-        plt.hist(self.norm_I, density=True, label='data')
+        plt.hist(self.norm_I, bins=101, density=True, label='data')
         # I = np.linspace(beta.ppf(0.01, self.a, self.b), beta.ppf(0.99, self.a, self.b), 101)
         I = np.linspace(0, 1, 101)
         plt.plot(I, beta.pdf(I, self.a, self.b), 'r-', label='beta pdf')
-        # plt.ylim(0, 1)
+        plt.ylim(0, 10)
         plt.legend()
-        plt.show()

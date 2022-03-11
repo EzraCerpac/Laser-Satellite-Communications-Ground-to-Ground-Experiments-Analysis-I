@@ -94,3 +94,41 @@ pPl = p_P(PRl, SigP, P0)
 plt.plot(PRl, pPl)
 plt.show()
 
+
+
+def CNInterpol(z,Cn):
+    """
+
+    :param z: Array of distance to Transmitter
+    :param Cn: Array of Refractive Index over Distance
+    :return: Interpolating spline for CN
+    """
+    fun = interpolate.CubicSpline(z,Cn,bc_type='natural')
+    return fun
+
+def integrand(z,fun,L,k):
+
+    return 2.25 * k ** (7 / 6) * Cn2 * (L-z) ** (5/6)
+
+"""
+    
+    :param z: Array of distance to Transmitter
+    :param fun: Interpolating spline for CN
+    :param L: Distance to Transmitter
+    :param k: Wave Number
+    :return: Rytov index squared for changing CN.
+    """
+    Quad
+
+    from scipy.integrate import quad
+    >> >
+
+    def integrand(x, a, b):
+        ...
+        return a * x ** 2 + b
+
+    ...
+    >> > a = 2
+    >> > b = 1
+    >> > I = quad(integrand, 0, 1, args=(a, b))
+    >> > I

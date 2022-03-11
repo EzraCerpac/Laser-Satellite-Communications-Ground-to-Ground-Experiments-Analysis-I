@@ -1,7 +1,7 @@
 import numpy as np
 from scipy import integrate
 import math
-
+import pandas as pd
 
 def I0(W0, WLT):
     """
@@ -92,9 +92,21 @@ def F0(W0, z, wavelambda):
     """
     return z * (1 + (math.pi * W0 ** 2 / (wavelambda * z)) ** 2)
 
+
+W0 =
+pickle = pd.read_pickle(Data/DFs/Cn.pickle)
+h = pickle.altitude
+Cn = pickle.Cn
+z  = pickle.z
+wavelambda = 1550
+k = 2 * math.pi / wavelambda
+H = 900
+h0 = 600
 F0 = F0(W0, z, wavelambda)
 Lambda0 = Lambda0(z,k,W0)
 Theta0 = Theta0(z,F0)
 Lambda = Lambda(Theta0, Lambda0)
 mu2d = mu2d(Cn,h,h0,H)
-W = W
+W = W(W0,Theta0,Lambda0)
+WLT = WLT(W,mu2d,Lambda,k,H,h0)
+I0 = IO(W0,WLT)

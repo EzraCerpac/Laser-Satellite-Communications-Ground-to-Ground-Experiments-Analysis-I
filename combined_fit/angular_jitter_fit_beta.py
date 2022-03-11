@@ -3,7 +3,7 @@ from matplotlib import pyplot as plt
 from scipy.optimize import curve_fit
 from scipy.stats import beta
 
-from combined_fit.main import residu_angular_jitter
+from combined_fit.bridge import residu_angular_jitter
 from formula.jitter import calc_sigma
 from formula.normalize import norm_I
 

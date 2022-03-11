@@ -3,6 +3,7 @@ from __future__ import annotations
 import pickle
 
 import numpy as np
+import pandas as pd
 from matplotlib import pyplot as plt
 from scipy import integrate
 
@@ -16,8 +17,7 @@ def integrate_scint_index(I: np.ndarray, ii: np.ndarray | float):
 
 
 def calc_probs(I: np.ndarray, ii: np.ndarray | float, I_0: float = None) -> np.ndarray:
-    with open('../Data/DFs/Cn.pickle', 'rb') as f:
-        Cn = pickle.load(f)
+    Cn = pd.read_pickle('Data/DFs/Cn.pickle')
 
     zz = np.array(Cn['z-distance'])
     C_n2 = np.array(Cn['Cn^2'])

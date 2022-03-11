@@ -1,7 +1,6 @@
 import numpy as np
 import pandas as pd
 from matplotlib import pyplot as plt
-from numpy.random import normal
 from scipy.stats import norm, rv_continuous, beta
 
 # %%

@@ -1,4 +1,8 @@
-from dataclasses import dataclass
+import numpy as np
+import pandas as pd
+from matplotlib import pyplot as plt
+
+from combined_fit.angular_jitter_fit_beta import estimate_sigma
 
 
 class DataDF:
@@ -17,18 +21,37 @@ class DataDF:
             }
         }
         rootdir: str = 'Data/DFs/'
-        self.file = rootdir + dir[data_set] + mode_dict[mode]['filename'] \
+        self.file_path = rootdir + dir[data_set] + mode_dict[mode]['filename'] \
             if number in mode_dict[mode]['number'] else None
+        self.df = pd.read_pickle(self.file_path)
+        self.w_0 = data_set * 1e-6  # rad
 
 
-@dataclass
-class UserInterface:
-    title: str = "My app"
-    width: int = 1024
-    height: int = 768
+class Run:
+    def __init__(self, data: DataDF, *args, **kwargs):
+        self.data = data
+        self.results = []
+
+    def calc_sigma(self, res: int = 1001, usable: float = 0.2, plot: bool = False):
+        result = estimate_sigma(
+            np.array(self.data.df), self.data.w_0, res, usable, plot
+        )
+        self.results.append(result)
+        print(result)
+        if plot:
+            plt.legend()
+            plt.show()
+        return result
 
 
-@dataclass
 class FileConfig:
-    default: DataDF = DataDF(11, False, 1)
-    ui: UserInterface = UserInterface()
+    def __init__(self):
+        self.default_data: DataDF = DataDF(11, False, 1)
+        self.data = self.default_data
+
+    def data_set(self, data_set: int, mode: bool, number: int) -> DataDF:
+        self.data = DataDF(data_set, mode, number)
+        return self.data
+
+    def run(self, *args, **kwargs) -> Run:
+        return Run(self.data, *args, **kwargs)

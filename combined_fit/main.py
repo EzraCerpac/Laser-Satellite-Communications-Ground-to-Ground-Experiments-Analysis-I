@@ -1,5 +1,6 @@
-import numpy as np
 import pickle
+
+import numpy as np
 from matplotlib import pyplot as plt
 
 from combined_fit.angular_jitter_fit import plot_angular_jitter_dist, fit_beta_to_hist, calc_sigma
@@ -37,7 +38,7 @@ def main():
     with open('../Data/DFs/data11/off1.pickle', 'rb') as f:
         data = pickle.load(f)
     I = np.array(data)
-    estimate_sigma(I, True)
+    print(estimate_sigma(I, True))
 
 
 if __name__ == '__main__':

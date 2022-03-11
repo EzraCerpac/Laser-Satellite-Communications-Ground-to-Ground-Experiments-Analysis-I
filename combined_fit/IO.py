@@ -1,7 +1,10 @@
 import math
+
 import numpy as np
 import pandas as pd
 from scipy import integrate
+
+from combined_fit.indices import k
 
 
 def I0(W0, WLT):
@@ -62,7 +65,13 @@ def Lambda0(z, k, W0):
 
 
 def mu2d(hh: np.ndarray, C_n2: np.ndarray) -> float:
-    yy = [C_n2[i] * ((h - hh[0]) / (hh[-1] - h[0])) ** (5 / 3) for i, h in enumerate(hh)]
+    """
+    Compute the mu_2d by integration.
+    Not working, because h-hh[0] can give negative numbers (and a cubic root is taken),
+    and because hh isn't in order, so no integration is possible.
+    TODO: discus way to fix this. Maybe take absolute values and order by force?
+    """
+    yy = [C_n2[i] * ((h - hh[0]) / (hh[-1] - hh[0])) ** (5 / 3) for i, h in enumerate(hh)]
     integral = integrate.simpson(yy, hh)
     return integral
 
@@ -77,53 +86,46 @@ def Lambda(Theta0, Lambda0):
     return Lambda0 / (Theta0 ** 2 + Lambda0 ** 2)
 
 
-def F0(W0, z, wavelambda):
+def F0(W0, zi, wavelambda):
     """
 
     :param W0: Beam waist radius
-    :param z: Distance along the transmitting path
+    :param zi: Distance along the transmitting path
     :param wavelambda: Wavelength
     :return: Phase front radius of curvature
     """
-    return z * (1 + (math.pi * W0 ** 2 / (wavelambda * z)) ** 2)
+    return zi * (1 + (math.pi * W0 ** 2 / (wavelambda * zi)) ** 2)
 
 
 def main():
-    with open('../Data/DFs/Cn.pickle', 'rb') as f:
-        Cn = pickle.load(f)
-
+    Cn = pd.read_pickle('../Data/DFs/Cn.pickle')
     zz = np.array(Cn['z-distance'])
     C_n2 = np.array(Cn['Cn^2'])
     hh = np.array(Cn['altitude'])
 
-    W0 = None
+    W0 = 11e-6  # random
     wavelambda = 1550
-    k = 2 * math.pi / wavelambda
-    H = 900
-    h0 = 600
-    F0 = F0(W0, z, wavelambda)
-    lambda0 = Lambda0(z, k, W0)
-    Theta0 = Theta0(z, F0)
-    Lambda = Lambda(Theta0, Lambda0)
-    mu_2d = mu2d(C_n2, hh)
-    W = W(W0, Theta0, Lambda0)
-    WLT = WLT(W, mu2d, Lambda, k, H, h0)
-    I0 = IO(W0, WLT)
+
+    io = I0(
+        W0,
+        WLT(
+            W(
+                W0,
+                Theta0(zz[-1], F0(W0, zz[-1], wavelambda)),
+                Lambda0(zz[-1], k(wavelambda), W0)
+            ),
+            mu2d(hh, C_n2),
+            Lambda(
+                Theta0(zz[-1], F0(W0, zz[-1], wavelambda)),
+                Lambda0(zz[-1], k(wavelambda), W0)
+            ),
+            k(wavelambda),
+            hh[-1],
+            hh[0]
+        )
+    )
+    return io
 
 
 if __name__ == '__main__':
-    main()
-
-
-io = I0(W0,
-        WLT(W(W0, Theta0(z, F0
-
-        ), Lambda0(z, k, W0
-
-        )
-
-        ), mu2d(C_n2, hh
-
-        ), Lambda(
-
-        ), k, H, h0))
+    print(main())

@@ -1,7 +1,8 @@
-import numpy as np
-from scipy import integrate
 import math
+import numpy as np
 import pandas as pd
+from scipy import integrate
+
 
 def I0(W0, WLT):
     """
@@ -25,7 +26,7 @@ def WLT(W, mu2d, Lambda, k, H, h0):
     :return: Long-term spot size
     """
     return W * (1 + 4.35 * mu2d * Lambda ** (5 / 6) * k ** (7 / 6) * (H - h0) ** (5 / 6) * (
-                (300 ** 2 + 10000 ** 2) ** (1 / 2) / 300) ** (11 / 6)) ** (1 / 2)
+            (300 ** 2 + 10000 ** 2) ** (1 / 2) / 300) ** (11 / 6)) ** (1 / 2)
 
 
 def W(W0, Theta0, Lambda0):
@@ -60,16 +61,10 @@ def Lambda0(z, k, W0):
     return 2 * z / (k * W0 ** 2)
 
 
-def mu2d(Cn, h, h0, H):
-    """
-
-    :param Cn: Refractive index
-    :param h: Altitude of beam
-    :param h0: Altitude of transmitter
-    :param H: Altitude of receiver
-    :return: Turbulence factor
-    """
-    return
+def mu2d(hh: np.ndarray, C_n2: np.ndarray) -> float:
+    yy = [C_n2[i] * ((h - hh[0]) / (hh[-1] - h[0])) ** (5 / 3) for i, h in enumerate(hh)]
+    integral = integrate.simpson(yy, hh)
+    return integral
 
 
 def Lambda(Theta0, Lambda0):
@@ -93,20 +88,25 @@ def F0(W0, z, wavelambda):
     return z * (1 + (math.pi * W0 ** 2 / (wavelambda * z)) ** 2)
 
 
-W0 =
-pickle = pd.read_pickle(Data/DFs/Cn.pickle)
-h = pickle.altitude
-Cn = pickle.Cn
-z  = pickle.z
-wavelambda = 1550
-k = 2 * math.pi / wavelambda
-H = 900
-h0 = 600
-F0 = F0(W0, z, wavelambda)
-Lambda0 = Lambda0(z,k,W0)
-Theta0 = Theta0(z,F0)
-Lambda = Lambda(Theta0, Lambda0)
-mu2d = mu2d(Cn,h,h0,H)
-W = W(W0,Theta0,Lambda0)
-WLT = WLT(W,mu2d,Lambda,k,H,h0)
-I0 = IO(W0,WLT)
+def main():
+    W0 =
+    pickle = pd.read_pickle(Data / DFs / Cn.pickle)
+    h = pickle.altitude
+    Cn = pickle.Cn
+    z = pickle.z
+    wavelambda = 1550
+    k = 2 * math.pi / wavelambda
+    H = 900
+    h0 = 600
+    F0 = F0(W0, z, wavelambda)
+    Lambda0 = Lambda0(z, k, W0)
+    Theta0 = Theta0(z, F0)
+    Lambda = Lambda(Theta0, Lambda0)
+    mu2d = mu2d(Cn, h, h0, H)
+    W = W(W0, Theta0, Lambda0)
+    WLT = WLT(W, mu2d, Lambda, k, H, h0)
+    I0 = IO(W0, WLT)
+
+
+if __name__ == '__main__':
+    main()

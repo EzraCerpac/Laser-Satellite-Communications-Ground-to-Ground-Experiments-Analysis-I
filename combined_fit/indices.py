@@ -1,10 +1,5 @@
-from __future__ import annotations
-
 import numpy as np
 from scipy import integrate
-
-
-def k(l): return 2 * np.pi / l  # l = lambda
 
 
 def rytov_index(k, zz: np.ndarray, C_n2: np.ndarray) -> float:

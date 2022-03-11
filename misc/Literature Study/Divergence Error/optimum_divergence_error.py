@@ -1,8 +1,7 @@
-import numpy as np
-from scipy.special import erfc
 import matplotlib.pyplot as plt
+import numpy as np
 
-plot_dir = "../../Plots"
+plot_dir = "../../../Plots"
 filename = "optimum_ratio.pdf"
 
 a_coeff = {

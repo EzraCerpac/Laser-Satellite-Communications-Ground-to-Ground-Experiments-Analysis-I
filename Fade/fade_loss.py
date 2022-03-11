@@ -1,9 +1,16 @@
-import numpy as np
-import matplotlib.pyplot as plt
-import pandas as pd
+"""
+Never commit anything like this! Only commit working stuff
+Also, put everthing in main function, then use if __name__ == "__main__": main()
+TODO: make working, then commit
+"""
+
 from pathlib import Path
+
+import matplotlib.pyplot as plt
+import numpy as np
+import pandas as pd
 from scipy import interpolate
-from scipy.integrate import quad
+
 
 def Ap_Av(k, D, L):
     """
@@ -19,11 +26,11 @@ def Ap_Av(k, D, L):
 def Sigma_I(Sigma_R2):
     """
 
-    :param Sigma_R: Rytov Index
+    :param Sigma_R2: Rytov Index
     :return: Intensity Scintillation Index
     """
     return np.exp((0.49 * Sigma_R2) / (1 + 1.11 * Sigma_R2 ** (6 / 5)) + (0.51 * Sigma_R2) / (
-                1 + 0.69 * Sigma_R2 ** (6 / 5)) ** (5 / 6)) - 1
+            1 + 0.69 * Sigma_R2 ** (6 / 5)) ** (5 / 6)) - 1
 
 
 def Sigma_R2(Cn, k, L):
@@ -61,61 +68,62 @@ def p_P(P_RX, Sigma_P, P0):
 
 
 def test_curve(x, a, b):
-
     part1 = 1 / (x * (2 * np.pi * np.log(a + 1)) ** (1 / 2))
     part2 = - ((np.log(x / b) + 0.5 * np.log(x + 1)) ** 2) / (2 * np.log(x + 1))
     return part1 * np.exp(part2)
 
 
-
-
-# k is 2*pi/lambda, D is reciever diameter
-folder = Path('CSV')
-datacn = pd.read_csv(folder / 'Cnprofile', names=['z-dist', 'height', 'cn2'], skiprows=1)
-
-print(datacn.height[2])
-
-Lambda = 1550e-9
-Cn = 0.033
-L = 10000
-D = 3.45
-P0 = 1000
-k = 2 * np.pi / Lambda
-
-A = Ap_Av(k, D, L)
-SigR = Sigma_R2(Cn, k, L)
-SigI = Sigma_I(SigR)
-SigP = Sigma_P(A, SigI)
-
-PRl = np.linspace(0, 101)
-pPl = p_P(PRl, SigP, P0)
-# pPl = test_curve(PRl, 3, 50)
-
-plt.plot(PRl, pPl)
-plt.show()
-
-
-
-def CNInterpol(z,Cn):
+def CNInterpol(z, Cn):
     """
-
     :param z: Array of distance to Transmitter
     :param Cn: Array of Refractive Index over Distance
     :return: Interpolating spline for CN
     """
-    fun = interpolate.CubicSpline(z,Cn,bc_type='natural')
+    fun = interpolate.CubicSpline(z, Cn, bc_type='natural')
     return fun
 
-def integrand(z,fun,L,k):
-    I = quad(CNInterpol(z,Cn), 0, 1, args=(a, b))
-    return Cn2 * (L-z) ** (5/6)
-2.25 * k ** (7 / 6) *
 
-"""
-    
-    :param z: Array of distance to Transmitter
-    :param fun: Interpolating spline for CN
-    :param L: Distance to Transmitter
-    :param k: Wave Number
-    :return: Rytov index squared for changing CN.
-    """
+# TODO: fix and decomment
+# def integrand(z, fun, L, k):
+#     """
+#     :param z: Array of distance to Transmitter
+#     :param fun: Interpolating spline for CN
+#     :param L: Distance to Transmitter
+#     :param k: Wave Number
+#     :return: Rytov index squared for changing CN.
+#     """
+#     I = quad(CNInterpol(z, Cn), 0, 1, args=(a, b))
+#     return Cn2 * (L - z) ** (5 / 6)
+
+#  2.25 * k ** (7 / 6) *
+
+# k is 2*pi/lambda, D is reciever diameter
+
+def main():
+    folder = Path('CSV')
+    datacn = pd.read_csv(folder / 'Cnprofile', names=['z-dist', 'height', 'cn2'], skiprows=1)
+
+    print(datacn.height[2])
+
+    Lambda = 1550e-9
+    Cn = 0.033
+    L = 10000
+    D = 3.45
+    P0 = 1000
+    k = 2 * np.pi / Lambda
+
+    A = Ap_Av(k, D, L)
+    SigR = Sigma_R2(Cn, k, L)
+    SigI = Sigma_I(SigR)
+    SigP = Sigma_P(A, SigI)
+
+    PRl = np.linspace(0, 101)
+    pPl = p_P(PRl, SigP, P0)
+    # pPl = test_curve(PRl, 3, 50)
+
+    plt.plot(PRl, pPl)
+    plt.show()
+
+
+if __name__ == '__main__':
+    main()

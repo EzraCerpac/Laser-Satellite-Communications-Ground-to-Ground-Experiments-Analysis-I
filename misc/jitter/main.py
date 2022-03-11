@@ -1,12 +1,12 @@
 from pathlib import Path
 
 import numpy as np
+from combined_fit.angular_jitter_do_not_use import IntensityDistribution
 from matplotlib import pyplot as plt
 from scipy.stats import beta
 
 from Data.data_test import import_data, split_data
-from combined_fit.angular_jitter_do_not_use import IntensityDistribution
-from jitter.random_pointing_angle import PointingProbability
+from misc.jitter.random_pointing_angle import PointingProbability
 
 
 def fit_all(dataset: dict) -> dict:
@@ -22,7 +22,7 @@ def fit_all(dataset: dict) -> dict:
 
 
 def main():
-    data_folder = Path('../Data/CSV')
+    data_folder = Path('../../Data/CSV')
     data_dict = import_data(data_folder)
     df_dict = split_data(data_dict['data_11'])
 

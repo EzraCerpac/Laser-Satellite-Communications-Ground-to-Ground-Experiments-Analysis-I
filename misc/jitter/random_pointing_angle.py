@@ -1,5 +1,3 @@
-from dataclasses import dataclass, field
-
 import numpy as np
 from matplotlib import pyplot as plt
 from scipy.stats import rayleigh

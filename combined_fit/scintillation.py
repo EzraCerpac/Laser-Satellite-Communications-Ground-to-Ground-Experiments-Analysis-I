@@ -6,7 +6,8 @@ import numpy as np
 from matplotlib import pyplot as plt
 from scipy import integrate
 
-from combined_fit.indices import rytov_index, k, scintillation_index
+from combined_fit.indices import rytov_index, scintillation_index
+from formula.jitter import k
 from formula.normalize import norm_I
 
 

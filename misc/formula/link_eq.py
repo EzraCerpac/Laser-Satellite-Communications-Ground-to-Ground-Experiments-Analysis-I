@@ -1,6 +1,4 @@
-from sympy import *
-
-from formula.power_penalty import *
+from misc.formula.power_penalty import *
 
 labda, R, A_r = symbols('lambda R A_r')
 

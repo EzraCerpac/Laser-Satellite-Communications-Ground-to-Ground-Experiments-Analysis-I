@@ -2,7 +2,7 @@ import numpy as np
 from scipy.integrate import quad
 from scipy.special import erfc
 
-from formula.basic import beta
+from misc.formula.basic import beta
 
 BER = lambda Q: 0.5 * erfc(Q / np.sqrt(2))
 

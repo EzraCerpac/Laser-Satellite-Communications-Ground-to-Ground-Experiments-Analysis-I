@@ -4,7 +4,7 @@ import numpy as np
 import pandas as pd
 from scipy import integrate
 
-from combined_fit.indices import k
+from formula.jitter import k
 
 
 def I0(W0, WLT):

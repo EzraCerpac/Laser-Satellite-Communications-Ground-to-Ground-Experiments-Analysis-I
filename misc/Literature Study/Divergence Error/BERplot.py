@@ -1,12 +1,11 @@
 import matplotlib.pyplot as plt
-import numpy as np
 
-from formula.ber_from_w_sigma import *
+from misc.formula.ber_from_w_sigma import *
 
 # plt.rcParams['axes.prop_cycle'] = ("cycler('color', list('rbgk')) +"
 #                                    "cycler('linestyle', ['-', '--', ':', '-.'])")
 
-plot_dir = "../../Plots"
+plot_dir = "../../../Plots"
 filename = "BER_w_sigma.pdf"
 
 Q = np.linspace(0.01, 8, 101)

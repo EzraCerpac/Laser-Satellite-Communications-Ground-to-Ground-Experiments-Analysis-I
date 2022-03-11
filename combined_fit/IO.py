@@ -113,3 +113,17 @@ def main():
 
 if __name__ == '__main__':
     main()
+
+
+io = I0(W0,
+        WLT(W(W0, Theta0(z, F0
+
+        ), Lambda0(z, k, W0
+
+        )
+
+        ), mu2d(C_n2, hh
+
+        ), Lambda(
+
+        ), k, H, h0))

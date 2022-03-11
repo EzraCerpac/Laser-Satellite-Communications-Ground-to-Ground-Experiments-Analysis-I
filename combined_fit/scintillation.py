@@ -3,6 +3,7 @@ from __future__ import annotations
 import pickle
 
 import numpy as np
+from matplotlib import pyplot as plt
 from scipy import integrate
 
 from combined_fit.indices import rytov_index, k, scintillation_index
@@ -33,3 +34,13 @@ def probability_dist(I: float | np.ndarray, I_0: float, sigma_I2: float) -> floa
     return 1 / (I * sigma_I2 * np.sqrt(2 * np.pi)) * np.exp(
         - (np.log(I / I_0) + 0 + sigma_I2 / 2) ** 2 / (2 * sigma_I2)
     )
+
+
+if __name__ == '__main__':
+    with open('../Data/DFs/data11/off1.pickle', 'rb') as f:
+        data = pickle.load(f)
+    I = np.array(data)
+    ii = np.linspace(0, 1, 101)[1:]
+    p_sc = integrate_scint_index(I, ii)
+    plt.plot(ii, p_sc)
+    plt.show()

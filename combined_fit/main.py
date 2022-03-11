@@ -3,6 +3,7 @@ import pickle
 import numpy as np
 from matplotlib import pyplot as plt
 
+from combined_fit.angular_jitter_fit import calc_beta, plot_angular_jitter_dist
 from combined_fit.scintillation import integrate_scint_index
 from info_plots.norm_I_hist import norm_I_hist
 
@@ -12,9 +13,9 @@ def main():
         data = pickle.load(f)
     I = np.array(data)
     residu = residu_angular_jitter(I, plot=True)
-    # beta = calc_beta(residu)  # TODO: make working
-    # plot_angular_jitter_dist(residu, beta)
-    # plt.show()
+    beta = calc_beta(residu)  # TODO: make working
+    plot_angular_jitter_dist(residu, beta)
+    plt.show()
 
 
 def residu_angular_jitter(I: np.ndarray, plot: bool = False) -> np.ndarray:

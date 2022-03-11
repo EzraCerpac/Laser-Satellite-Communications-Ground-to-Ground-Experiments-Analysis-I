@@ -15,7 +15,7 @@ def calc_sigma(beta: float, w_0: float) -> float:
     return sigma
 
 
-def plot_angular_jitter_dist(I: np.ndarray, bet: float, ii: np.ndarray = np.linspace(0, 1, 101)):
+def plot_angular_jitter_dist(I: np.ndarray, bet: float, ii: np.ndarray = np.linspace(0, 1, 101)) -> None:
     plt.hist(norm_I(I), bins=101, density=True, label='normalized irradiance')
     plt.plot(ii, beta.pdf(ii, 1, bet), 'r-', label='angular jitter dist')
     # plt.ylim(0, 10)

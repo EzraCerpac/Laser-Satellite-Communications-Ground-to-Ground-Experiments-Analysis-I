@@ -89,20 +89,23 @@ def F0(W0, z, wavelambda):
 
 
 def main():
-    W0 =
-    pickle = pd.read_pickle(Data / DFs / Cn.pickle)
-    h = pickle.altitude
-    Cn = pickle.Cn
-    z = pickle.z
+    with open('../Data/DFs/Cn.pickle', 'rb') as f:
+        Cn = pickle.load(f)
+
+    zz = np.array(Cn['z-distance'])
+    C_n2 = np.array(Cn['Cn^2'])
+    hh = np.array(Cn['altitude'])
+
+    W0 = None
     wavelambda = 1550
     k = 2 * math.pi / wavelambda
     H = 900
     h0 = 600
     F0 = F0(W0, z, wavelambda)
-    Lambda0 = Lambda0(z, k, W0)
+    lambda0 = Lambda0(z, k, W0)
     Theta0 = Theta0(z, F0)
     Lambda = Lambda(Theta0, Lambda0)
-    mu2d = mu2d(Cn, h, h0, H)
+    mu_2d = mu2d(C_n2, hh)
     W = W(W0, Theta0, Lambda0)
     WLT = WLT(W, mu2d, Lambda, k, H, h0)
     I0 = IO(W0, WLT)
@@ -110,3 +113,17 @@ def main():
 
 if __name__ == '__main__':
     main()
+
+
+io = I0(W0,
+        WLT(W(W0, Theta0(z, F0
+
+        ), Lambda0(z, k, W0
+
+        )
+
+        ), mu2d(C_n2, hh
+
+        ), Lambda(
+
+        ), k, H, h0))

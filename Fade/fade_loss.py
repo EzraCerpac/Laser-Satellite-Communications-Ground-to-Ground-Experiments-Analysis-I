@@ -2,8 +2,8 @@ import numpy as np
 import matplotlib.pyplot as plt
 import pandas as pd
 from pathlib import Path
-from scipy import interpolate, \
-    quad
+from scipy import interpolate
+from scipy.integrate import quad
 
 def Ap_Av(k, D, L):
     """
@@ -107,8 +107,9 @@ def CNInterpol(z,Cn):
     return fun
 
 def integrand(z,fun,L,k):
-
-    return 2.25 * k ** (7 / 6) * Cn2 * (L-z) ** (5/6)
+    I = quad(CNInterpol(z,Cn), 0, 1, args=(a, b))
+    return Cn2 * (L-z) ** (5/6)
+2.25 * k ** (7 / 6) *
 
 """
     
@@ -118,17 +119,3 @@ def integrand(z,fun,L,k):
     :param k: Wave Number
     :return: Rytov index squared for changing CN.
     """
-    Quad
-
-    from scipy.integrate import quad
-    >> >
-
-    def integrand(x, a, b):
-        ...
-        return a * x ** 2 + b
-
-    ...
-    >> > a = 2
-    >> > b = 1
-    >> > I = quad(integrand, 0, 1, args=(a, b))
-    >> > I

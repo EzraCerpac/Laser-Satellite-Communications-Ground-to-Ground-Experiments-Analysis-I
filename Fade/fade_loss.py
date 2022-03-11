@@ -107,8 +107,9 @@ def CNInterpol(z,Cn):
     return fun
 
 def integrand(z,fun,L,k):
-
-    return 2.25 * k ** (7 / 6) * Cn2 * (L-z) ** (5/6)
+    I = quad(CNInterpol(z,Cn), 0, 1, args=(a, b))
+    return Cn2 * (L-z) ** (5/6)
+2.25 * k ** (7 / 6) *
 
 """
     

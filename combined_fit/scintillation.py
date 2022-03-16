@@ -13,8 +13,14 @@ from formula.normalize import norm_I
 
 
 def integrate_scint_index(I: np.ndarray, ii: np.ndarray | float):
-    Cn = pd.read_pickle('Data/DFs/Cn.pickle')
-    return np.array([integrate.quad(lambda I_0: calc_probs(I, i, I_0, Cn), 0, 1)[0] for i in ii])
+    return np.array([integrate.quad(lambda I_0: calc_probs(I, i, I_0), 0, 1)[0] for i in ii])
+
+
+def calc_probs(I: np.ndarray, ii: np.ndarray | float, I_0: float = None) -> np.ndarray:
+    try:
+        Cn = pd.read_pickle('../Data/DFs/Cn.pickle')
+    except:
+        Cn = pd.read_pickle('Data/DFs/Cn.pickle')
 
 
 def calc_probs(I: np.ndarray, ii: np.ndarray | float, I_0: float = None,
@@ -44,5 +50,4 @@ if __name__ == '__main__':
     ii = np.linspace(0, 1, 101)[1:]
     p_sc = integrate_scint_index(I, ii)
     plt.plot(ii, p_sc)
-    # plt.ylim(0, 1.2 * max(p_sc))
     plt.show()

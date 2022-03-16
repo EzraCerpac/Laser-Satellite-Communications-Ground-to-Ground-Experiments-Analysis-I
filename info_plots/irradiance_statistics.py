@@ -2,9 +2,7 @@ from matplotlib import pyplot as plt
 
 from Data.data import *
 
-
-
-# for mode, set in data11:
+# for mode, set in data18:
 #     info[mode] = {
 #         'mean': set.irradiance.describe()['mean'],
 #         'scintillation': set.irradiance.describe()['std']
@@ -21,5 +19,5 @@ from Data.data import *
 # plt.show()
 
 
-data11.plot()
+data18.plot()
 plt.show()

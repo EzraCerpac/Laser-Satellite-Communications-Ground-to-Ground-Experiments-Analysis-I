@@ -5,7 +5,6 @@ from matplotlib import pyplot as plt
 from scipy.stats import beta
 
 from Data.data_test import import_data, split_data
-from Data.tests_generated.beta_distibution import sample
 from jitter.intensity_prob import IntensityDistribution
 from jitter.random_pointing_angle import PointingProbability
 
@@ -30,7 +29,7 @@ def main():
     data = df_dict['28 modes']
     # data = sample
 
-    # data11.plot()
+    # data18.plot()
     # plt.show()
     distribution = IntensityDistribution(data.irradiance, 16e-6)
     # distribution.plot()

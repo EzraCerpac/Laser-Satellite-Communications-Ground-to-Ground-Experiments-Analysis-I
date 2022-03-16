@@ -7,8 +7,10 @@ from combined_fit.angular_jitter_fit_beta import estimate_sigma
 
 class DataDF:
     def __init__(self, data_set: int, mode: bool, number: int):
+        assert data_set != 11, "Depreciated, use data18"
         dir = {
-            11: 'data11/'
+            11: 'data11/',
+            18: 'data18/'
         }
         mode_dict = {
             True: {
@@ -45,9 +47,8 @@ class Run:
 
 
 class FileConfig:
-    def __init__(self):
-        self.default_data: DataDF = DataDF(11, False, 1)
-        self.data = self.default_data
+    def __init__(self, default=False):
+        self.data = DataDF(11, False, 1) if default else None
 
     def data_set(self, data_set: int, mode: bool, number: int) -> DataDF:
         self.data = DataDF(data_set, mode, number)

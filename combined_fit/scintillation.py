@@ -17,7 +17,7 @@ def integrate_scint_index(I: np.ndarray, ii: np.ndarray | float):
 
 
 def calc_probs(I: np.ndarray, ii: np.ndarray | float, I_0: float = None) -> np.ndarray:
-    Cn = pd.read_pickle('../Data/DFs/Cn.pickle')
+    Cn = pd.read_pickle('Data/DFs/Cn.pickle')
 
     zz = np.array(Cn['z-distance'])
     C_n2 = np.array(Cn['Cn^2'])

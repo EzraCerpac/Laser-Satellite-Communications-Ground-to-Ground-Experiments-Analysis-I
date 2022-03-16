@@ -2,7 +2,7 @@ from conf.config import FileConfig
 
 
 def main(cfg=FileConfig()):
-    cfg.data_set(11, True, 4).df
+    cfg.data_set(18, True, 4)
     cfg.run().calc_sigma(plot=True)
 
 

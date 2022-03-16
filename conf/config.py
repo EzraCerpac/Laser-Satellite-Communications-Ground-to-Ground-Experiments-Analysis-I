@@ -30,13 +30,13 @@ class DataDF:
 class Run:
     def __init__(self, data: DataDF, *args, **kwargs):
         self.data = data
-        self.results = []
+        self.results = {}
 
     def calc_sigma(self, res: int = 1001, usable: float = 0.2, plot: bool = False):
         result = estimate_sigma(
             np.array(self.data.df), self.data.w_0, res, usable, plot
         )
-        self.results.append(result)
+        self.results['sigma'] = result
         print(result)
         if plot:
             plt.legend()

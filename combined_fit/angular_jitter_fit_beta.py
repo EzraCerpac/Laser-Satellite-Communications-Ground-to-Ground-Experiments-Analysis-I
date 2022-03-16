@@ -1,3 +1,5 @@
+from typing import Tuple
+
 import numpy as np
 from matplotlib import pyplot as plt
 from scipy.optimize import curve_fit
@@ -17,7 +19,7 @@ def calc_beta(I: np.ndarray) -> float:
     return beta.fit(I_n, fa=1, floc=0, fscale=1)[1]
 
 
-def fit_beta_to_hist(freqs: np.ndarray, ii: np.ndarray) -> tuple[float, np.float]:
+def fit_beta_to_hist(freqs: np.ndarray, ii: np.ndarray) -> Tuple[float, np.float]:
     p_opt, _ = curve_fit(beta_func, ii, freqs, (3., 2.))
     return p_opt[0], p_opt[1]  # code for norm_residu: freqs * p_opt[1] ** (p_opt[0] - 1)
 

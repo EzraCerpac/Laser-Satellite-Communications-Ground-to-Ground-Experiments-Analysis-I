@@ -8,6 +8,11 @@ from combined_fit.angular_jitter_fit_beta import estimate_sigma
 class DataDF:
     def __init__(self, data_set: int, mode: bool, number: int):
         assert data_set != 11, "Depreciated, use data18"
+        self.data_set = data_set
+        self.mode = mode
+        self.number = number
+        self.mode_rep = f'{number} modes' if mode else f'off{number}'
+
         dir = {
             11: 'data11/',
             18: 'data18/'
@@ -15,18 +20,19 @@ class DataDF:
         mode_dict = {
             True: {
                 'number': [2, 4, 8, 16, 28],
-                'filename': f'{number} modes.pickle'
             },
             False: {
                 'number': [1, 2, 3, 4, 5],
-                'filename': f'off{number}.pickle'
             }
         }
         rootdir: str = 'Data/DFs/'
-        self.file_path = rootdir + dir[data_set] + mode_dict[mode]['filename'] \
+        self.file_path = rootdir + dir[data_set] + self.mode_rep + '.pickle' \
             if number in mode_dict[mode]['number'] else None
         self.df = pd.read_pickle(self.file_path)
         self.w_0 = data_set * 1e-6  # rad
+
+    def __repr__(self):
+        return f'the {self.data_set}urad data set with {self.number if self.mode else "no"} modes'
 
 
 class Run:
@@ -34,13 +40,16 @@ class Run:
         self.data = data
         self.results = {}
 
-    def calc_sigma(self, res: int = 1001, usable: float = 0.2, plot: bool = False):
+    def calc_sigma(self, res: int = 1001, usable: float = 0.4, plot: bool = False):
         result = estimate_sigma(
             np.array(self.data.df), self.data.w_0, res, usable, plot
         )
         self.results['sigma'] = result
         print(result)
         if plot:
+            plt.title(f'Histograms and Probs of {self.data}')
+            plt.xlabel(r'$I_{norm}$')
+            plt.ylabel(r'$p(I)$')
             plt.legend()
             plt.show()
         return result
@@ -48,9 +57,9 @@ class Run:
 
 class FileConfig:
     def __init__(self, default=False):
-        self.data = DataDF(11, False, 1) if default else None
+        self.data = DataDF() if default else None
 
-    def data_set(self, data_set: int, mode: bool, number: int) -> DataDF:
+    def data_set(self, data_set: int = 18, mode: bool = False, number: int = 2) -> DataDF:
         self.data = DataDF(data_set, mode, number)
         return self.data
 

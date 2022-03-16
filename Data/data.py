@@ -1,5 +1,6 @@
 import pickle
 from pathlib import Path
+from typing import Dict
 
 import pandas as pd
 
@@ -17,7 +18,7 @@ starting_values_18 = {
 }
 
 
-def split_data(data: pd.DataFrame, split_dict: dict[str, float]) -> pd.DataFrame:
+def split_data(data: pd.DataFrame, split_dict: Dict[str, float]) -> pd.DataFrame:
     timestep = .0004034
     length = 30
     df_dict = {}

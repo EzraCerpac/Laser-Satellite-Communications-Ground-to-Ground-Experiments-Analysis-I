@@ -13,12 +13,12 @@ from formula.normalize import norm_I
 
 
 def integrate_scint_index(I: np.ndarray, ii: np.ndarray | float):
-    return np.array([integrate.quad(lambda I_0: calc_probs(I, i, I_0), 0, 1)[0] for i in ii])
-
-
-def calc_probs(I: np.ndarray, ii: np.ndarray | float, I_0: float = None) -> np.ndarray:
     Cn = pd.read_pickle('Data/DFs/Cn.pickle')
+    return np.array([integrate.quad(lambda I_0: calc_probs(I, i, I_0, Cn), 0, 1)[0] for i in ii])
 
+
+def calc_probs(I: np.ndarray, ii: np.ndarray | float, I_0: float = None,
+               Cn: pd.DataFrame = pd.read_pickle('Data/DFs/Cn.pickle')) -> np.ndarray:
     zz = np.array(Cn['z-distance'])
     C_n2 = np.array(Cn['Cn^2'])
 
@@ -27,7 +27,7 @@ def calc_probs(I: np.ndarray, ii: np.ndarray | float, I_0: float = None) -> np.n
     sigma_R2 = rytov_index(k(labda), zz, C_n2)
     sigma_I2 = scintillation_index(sigma_R2)
 
-    I_0 = norm_I(I).mean() if not I_0 else I_0
+    I_0 = norm_I(I).mean() if I_0 is None else I_0
     return probability_dist(ii, I_0, sigma_I2)  # return array
 
 
@@ -44,4 +44,5 @@ if __name__ == '__main__':
     ii = np.linspace(0, 1, 101)[1:]
     p_sc = integrate_scint_index(I, ii)
     plt.plot(ii, p_sc)
+    # plt.ylim(0, 1.2 * max(p_sc))
     plt.show()

@@ -1,5 +1,4 @@
 import math
-
 import numpy as np
 import pandas as pd
 from scipy import integrate
@@ -67,9 +66,9 @@ def Lambda0(z, k, W0):
 def mu2d(hh: np.ndarray, C_n2: np.ndarray) -> float:
     """
     Compute the mu_2d by integration.
-    Not working, because h-hh[0] can give negative numbers (and a cubic root is taken),
-    and because hh isn't in order, so no integration is possible.
-    TODO: discus way to fix this. Maybe take absolute values and order by force?
+    Not working, because hh isn't in order, so no integration is possible.
+    Fix is plugging in zz instead of hh. Probably does not work.
+    TODO: check effect of using zz or rr instead of hh.
     """
     yy = [C_n2[i] * ((h - hh[0]) / (hh[-1] - hh[0])) ** (5 / 3) for i, h in enumerate(hh)]
     integral = integrate.simpson(yy, hh)
@@ -104,7 +103,7 @@ def main():
     hh = np.array(Cn['altitude'])
 
     W0 = 11e-6  # random
-    wavelambda = 1550
+    wavelambda = 1550e-9
 
     io = I0(
         W0,
@@ -114,7 +113,7 @@ def main():
                 Theta0(zz[-1], F0(W0, zz[-1], wavelambda)),
                 Lambda0(zz[-1], k(wavelambda), W0)
             ),
-            mu2d(hh, C_n2),
+            mu2d(zz, C_n2),
             Lambda(
                 Theta0(zz[-1], F0(W0, zz[-1], wavelambda)),
                 Lambda0(zz[-1], k(wavelambda), W0)

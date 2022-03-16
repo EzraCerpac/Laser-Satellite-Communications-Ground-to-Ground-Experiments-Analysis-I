@@ -1,8 +1,7 @@
-from pathlib import Path
-import pandas as pd
 import pickle
+from pathlib import Path
 
-from matplotlib import pyplot as plt
+import pandas as pd
 
 starting_values_18 = {
     'off1': 46.3,
@@ -18,7 +17,7 @@ starting_values_18 = {
 }
 
 
-def split_data(data: pd.DataFrame, split_dict: dict[str, float] = starting_values_11) -> pd.DataFrame:
+def split_data(data: pd.DataFrame, split_dict: dict[str, float]) -> pd.DataFrame:
     timestep = .0004034
     length = 30
     df_dict = {}
@@ -32,19 +31,19 @@ def split_data(data: pd.DataFrame, split_dict: dict[str, float] = starting_value
 if __name__ == '__main__':
     folder = Path('CSV')
 
-    data11 = pd.read_csv(folder / 'data_11.csv', names=['time', 'irradiance'], skiprows=1)
-    data11 = split_data(data11)
-    data22 = pd.read_csv(folder / 'data22urad.csv', names=['index', 'time', 'irradiance'], skiprows=1)
-    Cn_df = pd.read_csv(folder / 'Cnprofile.csv')
+    data18 = pd.read_csv(folder / 'data18urad.csv', names=['time', 'irradiance'], skiprows=1)
+    data18 = split_data(data18, starting_values_18)
+    # data22 = pd.read_csv(folder / 'data22urad.csv', names=['index', 'time', 'irradiance'], skiprows=1)
+    # Cn_df = pd.read_csv(folder / 'Cnprofile.csv')
+
+    # plt.plot(data18.time, data18.irradiance)
+    # plt.show()
 
     pickle_dir = Path('DFs')
-    # for mode in starting_values_11.keys():
-    #     print(mode)
-    #     with open(pickle_dir / f"data11/{mode}.pickle", 'wb') as f:
-    #         pickle.dump(data11[mode], f)
-
-    plt.plot(data22.time, data22.irradiance)
-    plt.show()
+    for mode in starting_values_18.keys():
+        print(mode)
+        with open(pickle_dir / f"data18/{mode}.pickle", 'wb') as f:
+            pickle.dump(data18[mode], f)
 
     # with open(pickle_dir / f"data18.pickle", 'wb') as f:
     #     pickle.dump(Cn_df, f)

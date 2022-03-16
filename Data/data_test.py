@@ -1,8 +1,8 @@
+import os
 from pathlib import Path
 
 import matplotlib.pyplot as plt
 import pandas as pd
-import os
 
 starting_values_11 = {
     'off1': 31.8,
@@ -44,7 +44,7 @@ if __name__ == '__main__':
     folder = Path('CSV')
     # datasets = import_data(folder)
     # print(datasets)
-    # data = split_data(data11, starting_values_11)
+    # data = split_data(data18, starting_values_11)
 
     data18 = pd.read_csv(folder / 'data18urad.csv', names=['sec', 'msec', 'irradiance'], skiprows=1)
     # data18.boxplot()

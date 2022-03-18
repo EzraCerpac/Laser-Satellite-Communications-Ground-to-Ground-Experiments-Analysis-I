@@ -5,16 +5,16 @@ from typing import Dict
 import pandas as pd
 
 starting_values_18 = {
-    'off1': 46.3,
+    'off1': 38.,
     '2 modes': 100.0,
-    'off2': 172.3,
-    '28 modes': 240.3,
-    'off3': 318.1,
-    '4 modes': 382.0,
-    'off4': 472.9,
-    '8 modes': 527.6,
-    'off5': 603.3,
-    '16 modes': 675.2
+    'off2': 154.,
+    '28 modes': 270.,
+    'off3': 341.,
+    '4 modes': 416.,
+    'off4': 487.,
+    '8 modes': 564.,
+    'off5': 636.,
+    '16 modes': 668.
 }
 
 

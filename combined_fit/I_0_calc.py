@@ -101,21 +101,20 @@ def main():
     zz = np.array(Cn['z-distance'])
     C_n2 = np.array(Cn['Cn^2'])
     hh = np.array(Cn['altitude'])
-
+    F0_inf = math.inf
     W0 = 11e-6  # random
     wavelambda = 1550e-9
-
     io = I0(
         W0,
         WLT(
             W(
                 W0,
-                Theta0(zz[-1], F0(W0, zz[-1], wavelambda)),
+                Theta0(zz[-1], F0_inf),
                 Lambda0(zz[-1], k(wavelambda), W0)
             ),
             mu2d(zz, C_n2),
             Lambda(
-                Theta0(zz[-1], F0(W0, zz[-1], wavelambda)),
+                Theta0(zz[-1], F0_inf),
                 Lambda0(zz[-1], k(wavelambda), W0)
             ),
             k(wavelambda),

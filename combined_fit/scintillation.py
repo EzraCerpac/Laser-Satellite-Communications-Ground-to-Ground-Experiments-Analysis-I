@@ -8,9 +8,8 @@ from matplotlib import pyplot as plt
 from scipy import integrate
 
 from combined_fit.indices import rytov_index, scintillation_index
-from formula.jitter import k as function_k
+from formula.jitter import k
 from formula.normalize import norm_I
-from pathlib import PurePath
 
 
 def integrate_scint_index(I: np.ndarray, ii: np.ndarray | float):
@@ -23,14 +22,18 @@ def calc_probs(I: np.ndarray, ii: np.ndarray | float, I_0: float = None) -> np.n
     except:
         Cn = pd.read_pickle('Data/DFs/Cn.pickle')
 
+
+def calc_probs(I: np.ndarray, ii: np.ndarray | float, I_0: float = None,
+               Cn: pd.DataFrame = pd.read_pickle('Data/DFs/Cn.pickle')) -> np.ndarray:
     zz = np.array(Cn['z-distance'])
     C_n2 = np.array(Cn['Cn^2'])
+
     labda = 1550e-9  # Wavelength (unknown)
 
-    sigma_R2 = rytov_index(function_k(labda), zz, C_n2)
+    sigma_R2 = rytov_index(k(labda), zz, C_n2)
     sigma_I2 = scintillation_index(sigma_R2)
 
-    I_0 = norm_I(I).mean() if not I_0 else I_0
+    I_0 = norm_I(I).mean() if I_0 is None else I_0
     return probability_dist(ii, I_0, sigma_I2)  # return array
 
 

@@ -1,7 +1,7 @@
 import pandas as pd
 from matplotlib import pyplot as plt
 
-data = pd.read_csv('CSV/data18urad.csv', skiprows= 1, names = ['time','irradiance'])
+data = pd.read_csv('CSV/data22urad.csv', skiprows= 1, names = ['time','irradiance'])
 
 tl2 = data['time']
 #print(timelist[1902320] - timelist[1902320+1])
@@ -39,12 +39,12 @@ cor = [[83389, 85846, 12234180],[192581, 195036, 12235200], [286857, 291794, 122
 #     elif cor[9][0] <= j <= cor[9][1]:
 #         tl2[j] = tl2[j] + cor[9][2]
 #
-# tl2 = tl2 - tl2[0]
+tl2 = tl2 - tl2[0]
 #
 # print(tl2[0],tl2[len(tl2)-1])
 #
 #
-# data ['time'] = tl2
-#data.to_csv('CSV/data18urad.csv')
+data['time'] = tl2
+#data.to_csv('CSV/data22urad.csv')
 plt.plot(data['time'], data['irradiance'])
 plt.show()

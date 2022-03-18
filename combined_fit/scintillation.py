@@ -24,7 +24,7 @@ def calc_probs(I: np.ndarray, ii: np.ndarray | float, I_0: float = None) -> np.n
 
 
 def calc_probs(I: np.ndarray, ii: np.ndarray | float, I_0: float = None,
-               Cn: pd.DataFrame = pd.read_pickle('Data/DFs/Cn.pickle')) -> np.ndarray:
+    Cn: pd.DataFrame = pd.read_pickle('Data/DFs/Cn.pickle')) -> np.ndarray:
     zz = np.array(Cn['z-distance'])
     C_n2 = np.array(Cn['Cn^2'])
 

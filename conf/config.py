@@ -40,9 +40,9 @@ class Run:
         self.data = data
         self.results = {}
 
-    def calc_sigma(self, res: int = 1001, usable: float = 0.4, plot: bool = False):
+    def calc_sigma(self, res: int = 1001, usable: float = 0.6, plot: bool = False, first_skip: float = 0.075):
         result = estimate_sigma(
-            np.array(self.data.df), self.data.w_0, res, usable, plot
+            np.array(self.data.df), self.data.w_0, res, usable, plot, first_skip
         )
         self.results['sigma'] = result
         print(result)

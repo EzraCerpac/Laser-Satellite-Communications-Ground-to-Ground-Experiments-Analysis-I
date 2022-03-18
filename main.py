@@ -2,12 +2,12 @@ import pickle
 import warnings
 
 from combined_fit.Plotting.plots import sigmaplot
-from conf.config import FileConfig
+from conf.config import Config
 
 warnings.filterwarnings("ignore", category=RuntimeWarning)
 
 
-def main(cfg=FileConfig()):
+def main(cfg=Config()):
     # cfg.set_data(18, True, 8)
     # cfg.run().calc_sigma(plot=True)
     # cfg.run_batch([18]).run('sigma')
@@ -15,7 +15,7 @@ def main(cfg=FileConfig()):
     results = open_results()
     sigmaplot(results)
 
-def store_results(cfg=FileConfig()):
+def store_results(cfg=Config()):
     with open('Results/sigmas.pickle', 'wb') as f:
         pickle.dump(cfg.run_batch([18]).run('sigma'), f)
 

@@ -33,7 +33,7 @@ def calc_probs(I: np.ndarray, ii: np.ndarray | float, I_0: float = None,
     sigma_R2 = rytov_index(k(labda), zz, C_n2)
     sigma_I2 = scintillation_index(sigma_R2)
 
-    I_0 = norm_I(I).mean() if I_0 is None else I_0
+    I_0 = norm_I(I, True).mean() if I_0 is None else I_0
     return probability_dist(ii, I_0, sigma_I2)  # return array
 
 

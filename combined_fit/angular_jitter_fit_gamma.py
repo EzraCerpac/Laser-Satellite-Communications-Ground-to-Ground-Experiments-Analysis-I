@@ -20,7 +20,7 @@ def betafun(Rytov=math.sqrt(rytov_index(k(wavelambda), np.array(Cn['z-distance']
 def gamma_gamma(I: np.ndarray, alpha=alphafun(), beta=betafun(),mai=main()):
     gamma = np.empty(0)
     for i in range(I.shape[0]):
-        gamma = np.append(gamma,((2 * (alpha * beta) ** ((alpha + beta) / 2 - 1)) / (special.gamma(alpha) * special.gamma(beta) * I[i])) * ((I[i]) ** ((alpha + beta) / 2)) * special.kv(alpha - beta, 2 * math.sqrt(alpha * beta * I[i])))
+        gamma = np.append(gamma,((2 * (alpha * beta) ** ((alpha + beta) / 2 )) / (special.gamma(alpha) * special.gamma(beta) * I[i])) * ((I[i]) ** ((alpha + beta) / 2)) * special.kv(alpha - beta, 2 * math.sqrt(alpha * beta * I[i])))
     return(gamma)
 
 if __name__ == '__main__':
@@ -28,5 +28,6 @@ if __name__ == '__main__':
    gamma_pdf = gamma_gamma(norm_I(I, True))
    print(gamma_pdf)
    plt.plot(norm_I(I, True),gamma_pdf)
+   plt.xlim((0,0.05))
    plt.show()
 

@@ -1,6 +1,6 @@
 """
 Never commit anything like this! Only commit working stuff
-Also, put everthing in main function, then use if __name__ == "__main__": main()
+Also, put everything in main function, then use if __name__ == "__main__": main()
 TODO: make working, then commit
 """
 

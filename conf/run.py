@@ -43,7 +43,7 @@ class BatchRun:
                     function_dict = {
                         'sigma': run.calc_sigma
                     }
-                    do = [function_dict[function]() for function in functions]
+                    [function_dict[function]() for function in functions]
                     number_results[data.number] = run.results
                 mode_results[data_mode[0].mode] = number_results
             self.results[data_set[0][0].data_set] = mode_results

@@ -17,6 +17,7 @@ def noise_floor(path: Path) -> float:
         return minum * 1.1
 
 
+
 # desnt = Path('../Data/DFs/data11/8 modes.pickle')
 
 # nf = noise_floor(desnt)

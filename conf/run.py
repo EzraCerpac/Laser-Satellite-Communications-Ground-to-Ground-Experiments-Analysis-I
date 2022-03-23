@@ -30,7 +30,7 @@ class BatchRun:
                       for mode in Data.mode_dict.keys()] for data_set in data_sets]
         self.results: dict[int, dict[bool, dict[int, dict[str, float]]]] = {}
 
-    def run(self, *functions: str):
+    def run(self, *functions: str, **kwargs):
         print('Running Programs: ' + ' '.join([function for function in functions]))
         for i, data_set in enumerate(self.data):
             print(f'Running experiment {i + 1} of {len(self.data)}')
@@ -38,13 +38,17 @@ class BatchRun:
             for j, data_mode in enumerate(data_set):
                 number_results = {}
                 for k, data in enumerate(data_mode):
-                    print(f'\tRunning dataset {(j) * len(data_mode) + (k + 1)} of {len(data_mode) * len(data_set)}')
+                    print(f'\tRunning dataset {j * len(data_mode) + (k + 1)} of {len(data_mode) * len(data_set)}')
                     run = Run(data)
                     function_dict = {
                         'sigma': run.calc_sigma
                     }
-                    [function_dict[function]() for function in functions]
-                    number_results[data.number] = run.results
+                    try:
+                        [function_dict[function](**kwargs) for function in functions]
+                        number_results[data.number] = run.results
+                    except RuntimeError:
+                        print(f'RuntimeError in dataset {j * len(data_mode) + (k + 1)}')
+                        plt.clf()
                 mode_results[data_mode[0].mode] = number_results
             self.results[data_set[0][0].data_set] = mode_results
         return self.results

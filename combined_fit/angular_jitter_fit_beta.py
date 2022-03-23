@@ -10,7 +10,7 @@ from formula.jitter import calc_sigma
 from formula.normalize import norm_I
 
 
-def beta_func(I: np.ndarray, beta: float, scale: float) -> float:
+def beta_func(I: np.ndarray, beta: float, scale: float = 1) -> float:
     return beta * (I / scale) ** (beta - 1)
 
 
@@ -19,7 +19,12 @@ def calc_beta(I: np.ndarray) -> float:
     return beta.fit(I_n, fa=1, floc=0, fscale=1)[1]
 
 
-def fit_beta_to_hist(freqs: np.ndarray, ii: np.ndarray, ignore_first: int = 5, recal_first_skip: bool = True) -> Tuple[float, np.float]:
+def fit_beta_to_hist(
+        freqs: np.ndarray,
+        ii: np.ndarray,
+        ignore_first: int = 5,
+        recal_first_skip: bool = True  # TODO: Not used
+) -> Tuple[float, np.float]:
     p_opt, _ = curve_fit(beta_func, ii[ignore_first:], freqs[ignore_first:], (3., 2.))  # TODO: fails in dataset off2
     return p_opt[0], p_opt[1]  # code for norm_residu: freqs * p_opt[1] ** (p_opt[0] - 1)
 

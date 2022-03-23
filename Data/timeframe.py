@@ -2,7 +2,7 @@ import numpy as np
 import pandas as pd
 from matplotlib import pyplot as plt
 
-file = 'CSV/data18urad.csv'
+file = 'CSV/data22urad.csv'
 data = pd.read_csv(file, skiprows=1, names = ['time','irradiance'])
 time = np.array(data['time'])
 psi = data['irradiance']
@@ -42,21 +42,31 @@ while j < len(slotlst):
 # print(heightlst)
 # print(slots)
 
-plt.plot(np.arange(len(heightlst)),heightlst)
+plt.plot(np.arange(len(heightlst)),heightlst, linewidth = 0.5)
+# plt.vlines(10/dt,1e11,2e11,colors = 'red')
+# plt.vlines(56/dt,1e11,2e11,colors = 'red')
+# plt.vlines(98/dt,1e11,2e11,colors = 'red')
+# plt.vlines(140/dt,1e11,2e11,colors = 'red')
+# plt.vlines(180/dt,1e11,2e11,colors = 'red')
+# plt.vlines(220/dt,1e11,2e11,colors = 'red')
+# plt.vlines(260/dt,1e11,2e11,colors = 'red')
+# plt.vlines(300/dt,1e11,2e11,colors = 'red')
+# plt.vlines(340/dt,1e11,2e11,colors = 'red')
+
 plt.show()
 
-beginings = {
-    'off 1' : heightlst.index(max(heightlst[0:100])) * dt,
-    '2 modes' : heightlst.index(min(heightlst[50:150])) * dt,
-    'off 2' : heightlst.index(max(heightlst[100:200])) * dt,
-    '28 modes' : heightlst.index(min(heightlst[200:300])) * dt,
-    'off 3' : heightlst.index(max(heightlst[250:400])) * dt,
-    '4 modes' : heightlst.index(min(heightlst[350:450])) * dt,
-    'off 4' : heightlst.index(max(heightlst[400:520])) * dt,
-    '8 modes': heightlst.index(min(heightlst[500:600])) * dt,
-    'off 5' : heightlst.index(max(heightlst[550:700])) * dt,
-    '16 modes' : heightlst.index(min(heightlst[650:700])) * dt
-
-}
-
-print(beginings)
+# beginings = {
+#     'off 1' : heightlst.index(max(heightlst[0:50])) * dt,
+#     '2 modes' : heightlst.index(min(heightlst[40:70])) * dt,
+#     'off 2' : heightlst.index(max(heightlst[70:100])) * dt,
+#     '28 modes' : heightlst.index(min(heightlst[80:120])) * dt,
+#     'off 3' : heightlst.index(max(heightlst[120:200])) * dt,
+#     '4 modes' : heightlst.index(min(heightlst[200:250])) * dt,
+#     'off 4' : heightlst.index(max(heightlst[250:300])) * dt,
+#     '8 modes': heightlst.index(min(heightlst[300:360])) * dt,
+#     'off 5' : heightlst.index(max(heightlst[350:370])) * dt,
+#     '16 modes' : heightlst.index(min(heightlst[350:400])) * dt
+#
+# }
+#
+# print(beginings)

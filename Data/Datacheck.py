@@ -1,7 +1,7 @@
 import pandas as pd
 from matplotlib import pyplot as plt
 
-data = pd.read_csv('CSV/data22urad.csv', skiprows= 1, names = ['time','irradiance'])
+data = pd.read_csv('CSV/data18urad.csv', skiprows= 1, names = ['time','irradiance'])
 
 tl2 = data['time']
 #print(timelist[1902320] - timelist[1902320+1])

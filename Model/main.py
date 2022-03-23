@@ -31,7 +31,7 @@ class CombinedFit(rv_continuous):
             ))), 0, 1)[0]
 
 
-beta = 3
+beta = 40
 labda = 1550e-9
 
 
@@ -54,7 +54,7 @@ def main_colors():
 
 
 def main():
-    ii = np.linspace(1e-10, 4, 1000)
+    ii = np.linspace(1e-10, 1, 1000)
     ff = [quad(lambda I: beta_func(I, beta) * probability_dist(
         i, I, scintillation_index(rytov_index(
             k(labda), zz, C_n2
@@ -65,21 +65,29 @@ def main():
     print(np.sum(ff) * (ii[1] - ii[0]))
 
 
-def combined_dist(i: float, beta: float, scale: float = 1):
-    return quad(lambda I: beta_func(I, beta) * probability_dist(
+def combined_dist(X: list, beta: float, scale: float = 1):
+    return [quad(lambda I: beta_func(I, beta) * probability_dist(
         i, I, scintillation_index(rytov_index(
             k(labda), zz, C_n2
-        ))), 0, 1)[0] / scale
+        ))), 0, 1)[0] / scale for i in X]
+
+
+def random_dist_test(X: list, beta: float, alfa: float, sigma: float, scale: float = 1):
+    return [quad(lambda a: beta * i ** 3 * a**(2) + alfa * i ** 2 * np.log(a) - sigma * 10 * i + beta, 0, 1)[0] / scale for i in X]
 
 
 def main2(irradiance):
+    yy = norm_I_hist(irradiance, bins=15)
+    xx = np.linspace(1e-10, 1, len(yy))
+    beta, scale = curve_fit(combined_dist, xx, yy, p0=[20472.192184983873, 0.5], method="lm")[0]
+    print(beta, scale)
+    # beta, scale = p_opt
     yy = norm_I_hist(irradiance, bins=100)
-    xx = np.linspace(0, 1, len(yy))
-    p_opt, p_error = curve_fit(CombinedFit().pdf, xx, yy, p0=[2])
-    beta, scale = p_opt
-    plt.plot(xx, [CombinedFit().pdf(x, beta) for x in xx])
+    xx = np.linspace(1e-10, 1, len(yy))
+    plt.plot(xx, combined_dist(xx, beta, scale), label="fitted beta")
+
     plt.show()
 
 
 if __name__ == '__main__':
-    main2()
+    main()

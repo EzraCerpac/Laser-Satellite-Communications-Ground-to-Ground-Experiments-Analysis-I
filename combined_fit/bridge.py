@@ -12,7 +12,7 @@ def residu_angular_jitter(I: np.ndarray, res: int = 101, plot: bool = False) -> 
     # TODO: choose between the 2 versions below
     # plt.plot(ii, p_sc := integrate_scint_index(I, ii), label='integrated scintillation')
     Cn = pd.read_pickle('Data/DFs/Cn.pickle')
-    plt.plot(ii, p_sc := calc_probs(I, ii, Cn=Cn), label='scintillation')
+    plt.plot(ii, p_sc := calc_probs(I, ii), label='scintillation')
     plt.ylim(0, 1.2 * np.max(p_sc))
 
     yy = norm_I_hist(I, density=True, bins=res + 1)[1:]

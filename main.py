@@ -2,6 +2,8 @@ import pickle
 import warnings
 
 from combined_fit.Plotting.plots import sigmaplot
+import numpy as np
+
 from conf.config import Config
 
 warnings.filterwarnings("ignore", category=RuntimeWarning)
@@ -22,6 +24,7 @@ def store_results(cfg=Config()):
 def open_results(file: str = 'Results/sigmas.pickle') -> dict:
     with open(file, 'rb') as f:
         return pickle.load(f)
+    # print(cfg.run_batch([18]).run('sigma', plot=True))
 
 if __name__ == "__main__":
     main()

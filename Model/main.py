@@ -3,10 +3,10 @@ import pandas as pd
 from matplotlib import pyplot as plt
 from scipy.integrate import quad
 from scipy.optimize import curve_fit
-from scipy.stats import rv_continuous
 
 from combined_fit.angular_jitter_fit_beta import beta_func
-from combined_fit.indices import scintillation_index, rytov_index, rytov_index_const
+from combined_fit.angular_jitter_fit_gamma import gamma_gamma
+from combined_fit.indices import scintillation_index, rytov_index_const
 from combined_fit.scintillation import probability_dist
 from formula.jitter import k, calc_sigma
 from info_plots.norm_I_hist import norm_I_hist
@@ -15,54 +15,20 @@ Cn = pd.read_pickle('Data/DFs/Cn.pickle')
 zz = np.array(Cn['z-distance'])
 C_n2 = np.array(Cn['Cn^2'])
 
-
-class CombinedFit(rv_continuous):
-    # def __init__(self, **kwargs):
-    #     super(CombinedFit, self).__init__(*kwargs)
-
-    def _pdf(self, X, beta):
-        return [quad(lambda I: beta_func(I, beta[0]) * probability_dist(
-            x, I, scintillation_index(rytov_index(
-                k(labda), zz, C_n2
-            ))), 0, 1)[0] for x in X] if hasattr(X, '__iter__') \
-            else quad(lambda I: beta_func(I, beta) * probability_dist(
-            X, I, scintillation_index(rytov_index(
-                k(labda), zz, C_n2
-            ))), 0, 1)[0]
-
-
-beta = 40
 labda = 1550e-9
 
 
-def main_colors():
-    ii = np.linspace(1e-10, 4, 1000)
-    II = np.linspace(0, 1, 1000)
-    ff = np.zeros(len(ii))
-    for i in II:
-        f = beta_func(i, beta) * probability_dist(
-            ii, i, scintillation_index(rytov_index(
-                k(labda), zz, C_n2
-            )))
-        plt.plot(ii, f)
-        ff += f
-    ff /= len(II)
-    plt.plot(ii, ff, color='black', linewidth=4)
-    plt.show()
-
-    print(np.sum(ff) * (ii[1] - ii[0]))
-
-
-def main():
-    ii = np.linspace(1e-10, 1, 1000)
-    ff = [quad(lambda I: beta_func(I, beta) * probability_dist(
-        i, I, scintillation_index(rytov_index(
-            k(labda), zz, C_n2
-        ))), 0, 1)[0] for i in ii]
-    plt.plot(ii, ff, color='black', linewidth=4)
-    plt.show()
-
-    print(np.sum(ff) * (ii[1] - ii[0]))
+def estimate_sigma_better(irradiance: np.ndarray, w_0: float, use_gamma: bool = False, res: int = 100, plot=False):
+    scint_func = combined_dist_gamma if use_gamma else combined_dist
+    yy = norm_I_hist(irradiance, bins=res, plot=False)
+    xx = np.linspace(1e-10, 1, len(yy))
+    (beta, scale), p_cov = curve_fit(scint_func, xx, yy, p0=[10, 0.7],
+                                     bounds=((1, 0), (20, 1)))
+    if plot:
+        xx = np.linspace(1e-15, 1, 1001)
+        label = 'gamma fitment' if use_gamma else 'lognormal fitment'
+        plt.plot(xx, scint_func(xx, beta, scale), label=label)
+    return calc_sigma(beta, w_0), beta, scale, np.sqrt(p_cov[0, 0])
 
 
 def combined_dist(X: np.ndarray, beta: float, scale: float = 1):
@@ -72,21 +38,18 @@ def combined_dist(X: np.ndarray, beta: float, scale: float = 1):
         ))), 0, 1)[0] / scale for i in X]
 
 
+def combined_dist_gamma(X: np.ndarray, beta: float, scale: float = 1):
+    return [quad(lambda I: beta_func(I, beta) * gamma_gamma(i, I), 0, 1)[0] / scale for i in X]
+
+
 def random_dist_test(X: list, beta: float, alfa: float, sigma: float, scale: float = 1):
     return [quad(lambda a: beta * i ** 3 * a ** 2 + alfa * i ** 2 * np.log(a) - sigma * 10 * i + beta, 0, 1)[0] / scale
             for i in X]
 
 
-def estimate_sigma_better(irradiance, w_0, res=100, plot=False):
-    yy = norm_I_hist(irradiance, bins=res)
-    xx = np.linspace(1e-10, 1, len(yy))
-    (beta, scale), p_cov = curve_fit(combined_dist, xx, yy, p0=[2, 0.7],
-                                     bounds=((1, 0), (20, 1)))
-    if plot:
-        xx = np.linspace(1e-10, 1, 1001)
-        plt.plot(xx, combined_dist(xx, beta, scale), label="fitted beta")
-    return calc_sigma(beta, w_0), beta, scale, np.sqrt(p_cov[0, 0])
-
-
-if __name__ == '__main__':
-    main()
+def test():
+    scale = 1
+    for b in range(2, 10, 2):
+        xx = np.linspace(1e-15, 1, 1001)
+        plt.plot(xx, combined_dist_gamma(xx, b, scale), label="fitted beta")
+    plt.show()

@@ -1,6 +1,7 @@
 import numpy as np
 from matplotlib import pyplot as plt
 
+from Model.main import estimate_sigma_better
 from combined_fit.angular_jitter_fit_beta import estimate_sigma
 from conf.data import Data
 
@@ -14,7 +15,24 @@ class Run:
         result = estimate_sigma(
             np.array(self.data.df), self.data.w_0, res, usable, plot
         )
-        self.results['sigma'] = result
+        self.results['sigma'] = result[0]
+        self.results['beta'] = result[1]
+        self.results['standard div'] = result[-1]
+        if plot:
+            plt.title(f'Histograms and Probs of {self.data}')
+            plt.xlabel(r'$I_{norm}$')
+            plt.ylabel(r'$p(I)$')
+            plt.legend()
+            plt.show()
+        return self.results
+
+    def calc_sigma_better(self, res: int = 101, plot: bool = False):
+        result = estimate_sigma_better(
+            np.array(self.data.df), self.data.w_0, res, plot
+        )
+        self.results['sigma better'] = result[0]
+        self.results['beta better'] = result[1]
+        self.results['standard div better'] = result[-1]
         if plot:
             plt.title(f'Histograms and Probs of {self.data}')
             plt.xlabel(r'$I_{norm}$')
@@ -41,7 +59,8 @@ class BatchRun:
                     print(f'\tRunning dataset {j * len(data_mode) + (k + 1)} of {len(data_mode) * len(data_set)}')
                     run = Run(data)
                     function_dict = {
-                        'sigma': run.calc_sigma
+                        'sigma': run.calc_sigma,
+                        'sigma better': run.calc_sigma_better
                     }
                     try:
                         [function_dict[function](**kwargs) for function in functions]

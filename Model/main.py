@@ -6,9 +6,9 @@ from scipy.optimize import curve_fit
 from scipy.stats import rv_continuous
 
 from combined_fit.angular_jitter_fit_beta import beta_func
-from combined_fit.indices import scintillation_index, rytov_index
+from combined_fit.indices import scintillation_index, rytov_index, rytov_index_const
 from combined_fit.scintillation import probability_dist
-from formula.jitter import k
+from formula.jitter import k, calc_sigma
 from info_plots.norm_I_hist import norm_I_hist
 
 Cn = pd.read_pickle('Data/DFs/Cn.pickle')
@@ -31,7 +31,7 @@ class CombinedFit(rv_continuous):
             ))), 0, 1)[0]
 
 
-beta = 3
+beta = 40
 labda = 1550e-9
 
 
@@ -54,7 +54,7 @@ def main_colors():
 
 
 def main():
-    ii = np.linspace(1e-10, 4, 1000)
+    ii = np.linspace(1e-10, 1, 1000)
     ff = [quad(lambda I: beta_func(I, beta) * probability_dist(
         i, I, scintillation_index(rytov_index(
             k(labda), zz, C_n2
@@ -65,21 +65,28 @@ def main():
     print(np.sum(ff) * (ii[1] - ii[0]))
 
 
-def combined_dist(i: float, beta: float, scale: float = 1):
-    return quad(lambda I: beta_func(I, beta) * probability_dist(
-        i, I, scintillation_index(rytov_index(
-            k(labda), zz, C_n2
-        ))), 0, 1)[0] / scale
+def combined_dist(X: np.ndarray, beta: float, scale: float = 1):
+    return [quad(lambda I: beta_func(I, beta) * probability_dist(
+        i, I, scintillation_index(rytov_index_const(
+            k(labda), zz[-1], C_n2.mean()
+        ))), 0, 1)[0] / scale for i in X]
 
 
-def main2(irradiance):
-    yy = norm_I_hist(irradiance, bins=100)
-    xx = np.linspace(0, 1, len(yy))
-    p_opt, p_error = curve_fit(CombinedFit().pdf, xx, yy, p0=[2])
-    beta, scale = p_opt
-    plt.plot(xx, [CombinedFit().pdf(x, beta) for x in xx])
-    plt.show()
+def random_dist_test(X: list, beta: float, alfa: float, sigma: float, scale: float = 1):
+    return [quad(lambda a: beta * i ** 3 * a ** 2 + alfa * i ** 2 * np.log(a) - sigma * 10 * i + beta, 0, 1)[0] / scale
+            for i in X]
+
+
+def estimate_sigma_better(irradiance, w_0, res=100, plot=False):
+    yy = norm_I_hist(irradiance, bins=res)
+    xx = np.linspace(1e-10, 1, len(yy))
+    (beta, scale), p_cov = curve_fit(combined_dist, xx, yy, p0=[2, 0.7],
+                                     bounds=((1, 0), (20, 1)))
+    if plot:
+        xx = np.linspace(1e-10, 1, 1001)
+        plt.plot(xx, combined_dist(xx, beta, scale), label="fitted beta")
+    return calc_sigma(beta, w_0), beta, scale, np.sqrt(p_cov[0, 0])
 
 
 if __name__ == '__main__':
-    main2()
+    main()

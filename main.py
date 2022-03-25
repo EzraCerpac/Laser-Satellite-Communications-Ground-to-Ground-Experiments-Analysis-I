@@ -14,8 +14,12 @@ def main(cfg=Config()):
     # cfg.run().calc_sigma(plot=True)
     # cfg.run_batch([18]).run('sigma')
 
-    results = open_results()
-    sigmaplot(results)
+    print(cfg.run_batch([18]).run('sigma', 'sigma better', plot=False))
+    # estimate_sigma_better(np.array(cfg.set_data(18, False, 3).df), 18, plot=True)
+    # plt.show()
+
+    # results = open_results()
+    # sigmaplot(results)
 
 def store_results(cfg=Config()):
     with open('Results/sigmas.pickle', 'wb') as f:
@@ -25,6 +29,7 @@ def open_results(file: str = 'Results/sigmas.pickle') -> dict:
     with open(file, 'rb') as f:
         return pickle.load(f)
     # print(cfg.run_batch([18]).run('sigma', plot=True))
+
 
 if __name__ == "__main__":
     main()

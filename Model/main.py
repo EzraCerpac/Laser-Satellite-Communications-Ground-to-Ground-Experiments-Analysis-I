@@ -8,7 +8,7 @@ from scipy.stats import rv_continuous
 from combined_fit.angular_jitter_fit_beta import beta_func
 from combined_fit.indices import scintillation_index, rytov_index, rytov_index_const
 from combined_fit.scintillation import probability_dist
-from formula.jitter import k
+from formula.jitter import k, calc_sigma
 from info_plots.norm_I_hist import norm_I_hist
 
 Cn = pd.read_pickle('Data/DFs/Cn.pickle')
@@ -77,17 +77,15 @@ def random_dist_test(X: list, beta: float, alfa: float, sigma: float, scale: flo
             for i in X]
 
 
-def main2(irradiance):
-    yy = norm_I_hist(irradiance, bins=100)
+def estimate_sigma_better(irradiance, w_0, res=100, plot=False):
+    yy = norm_I_hist(irradiance, bins=res)
     xx = np.linspace(1e-10, 1, len(yy))
-    beta, scale = curve_fit(combined_dist, xx, yy, p0=[2, 0.7],
-                            bounds=((1, 0), (20, 1)))[0]
-    print(beta, scale)
-    # beta, scale = p_opt
-    xx = np.linspace(1e-10, 1, 1001)
-    plt.plot(xx, combined_dist(xx, beta, scale), label="fitted beta")
-    # plt.xlim(0, 0.1)
-    plt.show()
+    (beta, scale), p_cov = curve_fit(combined_dist, xx, yy, p0=[2, 0.7],
+                                     bounds=((1, 0), (20, 1)))
+    if plot:
+        xx = np.linspace(1e-10, 1, 1001)
+        plt.plot(xx, combined_dist(xx, beta, scale), label="fitted beta")
+    return calc_sigma(beta, w_0), beta, scale, np.sqrt(p_cov[0, 0])
 
 
 if __name__ == '__main__':

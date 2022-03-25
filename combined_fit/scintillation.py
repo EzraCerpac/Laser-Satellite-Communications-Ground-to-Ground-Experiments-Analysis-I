@@ -16,13 +16,6 @@ def integrate_scint_index(I: np.ndarray, ii: np.ndarray | float):
     return np.array([integrate.quad(lambda I_0: calc_probs(I, i, I_0), 0, 1)[0] for i in ii])
 
 
-# def calc_probs(I: np.ndarray, ii: np.ndarray | float, I_0: float = None) -> np.ndarray:
-#     try:
-#         Cn = pd.read_pickle('../Data/DFs/Cn.pickle')
-#     except:
-#         Cn = pd.read_pickle('Data/DFs/Cn.pickle')
-
-
 def calc_probs(I: np.ndarray, ii: np.ndarray | float, I_0: float = None) -> np.ndarray:
     try:
         Cn = pd.read_pickle('../Data/DFs/Cn.pickle')

@@ -12,7 +12,7 @@ def main(cfg=Config()):
     # cfg.set_data(18, True, 8)
     # cfg.run().calc_sigma(plot=True)
     # print(cfg.run_batch([18]).run('sigma', plot=True))
-    main2(np.array(cfg.set_data(18, False, 2).df))
+    main2(np.array(cfg.set_data(18, False, 4).df))
 
 if __name__ == "__main__":
     main()

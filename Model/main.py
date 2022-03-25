@@ -6,7 +6,7 @@ from scipy.optimize import curve_fit
 from scipy.stats import rv_continuous
 
 from combined_fit.angular_jitter_fit_beta import beta_func
-from combined_fit.indices import scintillation_index, rytov_index
+from combined_fit.indices import scintillation_index, rytov_index, rytov_index_const
 from combined_fit.scintillation import probability_dist
 from formula.jitter import k
 from info_plots.norm_I_hist import norm_I_hist
@@ -65,27 +65,28 @@ def main():
     print(np.sum(ff) * (ii[1] - ii[0]))
 
 
-def combined_dist(X: list, beta: float, scale: float = 1):
+def combined_dist(X: np.ndarray, beta: float, scale: float = 1):
     return [quad(lambda I: beta_func(I, beta) * probability_dist(
-        i, I, scintillation_index(rytov_index(
-            k(labda), zz, C_n2
+        i, I, scintillation_index(rytov_index_const(
+            k(labda), zz[-1], C_n2.mean()
         ))), 0, 1)[0] / scale for i in X]
 
 
 def random_dist_test(X: list, beta: float, alfa: float, sigma: float, scale: float = 1):
-    return [quad(lambda a: beta * i ** 3 * a**(2) + alfa * i ** 2 * np.log(a) - sigma * 10 * i + beta, 0, 1)[0] / scale for i in X]
+    return [quad(lambda a: beta * i ** 3 * a ** 2 + alfa * i ** 2 * np.log(a) - sigma * 10 * i + beta, 0, 1)[0] / scale
+            for i in X]
 
 
 def main2(irradiance):
-    yy = norm_I_hist(irradiance, bins=15)
-    xx = np.linspace(1e-10, 1, len(yy))
-    beta, scale = curve_fit(combined_dist, xx, yy, p0=[20472.192184983873, 0.5], method="lm")[0]
-    print(beta, scale)
-    # beta, scale = p_opt
     yy = norm_I_hist(irradiance, bins=100)
     xx = np.linspace(1e-10, 1, len(yy))
+    beta, scale = curve_fit(combined_dist, xx, yy, p0=[2, 0.7],
+                            bounds=((1, 0), (20, 1)))[0]
+    print(beta, scale)
+    # beta, scale = p_opt
+    xx = np.linspace(1e-10, 1, 1001)
     plt.plot(xx, combined_dist(xx, beta, scale), label="fitted beta")
-
+    # plt.xlim(0, 0.1)
     plt.show()
 
 

@@ -3,7 +3,8 @@ from typing import Dict
 import numpy as np
 from matplotlib import pyplot as plt
 
-from Model.main import estimate_sigma_better
+from Model.main import estimate_sigma
+from Model.main_with_alpha import estimate_sigma as estimate_sigma_with_alpha
 from conf.data import Data
 from info_plots.norm_I_hist import norm_I_hist
 
@@ -44,22 +45,33 @@ class Run:
     #     self.results['beta'] = result[1]
     #     self.results['standard div'] = result[-1]
     #     return self.results
-
     def calc_sigma(self, res: int = 101, plot: bool = False, **unused):
-        result = estimate_sigma_better(
-            np.array(self.data.df), self.data.w_0, False, res, plot
-        )
+        result = estimate_sigma(np.array(self.data.df), self.data.w_0, False, res, plot)
         self.results['sigma'] = result[0]
         self.results['beta'] = result[1]
         self.results['standard div'] = result[-1]
         return self.results
 
     def calc_sigma_gamma(self, res: int = 101, plot: bool = False, **unused):
-        result = estimate_sigma_better(
-            np.array(self.data.df), self.data.w_0, True, res, plot
-        )
+        result = estimate_sigma(np.array(self.data.df), self.data.w_0, True, res, plot)
         self.results['sigma gamma'] = result[0]
         self.results['beta gamma'] = result[1]
+        self.results['standard div gamma'] = result[-1]
+        return self.results
+
+    def calc_sigma_with_alpha(self, res: int = 101, plot: bool = False, **unused):
+        result = estimate_sigma_with_alpha(np.array(self.data.df), self.data.w_0, False, res, plot)
+        self.results['sigma'] = result[0]
+        self.results['alpha'] = result[1]
+        self.results['beta'] = result[2]
+        self.results['standard div'] = result[-1]
+        return self.results
+
+    def calc_sigma_gamma_with_alpha(self, res: int = 101, plot: bool = False, **unused):
+        result = estimate_sigma_with_alpha(np.array(self.data.df), self.data.w_0, True, res, plot)
+        self.results['sigma gamma'] = result[0]
+        self.results['alpha'] = result[1]
+        self.results['beta'] = result[2]
         self.results['standard div gamma'] = result[-1]
         return self.results
 
@@ -83,6 +95,8 @@ class BatchRun:
                     function_dict = {
                         'sigma': run.calc_sigma,
                         'sigma gamma': run.calc_sigma_gamma,
+                        'sigma_with_alpha': run.calc_sigma_with_alpha,
+                        'sigma gamma_with_alpha': run.calc_sigma_gamma_with_alpha,
                     }
                     try:
                         [function_dict[function](**kwargs) for function in functions]

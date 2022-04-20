@@ -7,14 +7,12 @@ warnings.filterwarnings("ignore", category=RuntimeWarning)
 
 
 def main(cfg=Config()):
-    # plt.plot(np.array(cfg.set_data(18, True, 4).df))
-    # plt.show()
-    # cfg.run().calc_sigma_gamma(plot=True)
+    # estimate_sigma(np.array(cfg.set_data(18, True, 4).df), 18, False, 10, plot=True)
 
-    # results = cfg.run_batch(18, 22).run('sigma', 'sigma gamma', plot=False, save=False)
+    results = cfg.run_batch(18).run('sigma', 'sigma gamma', plot=True, save=False)
     # store_results(results)
 
-    results = open_results()
+    # results = open_results()
 
 
 def store_results(results: dict, file: str = 'Results/sigmas.pickle'):

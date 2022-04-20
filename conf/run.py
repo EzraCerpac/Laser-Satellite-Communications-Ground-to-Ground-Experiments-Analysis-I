@@ -4,7 +4,6 @@ import numpy as np
 from matplotlib import pyplot as plt
 
 from Model.main import estimate_sigma_better
-from combined_fit.angular_jitter_fit_beta import estimate_sigma
 from conf.data import Data
 from info_plots.norm_I_hist import norm_I_hist
 
@@ -34,16 +33,19 @@ class Run:
         else:
             plt.show()
 
-    def calc_sigma(self, res: int = 1001, usable: float = 0.4, plot: bool = False):
-        result = estimate_sigma(
-            np.array(self.data.df), self.data.w_0, res, usable, False
-        )
-        self.results['sigma'] = result[0]
-        self.results['beta'] = result[1]
-        self.results['standard div'] = result[-1]
-        return self.results
+    # def calc_sigma(self, res: int = 1001, usable: float = 0.4, plot: bool = False):
+    #     """
+    #     Old method for sigma estimation
+    #     """
+    #     result = estimate_sigma(
+    #         np.array(self.data.df), self.data.w_0, res, usable, False
+    #     )
+    #     self.results['sigma'] = result[0]
+    #     self.results['beta'] = result[1]
+    #     self.results['standard div'] = result[-1]
+    #     return self.results
 
-    def calc_sigma_better(self, res: int = 101, plot: bool = False):
+    def calc_sigma(self, res: int = 101, plot: bool = False):
         result = estimate_sigma_better(
             np.array(self.data.df), self.data.w_0, False, res, plot
         )
@@ -80,13 +82,12 @@ class BatchRun:
                     run = Run(data)
                     function_dict = {
                         'sigma': run.calc_sigma,
-                        'sigma better': run.calc_sigma_better,
-                        'sigma gamma': run.calc_sigma_gamma
+                        'sigma gamma': run.calc_sigma_gamma,
                     }
                     try:
                         [function_dict[function](**kwargs) for function in functions]
                         if 'plot' in kwargs and kwargs['plot']:
-                            run.plot(**kwargs)
+                            run.plot()
                         number_results[data.number] = run.results
                     except RuntimeError:
                         print(f'RuntimeError in dataset {j * len(data_mode) + (k + 1)}')

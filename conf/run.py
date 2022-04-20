@@ -45,7 +45,7 @@ class Run:
     #     self.results['standard div'] = result[-1]
     #     return self.results
 
-    def calc_sigma(self, res: int = 101, plot: bool = False):
+    def calc_sigma(self, res: int = 101, plot: bool = False, **unused):
         result = estimate_sigma_better(
             np.array(self.data.df), self.data.w_0, False, res, plot
         )
@@ -54,7 +54,7 @@ class Run:
         self.results['standard div'] = result[-1]
         return self.results
 
-    def calc_sigma_gamma(self, res: int = 101, plot: bool = False):
+    def calc_sigma_gamma(self, res: int = 101, plot: bool = False, **unused):
         result = estimate_sigma_better(
             np.array(self.data.df), self.data.w_0, True, res, plot
         )

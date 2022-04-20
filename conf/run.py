@@ -29,7 +29,7 @@ class Run:
         plt.legend()
         self.ax.text(0.6, 0.7, text, fontsize=14, verticalalignment='top', transform=self.ax.transAxes, bbox=props)
         if save:
-            plt.savefig(f"Plots/fits/{self.data}.pdf")
+            plt.savefig(f"Plots/fits/{self.data.mode_rep}.pdf")
         else:
             plt.show()
 

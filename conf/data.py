@@ -3,8 +3,9 @@ import pandas as pd
 
 class Data:
     dir = {
-        11: 'data11/',
-        18: 'data18/'
+        11: 'data11_dont_use/',
+        18: 'data18/',
+        22: 'data22/',
     }
     mode_dict = {
         False: [1, 2, 3, 4, 5],

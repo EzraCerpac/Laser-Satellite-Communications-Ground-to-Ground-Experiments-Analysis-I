@@ -29,7 +29,7 @@ class Run:
         plt.legend()
         self.ax.text(0.6, 0.7, text, fontsize=14, verticalalignment='top', transform=self.ax.transAxes, bbox=props)
         if save:
-            plt.savefig(f"Plots/fits/{self.data.mode_rep}.pdf")
+            plt.savefig(f"Plots/fit_set{self.data.data_set}/{self.data.mode_rep}.pdf")
         else:
             plt.show()
 
@@ -71,7 +71,7 @@ class BatchRun:
         self.results: Dict[int, Dict[bool, Dict[int, Dict[str, float]]]] = {}
 
     def run(self, *functions: str, **kwargs):
-        print('Running Programs: ' + ' '.join([function for function in functions]))
+        print('Running Programs: ' + ', '.join([function for function in functions]))
         for i, data_set in enumerate(self.data):
             print(f'Running experiment {i + 1} of {len(self.data)}')
             mode_results = {}

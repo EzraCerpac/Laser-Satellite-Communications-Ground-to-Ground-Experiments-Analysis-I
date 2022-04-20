@@ -41,7 +41,7 @@ def probability_dist(I: float | np.ndarray, I_0: float, sigma_I2: float) -> floa
 
 
 if __name__ == '__main__':
-    with open('../Data/DFs/data11/off1.pickle', 'rb') as f:
+    with open('../Data/DFs/data11_dont_use/off1.pickle', 'rb') as f:
         data = pickle.load(f)
     I = np.array(data)
     ii = np.linspace(0, 1, 101)[1:]

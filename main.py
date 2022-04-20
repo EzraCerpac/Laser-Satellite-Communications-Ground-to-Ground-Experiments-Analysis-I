@@ -11,20 +11,20 @@ def main(cfg=Config()):
     # plt.show()
     # cfg.run().calc_sigma_gamma(plot=True)
 
-    # print(cfg.run_batch([18]).run('sigma', 'sigma gamma', plot=True, save=True))
+    # results = cfg.run_batch(18, 22).run('sigma', 'sigma gamma', plot=False, save=False)
+    # store_results(results)
 
     results = open_results()
 
 
-def store_results(cfg=Config()):
-    with open('Results/sigmas.pickle', 'wb') as f:
-        pickle.dump(cfg.run_batch([18]).run('sigma', 'sigma gamma'), f)
+def store_results(results: dict, file: str = 'Results/sigmas.pickle'):
+    with open(file, 'wb') as f:
+        pickle.dump(results, f)
 
 
 def open_results(file: str = 'Results/sigmas.pickle') -> dict:
     with open(file, 'rb') as f:
         return pickle.load(f)
-    # print(cfg.run_batch([18]).run('sigma', plot=True))
 
 
 if __name__ == "__main__":

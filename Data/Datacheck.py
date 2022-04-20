@@ -39,12 +39,12 @@ cor = [[83389, 85846, 12234180],[192581, 195036, 12235200], [286857, 291794, 122
 #     elif cor[9][0] <= j <= cor[9][1]:
 #         tl2[j] = tl2[j] + cor[9][2]
 #
-# tl2 = tl2 - tl2[0]
+tl2 = tl2 - tl2[0]
 #
 # print(tl2[0],tl2[len(tl2)-1])
 #
 #
-# data ['time'] = tl2
-#data.to_csv('CSV/data18urad.csv')
+data['time'] = tl2
+#data.to_csv('CSV/data22urad.csv')
 plt.plot(data['time'], data['irradiance'])
 plt.show()

@@ -1,20 +1,17 @@
 import pickle
 import warnings
 
-import numpy as np
-from matplotlib import pyplot as plt
-
 from conf.config import Config
 
 warnings.filterwarnings("ignore", category=RuntimeWarning)
 
 
 def main(cfg=Config()):
-    plt.plot(np.array(cfg.set_data(18, True, 4).df))
-    plt.show()
+    # plt.plot(np.array(cfg.set_data(18, True, 4).df))
+    # plt.show()
     # cfg.run().calc_sigma_gamma(plot=True)
 
-    # print(cfg.run_batch([18]).run('sigma better', 'sigma gamma', plot=True))
+    print(cfg.run_batch([18]).run('sigma', 'sigma gamma', plot=True, save=True))
 
     # test()
     # results = open_results()

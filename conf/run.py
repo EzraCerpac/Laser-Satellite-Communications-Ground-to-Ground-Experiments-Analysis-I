@@ -20,8 +20,8 @@ class Run:
         plt.xlabel(r'$I_{norm}$')
         plt.ylabel(r'$p(I)$')
         text = ''
-        if 'beta better' in self.results:
-            text += r'$\beta_{lognormal}$: ' + str(round(self.results['beta better'], 2)) + '\n'
+        if 'beta' in self.results:
+            text += r'$\beta_{lognormal}$: ' + str(round(self.results['beta'], 2)) + '\n'
         if 'beta gamma' in self.results:
             text += r'$\beta_{gamma}$: ' + str(round(self.results['beta gamma'], 2)) + '\n'
         text = text.strip('\n')
@@ -49,9 +49,9 @@ class Run:
         result = estimate_sigma_better(
             np.array(self.data.df), self.data.w_0, False, res, plot
         )
-        self.results['sigma better'] = result[0]
-        self.results['beta better'] = result[1]
-        self.results['standard div better'] = result[-1]
+        self.results['sigma'] = result[0]
+        self.results['beta'] = result[1]
+        self.results['standard div'] = result[-1]
         return self.results
 
     def calc_sigma_gamma(self, res: int = 101, plot: bool = False):
@@ -87,7 +87,7 @@ class BatchRun:
                     try:
                         [function_dict[function](**kwargs) for function in functions]
                         if 'plot' in kwargs and kwargs['plot']:
-                            run.plot()
+                            run.plot(True if 'save' in kwargs and kwargs['save'] else False)
                         number_results[data.number] = run.results
                     except RuntimeError:
                         print(f'RuntimeError in dataset {j * len(data_mode) + (k + 1)}')

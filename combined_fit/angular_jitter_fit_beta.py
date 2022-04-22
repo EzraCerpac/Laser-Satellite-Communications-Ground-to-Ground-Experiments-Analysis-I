@@ -15,7 +15,7 @@ def beta_func(I: np.ndarray, beta: float, scale: float = 1) -> float:
 
 
 def calc_beta(I: np.ndarray) -> float:
-    I_n = (norm_I(I, True) + 1e-10) / (1 + 1e-8)
+    I_n = (norm_I(I, False) + 1e-10) / (1 + 1e-8)
     return beta.fit(I_n, fa=1, floc=0, fscale=1)[1]
 
 

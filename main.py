@@ -9,7 +9,7 @@ warnings.filterwarnings("ignore", category=RuntimeWarning)
 def main(cfg=Config()):
     # estimate_sigma(np.array(cfg.set_data(18, True, 4).df), 18, False, 10, plot=True)
 
-    results = cfg.run_batch(18).run('sigma', 'sigma gamma', plot=True, save=False)
+    results = cfg.run_batch(22).run('sigma_with_alpha', res=4, plot=True, save=False)
     # store_results(results)
 
     # results = open_results()

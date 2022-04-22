@@ -4,7 +4,7 @@ import numpy as np
 from matplotlib import pyplot as plt
 
 from Model.main import estimate_sigma
-from Model.main_with_alpha import estimate_sigma as estimate_sigma_with_alpha
+from Model.main_without_scale import estimate_sigma as estimate_sigma_with_alpha
 from conf.data import Data
 from info_plots.norm_I_hist import norm_I_hist
 
@@ -21,8 +21,12 @@ class Run:
         plt.xlabel(r'$I_{norm}$')
         plt.ylabel(r'$p(I)$')
         text = ''
+        if 'alpha' in self.results:
+            text += r'$\alpha_{lognormal}$: ' + str(round(self.results['alpha'], 2)) + '\n'
         if 'beta' in self.results:
             text += r'$\beta_{lognormal}$: ' + str(round(self.results['beta'], 2)) + '\n'
+        if 'alpha gamma' in self.results:
+            text += r'$\alpha_{gamma}$: ' + str(round(self.results['alpha gamma'], 2)) + '\n'
         if 'beta gamma' in self.results:
             text += r'$\beta_{gamma}$: ' + str(round(self.results['beta gamma'], 2)) + '\n'
         text = text.strip('\n')
@@ -70,8 +74,8 @@ class Run:
     def calc_sigma_gamma_with_alpha(self, res: int = 101, plot: bool = False, **unused):
         result = estimate_sigma_with_alpha(np.array(self.data.df), self.data.w_0, True, res, plot)
         self.results['sigma gamma'] = result[0]
-        self.results['alpha'] = result[1]
-        self.results['beta'] = result[2]
+        self.results['alpha gamma'] = result[1]
+        self.results['beta gamma'] = result[2]
         self.results['standard div gamma'] = result[-1]
         return self.results
 
@@ -96,7 +100,7 @@ class BatchRun:
                         'sigma': run.calc_sigma,
                         'sigma gamma': run.calc_sigma_gamma,
                         'sigma_with_alpha': run.calc_sigma_with_alpha,
-                        'sigma gamma_with_alpha': run.calc_sigma_gamma_with_alpha,
+                        'sigma_gamma_with_alpha': run.calc_sigma_gamma_with_alpha,
                     }
                     try:
                         [function_dict[function](**kwargs) for function in functions]

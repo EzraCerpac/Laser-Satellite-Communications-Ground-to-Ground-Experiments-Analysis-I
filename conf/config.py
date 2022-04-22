@@ -19,5 +19,6 @@ class Config:
         return self.run_instance
 
     def run_batch(self, *data_sets) -> BatchRun:
+        """Runs multiple data sets in parallel"""
         self.run_instance = BatchRun(data_sets)
         return self.run_instance

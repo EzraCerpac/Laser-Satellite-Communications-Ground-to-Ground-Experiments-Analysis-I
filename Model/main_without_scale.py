@@ -31,6 +31,7 @@ def estimate_sigma(irradiance: np.ndarray, w_0: float, use_gamma: bool = False, 
 
 
 def combined_dist(X: np.ndarray, alpha: float, beta: float):
+    """Lognormal implementation"""
     return [quad(lambda I: beta_func.pdf(I, alpha, beta) * probability_dist(
         i, I, scintillation_index(rytov_index_const(
             k(labda), zz[-1], C_n2.mean()

@@ -32,11 +32,11 @@ def estimate_sigma(irradiance: np.ndarray, w_0: float, use_gamma: bool = False, 
     return calc_sigma(beta, w_0), alpha, beta, scale, np.sqrt(p_cov[0, 0])
 
 
-def combined_dist(X: np.ndarray, alpha: float, beta: float, scale: float = 1):
-    return [quad(lambda I: beta_func.pdf(I, alpha, beta) * probability_dist(
-        i, I, scintillation_index(rytov_index_const(
+def combined_dist(X: np.ndarray, alpha: float, beta: float, scale: float = 1, I_0: float = scintillation_index(rytov_index_const(
             k(labda), zz[-1], C_n2.mean()
-        ))), 0, 1)[0] / scale for i in X]
+        ))):
+    return [quad(lambda I: beta_func.pdf(I, alpha, beta) * probability_dist(
+        i, I, I_0), 0, 1)[0] / scale for i in X]
 
 
 def combined_dist_gamma(X: np.ndarray, alpha: float, beta: float, scale: float = 1):

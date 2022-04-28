@@ -25,8 +25,8 @@ def betafun(Rytov=np.sqrt(rytov_index(k(wavelambda), np.array(Cn['z-distance']),
     return (np.e ** (0.51 * Rytov ** 2 / (1 + 0.69 * Rytov ** (12 / 5)) ** (5 / 6)) - 1) ** - 1
 
 
-def gamma_gamma(I: np.ndarray | float, I_0: float):
-    alpha, beta = alphafun(), betafun()
+def gamma_gamma(I: np.ndarray | float, I_0: float, alpha: float = alphafun(), beta: float = betafun()):
+    # alpha, beta = alphafun(), betafun()
     gamma = np.empty(0)
     # print(I.shape[0])
     try:

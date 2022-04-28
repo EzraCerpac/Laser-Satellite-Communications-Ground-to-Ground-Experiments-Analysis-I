@@ -5,7 +5,7 @@ import matplotlib.pyplot as plt
 import numpy as np
 from scipy.integrate import IntegrationWarning
 
-from Model.main_without_scale import combined_dist
+from Model.with_beta import combined_dist
 
 warnings.filterwarnings("ignore", category=RuntimeWarning)
 warnings.filterwarnings("ignore", category=IntegrationWarning)

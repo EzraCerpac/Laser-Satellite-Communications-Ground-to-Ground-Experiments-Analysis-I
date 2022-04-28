@@ -3,7 +3,7 @@ import pandas as pd
 from matplotlib import pyplot as plt
 
 from combined_fit.scintillation import calc_probs
-from info_plots.norm_I_hist import norm_I_hist
+from plotting.norm_I_hist import norm_I_hist
 
 
 def residu_angular_jitter(I: np.ndarray, res: int = 101, plot: bool = False) -> np.ndarray:

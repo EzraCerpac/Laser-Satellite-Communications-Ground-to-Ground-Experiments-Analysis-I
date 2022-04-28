@@ -1,18 +1,18 @@
 import multiprocessing as mp
 import os
 from os import path
-from typing import Dict, List, Tuple, Any
+from typing import Dict, List
 
 import numpy as np
+import pandas as pd
 from matplotlib import pyplot as plt
 
 from Model.inv_gamma import inv_gamma
-from Model.main import estimate_sigma
-from Model.main_without_scale import estimate_sigma as estimate_sigma_with_alpha
 from Model.pure_lognormal import lognormal
+from Model.with_beta import estimate_sigma as estimate_sigma_with_alpha
 from conf.data import Data
-from info_plots.norm_I_hist import norm_I_hist
 from misc.timing import timing
+from plotting.norm_I_hist import norm_I_hist
 
 Result = Dict[int, Dict[bool, Dict[int, Dict[str, float]]]]
 
@@ -23,14 +23,14 @@ class Run:
         self.results = {}
         fig, self.ax = plt.subplots()
 
-    def _label(self, functions: List[str]):
+    def _label(self) -> str:
         text = ''
-        if 'lognormal' in functions:
-            text += r'$skew_{lognormal}$: ' + str(round(self.results['lognormal skew'], 2)) + '\n'
-            text += r'$pos_{lognormal}$: ' + str(format(self.results['lognormal pos'], '.2e')) + '\n'
-        if 'inv gamma' in functions:
-            text += r'$a_{inv gamma}$: ' + str(round(self.results['inv gamma a'], 2)) + '\n'
-            text += r'$pos_{inv gamma}$: ' + str(format(self.results['inv gamma pos'], '.2e')) + '\n'
+        if 'lognormal' in self.results:
+            text += r'$skew_{lognormal}$: ' + str(round(self.results['lognormal']['skew'], 2)) + '\n'
+            text += r'$pos_{lognormal}$: ' + str(format(self.results['lognormal']['pos'], '.2e')) + '\n'
+        if 'inv gamma' in self.results:
+            text += r'$a_{inv gamma}$: ' + str(round(self.results['inv gamma']['a'], 2)) + '\n'
+            text += r'$pos_{inv gamma}$: ' + str(format(self.results['inv gamma']['pos'], '.2e')) + '\n'
         if 'alpha' in self.results:
             text += r'$\alpha_{lognormal}$: ' + str(round(self.results['alpha'], 2)) + '\n'
         if 'beta' in self.results:
@@ -58,46 +58,52 @@ class Run:
         else:
             plt.show()
 
-    def calc_sigma(self, res: int = 101, plot: bool = False, **unused):
-        result = estimate_sigma(np.array(self.data.df), self.data.w_0, False, res, plot)
-        self.results['sigma'] = result[0]
-        self.results['beta'] = result[1]
-        self.results['standard div'] = result[-1]
-        return self.results
+    # def calc_sigma(self, res: int = 101, plot: bool = False, **unused):
+    #     result = estimate_sigma(np.array(self.data.df), self.data.w_0, False, res, plot)
+    #     self.results['sigma'] = result[0]
+    #     self.results['beta'] = result[1]
+    #     self.results['standard div'] = result[-1]
+    #     return self.results
+    #
+    # def calc_sigma_gamma(self, res: int = 101, plot: bool = False, **unused):
+    #     result = estimate_sigma(np.array(self.data.df), self.data.w_0, True, res, plot)
+    #     self.results['sigma gamma'] = result[0]
+    #     self.results['beta gamma'] = result[1]
+    #     self.results['standard div gamma'] = result[-1]
+    #     return self.results
 
-    def calc_sigma_gamma(self, res: int = 101, plot: bool = False, **unused):
-        result = estimate_sigma(np.array(self.data.df), self.data.w_0, True, res, plot)
-        self.results['sigma gamma'] = result[0]
-        self.results['beta gamma'] = result[1]
-        self.results['standard div gamma'] = result[-1]
-        return self.results
-
-    def calc_sigma_with_alpha(self, res: int = 101, plot: bool = False, **unused):
+    def fit_lognormal_in_beta(self, res: int = 101, plot: bool = False, **unused):
+        self.results['lognormal in beta'] = {}
         result = estimate_sigma_with_alpha(np.array(self.data.df), self.data.w_0, False, res, plot)
-        self.results['sigma'] = result[0]
-        self.results['alpha'] = result[1]
-        self.results['beta'] = result[2]
-        self.results['standard div'] = result[-1]
+        self.results['lognormal in beta']['sigma'] = result[0]
+        self.results['lognormal in beta']['alpha'] = result[1]
+        self.results['lognormal in beta']['beta'] = result[2]
+        self.results['lognormal in beta']['standard div'] = result[-1]
         return self.results
 
-    def calc_sigma_gamma_with_alpha(self, res: int = 101, plot: bool = False, **unused):
+    def fit_gamma_in_beta(self, res: int = 101, plot: bool = False, **unused):
+        self.results['gamma in beta'] = {}
         result = estimate_sigma_with_alpha(np.array(self.data.df), self.data.w_0, True, res, plot)
-        self.results['sigma gamma'] = result[0]
-        self.results['alpha gamma'] = result[1]
-        self.results['beta gamma'] = result[2]
-        self.results['standard div gamma'] = result[-1]
+        self.results['gamma in beta']['sigma'] = result[0]
+        self.results['gamma in beta']['alpha'] = result[1]
+        self.results['gamma in beta']['beta'] = result[2]
+        self.results['gamma in beta']['standard div'] = result[-1]
         return self.results
 
-    def fit_lognormal(self, plot: bool = False, **unused):
-        result = lognormal(np.array(self.data.df), plot)
-        self.results['lognormal skew'] = result[0]
-        self.results['lognormal pos'] = result[1]
+    def fit_lognormal(self, res: int = 101, plot: bool = False, **unused):
+        self.results['lognormal'] = {}
+        result = lognormal(np.array(self.data.df), res, plot)
+        self.results['lognormal']['skew'] = result[0]
+        self.results['lognormal']['pos'] = result[1]
+        self.results['lognormal']['standard div'] = result[-1]
         return self.results
 
-    def fit_inv_gamma(self, plot: bool = False, **unused):
-        result = inv_gamma(np.array(self.data.df), plot)
-        self.results['inv gamma a'] = result[0]
-        self.results['inv gamma pos'] = result[1]
+    def fit_inv_gamma(self, res: int = 101, plot: bool = False, **unused):
+        self.results['inv gamma'] = {}
+        result = inv_gamma(np.array(self.data.df), res, plot)
+        self.results['inv gamma']['a'] = result[0]
+        self.results['inv gamma']['pos'] = result[1]
+        self.results['inv gamma']['standard div'] = result[-1]
         return self.results
 
 
@@ -132,7 +138,7 @@ class BatchRun:
         return self.results
 
     @timing
-    def run_parallel(self, *functions: str, **kwargs) -> List[Tuple[Any, Dict[Any, Any]]]:
+    def run_parallel(self, *functions: str, **kwargs) -> Dict[int, Dict[bool, Dict[int, Dict[str, float]]]]:
         """
         Run all functions on all data sets in parallel
         :param functions: functions to run
@@ -147,24 +153,31 @@ class BatchRun:
         print('Running Programs: ' + ', '.join([function for function in functions]))
         for i, data_set in enumerate(self.data):
             print(f'Running experiment {i + 1} of {len(self.data)}')
+            self.results[data_set[0][0].data_set] = {}
             for j, data_mode in enumerate(data_set):
+                self.results[data_set[0][0].data_set][data_mode[0].mode] = {}
                 for k, data in enumerate(data_mode):
+                    self.results[data_set[0][0].data_set][data_mode[0].mode][data.number] = {}
                     results.append(
                         pool.apply_async(self._run, args=(data, data_mode, data_set, functions, j, k, kwargs)))
         results = [result.get() for result in results]
         pool.close()
+        for result in results:
+            self.results[result[0].data_set][result[0].mode][result[0].number] = result[1]
+        if 'results' in kwargs and kwargs['results']:
+            pd.DataFrame.from_dict(self.results).to_pickle('Results/results.pickle')
         print("\nDone!")
-        return results
+        return self.results
 
     @staticmethod
     def _run(data, data_mode, data_set, functions, j, k, kwargs) -> (Data, Result):
         print(f'\tRunning dataset {j * len(data_mode) + (k + 1)} of {len(data_mode) * len(data_set)}')
         run = Run(data)
         function_dict = {
-            'sigma': run.calc_sigma,
-            'sigma gamma': run.calc_sigma_gamma,
-            'sigma_with_alpha': run.calc_sigma_with_alpha,
-            'sigma_gamma_with_alpha': run.calc_sigma_gamma_with_alpha,
+            # 'sigma': run.calc_sigma,
+            # 'sigma gamma': run.calc_sigma_gamma,
+            'lognormal in beta': run.fit_lognormal_in_beta,
+            'gamma in beta': run.fit_gamma_in_beta,
             'lognormal': run.fit_lognormal,
             'inv gamma': run.fit_inv_gamma,
         }

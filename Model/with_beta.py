@@ -9,7 +9,7 @@ from combined_fit.angular_jitter_fit_gamma import gamma_gamma
 from combined_fit.indices import scintillation_index, rytov_index_const
 from combined_fit.scintillation import probability_dist
 from formula.jitter import k, calc_sigma
-from info_plots.norm_I_hist import norm_I_hist
+from plotting.norm_I_hist import norm_I_hist
 
 Cn = pd.read_pickle('Data/DFs/Cn.pickle')
 zz = np.array(Cn['z-distance'])

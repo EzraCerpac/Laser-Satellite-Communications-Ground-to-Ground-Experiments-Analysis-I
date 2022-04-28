@@ -1,6 +1,6 @@
 import pickle
 import warnings
-
+import numpy as np
 from conf.config import Config
 from Plotting.plots import sigmaplot
 

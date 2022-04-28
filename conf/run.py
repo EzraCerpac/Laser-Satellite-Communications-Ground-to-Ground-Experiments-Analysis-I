@@ -12,6 +12,7 @@ from Model.main_without_scale import estimate_sigma as estimate_sigma_with_alpha
 from Model.pure_lognormal import lognormal
 from conf.data import Data
 from info_plots.norm_I_hist import norm_I_hist
+from misc.timing import timing
 
 Result = Dict[int, Dict[bool, Dict[int, Dict[str, float]]]]
 
@@ -106,6 +107,7 @@ class BatchRun:
                       for mode in Data.mode_dict.keys()] for data_set in data_sets]
         self.results: Result = {}
 
+    @timing
     def run(self, *functions: str, **kwargs) -> Result:
         """
         Run all functions on all data sets
@@ -129,6 +131,7 @@ class BatchRun:
             self.results[data_set[0][0].data_set] = mode_results
         return self.results
 
+    @timing
     def run_parallel(self, *functions: str, **kwargs) -> List[Tuple[Any, Dict[Any, Any]]]:
         """
         Run all functions on all data sets in parallel

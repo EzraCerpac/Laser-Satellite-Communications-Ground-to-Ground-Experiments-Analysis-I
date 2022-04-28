@@ -7,9 +7,15 @@ warnings.filterwarnings("ignore", category=RuntimeWarning)
 
 
 def main(cfg=Config()):
-    # estimate_sigma(np.array(cfg.set_data(18, True, 4).df), 18, False, 10, plot=True)
-
-    results = cfg.run_batch(18, 22).run_parallel('sigma_with_alpha', res=16, plot=True, save=True)
+    # print(lognormal(np.array(cfg.set_data(22, False, 4).df)))
+    #
+    results = cfg.run_batch(18, 22).run_parallel(
+        'sigma_with_alpha',
+        'sigma_gamma_with_alpha',
+        'lognormal',
+        'inv gamma',
+        plot=True, save=True
+    )
     print(results)
     # store_results(results)
 

@@ -2,6 +2,7 @@ import pickle
 import warnings
 
 from conf.config import Config
+from Plotting.plots import sigmaplot
 
 warnings.filterwarnings("ignore", category=RuntimeWarning)
 
@@ -14,6 +15,10 @@ def main(cfg=Config()):
     # print(cfg.run_batch([18]).run('sigma', 'sigma gamma', plot=True, save=True))
 
     results = open_results()
+    sigmaplot(results)
+
+
+
 
 
 def store_results(cfg=Config()):

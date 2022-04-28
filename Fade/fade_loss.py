@@ -83,7 +83,7 @@ def CNInterpol(z, Cn):
     return fun
 
 
-# TODO: fix and decomment
+# TODO: fix and uncomment
 # def integrand(z, fun, L, k):
 #     """
 #     :param z: Array of distance to Transmitter
@@ -97,7 +97,7 @@ def CNInterpol(z, Cn):
 
 #  2.25 * k ** (7 / 6) *
 
-# k is 2*pi/lambda, D is reciever diameter
+# k is 2*pi/lambda, D is receiver diameter
 
 def main():
     folder = Path('CSV')

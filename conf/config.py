@@ -18,6 +18,6 @@ class Config:
         self.run_instance = Run(self.data, *args, **kwargs)
         return self.run_instance
 
-    def run_batch(self, data_sets) -> BatchRun:
+    def run_batch(self, *data_sets) -> BatchRun:
         self.run_instance = BatchRun(data_sets)
         return self.run_instance

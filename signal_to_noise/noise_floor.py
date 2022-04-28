@@ -1,7 +1,6 @@
-import pandas as pd
-import numpy as np
-import matplotlib.pyplot as plt
 from pathlib import Path
+
+import pandas as pd
 
 
 def noise_floor(path: Path) -> float:
@@ -16,9 +15,7 @@ def noise_floor(path: Path) -> float:
     else:
         return minum * 1.1
 
-
-
-# desnt = Path('../Data/DFs/data11/8 modes.pickle')
+# desnt = Path('../Data/DFs/data11_dont_use/8 modes.pickle')
 
 # nf = noise_floor(desnt)
 

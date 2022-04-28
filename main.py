@@ -1,8 +1,8 @@
 import pickle
 import warnings
-
+from Reverse_fit.main import Jorensfit
 from conf.config import Config
-
+import pandas as pd
 warnings.filterwarnings("ignore", category=RuntimeWarning)
 
 
@@ -25,6 +25,8 @@ def open_results(file: str = 'Results/sigmas.pickle') -> dict:
     with open(file, 'rb') as f:
         return pickle.load(f)
 
+#print(Jorensfit(pd.read_pickle("../Data/DFs/data18/off1.pickle")))
 
 if __name__ == "__main__":
     main()
+

@@ -46,3 +46,8 @@ def combined_dist_gamma(X: np.ndarray, alpha: float, beta: float, scale: float =
 def random_dist_test(X: list, beta: float, alfa: float, sigma: float, scale: float = 1):
     return [quad(lambda a: beta * i ** 3 * a ** 2 + alfa * i ** 2 * np.log(a) - sigma * 10 * i + beta, 0, 1)[0] / scale
             for i in X]
+
+
+def combined_dist2(X: np.ndarray, alpha: float, beta: float, I_0: float):
+    return [quad(lambda I: beta_func.pdf(I, alpha, beta) * probability_dist(
+        i, I, I_0), 0, 1)[0] / 1 for i in X]

@@ -14,6 +14,8 @@ from Model.with_beta import estimate_sigma as estimate_sigma_with_alpha
 from conf.data import Data
 from misc.timing import timing
 from plotting.norm_I_hist import norm_I_hist
+from info_plots.norm_I_hist import norm_I_hist
+from Reverse_fit.main import full_fit_lognorm
 
 Result = Dict[int, Dict[bool, Dict[int, Dict[str, float]]]]
 
@@ -122,6 +124,11 @@ class Run:
                      label='inverse gamma fitment')
         return self.results
 
+    def calc_full_lognorm(self, res: int = 101, plot: bool = False):
+        result = full_fit_lognorm(np.array(self.data.df), res, plot)
+        self.results['full_results'] = result
+        return self.results
+
 
 class BatchRun:
     def __init__(self, data_sets):
@@ -196,6 +203,11 @@ class BatchRun:
             'gamma in beta': run.fit_gamma_in_beta,
             'lognormal': run.fit_lognormal,
             'inv gamma': run.fit_inv_gamma,
+            'sigma': run.calc_sigma,
+            'sigma gamma': run.calc_sigma_gamma,
+            'sigma_with_alpha': run.calc_sigma_with_alpha,
+            'sigma_gamma_with_alpha': run.calc_sigma_gamma_with_alpha,
+            'full_lognorm': run.calc_full_lognorm,
         }
         try:
             [function_dict[function](**kwargs) for function in functions]

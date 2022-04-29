@@ -99,11 +99,10 @@ def CNInterpol(z, Cn):
 
 # k is 2*pi/lambda, D is receiver diameter
 
-def main():
-    folder = Path('CSV')
-    datacn = pd.read_csv(folder / 'Cnprofile', names=['z-dist', 'height', 'cn2'], skiprows=1)
-
-    print(datacn.height[2])
+def fade_loss_plots():
+    Cn = pd.read_pickle('Data/DFs/Cn.pickle')
+    print(Cn)
+    # print(Cn.height[2])
 
     Lambda = 1550e-9
     Cn = 0.033
@@ -126,4 +125,10 @@ def main():
 
 
 if __name__ == '__main__':
-    main()
+    fade_loss_plots()
+
+
+
+
+
+

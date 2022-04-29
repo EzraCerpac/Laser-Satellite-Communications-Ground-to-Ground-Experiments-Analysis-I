@@ -1,9 +1,9 @@
 from scipy.optimize import curve_fit
 import numpy as np
-from Model.main_with_alpha import combined_dist
+from Model.with_beta import combined_dist
 from matplotlib import pyplot as plt
-from info_plots.norm_I_hist import norm_I_hist
-from Model.main_with_alpha import combined_dist2
+from plotting.norm_I_hist import norm_I_hist
+from Model.with_beta import combined_dist
 import pandas as pd
 
 

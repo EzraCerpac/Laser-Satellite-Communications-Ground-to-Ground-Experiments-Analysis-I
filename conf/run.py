@@ -14,7 +14,6 @@ from Model.with_beta import estimate_sigma as estimate_sigma_with_alpha
 from conf.data import Data
 from misc.timing import timing
 from plotting.norm_I_hist import norm_I_hist
-from info_plots.norm_I_hist import norm_I_hist
 from Reverse_fit.main import full_fit_lognorm
 
 Result = Dict[int, Dict[bool, Dict[int, Dict[str, float]]]]

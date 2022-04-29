@@ -11,16 +11,16 @@ def main(cfg=Config()):
     # print(lognormal(np.array(cfg.set_data(22, False, 4).df)))
 
     #
-    results = cfg.run_batch(18, 22).run_parallel(
-        # 'lognormal in beta',
-        # 'gamma in beta',
-        'lognormal',
-        'inv gamma',
-        plot=False, save=False, results=True
-    )
-
-    print(results)
-    store_results(results)
+    # results = cfg.run_batch(18, 22).run_parallel(
+    #     'lognormal in beta',
+    #     'gamma in beta',
+    #     'lognormal',
+    #     'inv gamma',
+    #     plot=False, save=False, results=True
+    # )
+    #
+    # print(results)
+    # store_results(results)
 
     comparison_plot()
 

@@ -13,15 +13,16 @@ from formula.normalize import norm_I
 
 wavelambda = 1550e-9
 Cn = pd.read_pickle('Data/DFs/Cn.pickle') if __name__ != '__main__' else pd.read_pickle('../Data/DFs/Cn.pickle')
+RYTOV = np.sqrt(rytov_index(k(wavelambda), np.array(Cn['z-distance']), np.array(Cn['Cn^2'])))
 
 
 @lru_cache(maxsize=None)
-def alphafun(Rytov=np.sqrt(rytov_index(k(wavelambda), np.array(Cn['z-distance']), np.array(Cn['Cn^2'])))):
+def alphafun(Rytov=RYTOV):
     return (np.e ** (0.49 * Rytov ** 2 / (1 + 1.11 * Rytov ** (12 / 5)) ** (7 / 6)) - 1) ** - 1
 
 
 @lru_cache(maxsize=None)
-def betafun(Rytov=np.sqrt(rytov_index(k(wavelambda), np.array(Cn['z-distance']), np.array(Cn['Cn^2'])))):
+def betafun(Rytov=RYTOV):
     return (np.e ** (0.51 * Rytov ** 2 / (1 + 0.69 * Rytov ** (12 / 5)) ** (5 / 6)) - 1) ** - 1
 
 

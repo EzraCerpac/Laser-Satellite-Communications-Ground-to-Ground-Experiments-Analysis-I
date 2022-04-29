@@ -1,28 +1,34 @@
 import pickle
 import warnings
 
+from scipy.integrate import IntegrationWarning
+
 from conf.config import Config
-from plotting.fitment_comparison import comparison_plot
+from conf.plotting import plot_combined
 
 warnings.filterwarnings("ignore", category=RuntimeWarning)
+warnings.filterwarnings("ignore", category=IntegrationWarning)
 
 
 def main(cfg=Config()):
     # print(lognormal(np.array(cfg.set_data(22, False, 4).df)))
 
-    #
     # results = cfg.run_batch(18, 22).run_parallel(
     #     'lognormal in beta',
     #     'gamma in beta',
     #     'lognormal',
     #     'inv gamma',
-    #     plot=False, save=False, results=True
+    #     res=100,
+    #     plot=True,
+    #     errors=True,
+    #     save=True,
+    #     results=True
     # )
     #
     # print(results)
     # store_results(results)
 
-    comparison_plot()
+    plot_combined(open_results(), save=True)
 
     # results = open_results()
 

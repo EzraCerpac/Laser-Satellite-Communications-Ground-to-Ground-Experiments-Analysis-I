@@ -9,6 +9,7 @@ from combined_fit.angular_jitter_fit_gamma import gamma_gamma
 from combined_fit.indices import scintillation_index, rytov_index_const
 from combined_fit.scintillation import probability_dist
 from formula.jitter import k, calc_sigma
+from formula.statistics import MSE
 from plotting.norm_I_hist import norm_I_hist
 
 Cn = pd.read_pickle('Data/DFs/Cn.pickle')
@@ -24,10 +25,10 @@ def estimate_sigma(irradiance: np.ndarray, w_0: float, use_gamma: bool = False, 
     xx = np.linspace(1e-10, 1, len(yy))
     (alpha, beta), p_cov = curve_fit(scint_func, xx, yy, p0=[2, 5], bounds=((0.5, 0.5), (20, 20)))
     if plot:
-        xx = np.linspace(1e-15, 1, 1001)
+        xx_for_plot = np.linspace(1e-10, 1, 1001)
         label = 'gamma fitment' if use_gamma else 'lognormal fitment'
-        plt.plot(xx, scint_func(xx, alpha, beta), label=label)
-    return calc_sigma(beta, w_0), alpha, beta, np.sqrt(p_cov[0, 0])
+        plt.plot(xx_for_plot, scint_func(xx_for_plot, alpha, beta), label=label)
+    return calc_sigma(beta, w_0), alpha, beta, MSE(scint_func, xx, yy, (alpha, beta))
 
 
 def combined_dist(X: np.ndarray, alpha: float, beta: float):

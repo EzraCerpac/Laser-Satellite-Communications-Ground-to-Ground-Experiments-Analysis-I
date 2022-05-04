@@ -7,7 +7,7 @@ import pandas as pd
 
 def comparison_plot(results: pd.DataFrame = pd.read_pickle('Results/results.pickle'), save: bool = False):
     fig, axs = plt.subplots(*results.shape, figsize=(10, 10))
-    fig.suptitle('Fitment Comparison', fontsize=22)
+    fig.suptitle('Fitment MSE Comparison', fontsize=22)
     for i, set in enumerate(results):
         for j, datas in enumerate(results[set]):
             std_diffs = Counter()
@@ -23,5 +23,6 @@ def comparison_plot(results: pd.DataFrame = pd.read_pickle('Results/results.pick
 
             axs[i, j].bar(indexes, values, width)
             axs[i, j].set_xticks(indexes, labels, fontsize=8)
-
+    if save:
+        plt.savefig('Plots/Fitment_Comparison.pdf')
     plt.show()

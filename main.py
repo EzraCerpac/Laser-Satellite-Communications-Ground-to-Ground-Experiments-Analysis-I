@@ -4,7 +4,7 @@ import warnings
 from scipy.integrate import IntegrationWarning
 
 from conf.config import Config
-from conf.plotting import plot_combined
+from plotting.fitment_comparison import comparison_plot
 
 warnings.filterwarnings("ignore", category=RuntimeWarning)
 warnings.filterwarnings("ignore", category=IntegrationWarning)
@@ -18,19 +18,20 @@ def main(cfg=Config()):
     #     'gamma in beta',
     #     'lognormal',
     #     'inv gamma',
-    #     res=100,
+    #     res=15,
     #     plot=True,
-    #     errors=True,
-    #     save=True,
-    #     results=True
+    #     # save=True,
+    #     # results=True
     # )
     #
     # print(results)
     # store_results(results)
 
-    plot_combined(open_results(), save=True)
+    # plot_combined(open_results(), save=False)
 
-    # results = open_results()
+    comparison_plot(save=True)
+
+    # PDF_gamma_test()
 
 
 def store_results(results: dict, file: str = 'Results/dict.pickle'):

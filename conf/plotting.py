@@ -10,7 +10,7 @@ from scipy.stats import lognorm, invgamma
 
 from Model.with_beta import combined_dist, combined_dist_gamma
 from conf.data import Data
-from plotting.norm_I_hist import norm_I_hist
+from Plotting.norm_I_hist import norm_I_hist
 
 
 def plot_combined(
@@ -65,7 +65,7 @@ def _plot_one(funcs: dict, mode: bool, num: int, set: int, save: bool) -> None:
             )
         if func == 'lognormal full fit':
             plt.plot(xx, combined_dist(xx, values['alpha'], values['beta'], values['sigma_i'], full_fit=True),
-                     label=f'{func} (α={values["alpha"]:.2f}, β={values["beta"]:.2f}, $\simga_i$={values["simga_i"]:.2f} '
+                     label=f'{func} (α={values["alpha"]:.2f}, β={values["beta"]:.2f}, $sigma_i$={values["sigma_i"]:.2f} '
                            f'MSE={values["standard div"]:.2f})')
         if func == 'gamma full fit':
             ax.plot(

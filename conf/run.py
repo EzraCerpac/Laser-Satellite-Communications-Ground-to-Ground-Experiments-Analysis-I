@@ -1,7 +1,5 @@
 import multiprocessing as mp
-import os
-from os import path
-from typing import Dict, List
+from typing import Dict
 
 import numpy as np
 import pandas as pd
@@ -11,10 +9,10 @@ from scipy.stats import invgamma, lognorm
 from Model.inv_gamma import inv_gamma, inv_gamma_curve_fit
 from Model.pure_lognormal import lognormal, lognormal_curve_fit
 from Model.with_beta import estimate_sigma as estimate_sigma_with_alpha
+from Reverse_fit.main import full_fit_lognorm
+from conf import plotting
 from conf.data import Data
 from misc.timing import timing
-from plotting.norm_I_hist import norm_I_hist
-from Reverse_fit.main import full_fit_lognorm
 
 Result = Dict[int, Dict[bool, Dict[int, Dict[str, float]]]]
 
@@ -195,26 +193,26 @@ class BatchRun:
         results = []
         print('Running Programs: ' + ', '.join([function for function in functions]))
         for i, data_set in enumerate(self.data):
-            print(f'Running experiment {i + 1} of {len(self.data)}')
             self.results[data_set[0][0].data_set] = {}
             for j, data_mode in enumerate(data_set):
                 self.results[data_set[0][0].data_set][data_mode[0].mode] = {}
                 for k, data in enumerate(data_mode):
                     self.results[data_set[0][0].data_set][data_mode[0].mode][data.number] = {}
                     results.append(
-                        pool.apply_async(self._run, args=(data, data_mode, data_set, functions, j, k, kwargs)))
+                        pool.apply_async(self._run, args=(data, functions, kwargs)))
         results = [result.get() for result in results]
         pool.close()
         for result in results:
             self.results[result[0].data_set][result[0].mode][result[0].number] = result[1]
         if 'results' in kwargs and kwargs['results']:
             pd.DataFrame.from_dict(self.results).to_pickle('Results/results.pickle')
+        if 'plot' in kwargs and kwargs['plot']:
+            plotting.plot_combined(self.results, save=True if 'save' in kwargs and kwargs['save'] else False)
         print("\nDone!")
         return self.results
 
     @staticmethod
-    def _run(data, data_mode, data_set, functions, j, k, kwargs) -> (Data, Result):
-        print(f'\tRunning dataset {j * len(data_mode) + (k + 1)} of {len(data_mode) * len(data_set)}')
+    def _run(data, functions, kwargs) -> (Data, Result):
         run = Run(data)
         function_dict = {
             # 'sigma': run.calc_sigma,
@@ -230,12 +228,8 @@ class BatchRun:
             #'sigma_with_alpha': run.calc_sigma_with_alpha,
             #'sigma_gamma_with_alpha': run.calc_sigma_gamma_with_alpha,
         }
-        try:
-            [function_dict[function](**kwargs) for function in functions]
-            if 'plot' in kwargs and kwargs['plot']:
-                run.plot(functions, True if 'errors' in kwargs and kwargs['errors'] else False,
-                         save=True if 'save' in kwargs and kwargs['save'] else False)
-            return data, run.results
-        except RuntimeError:
-            print(f'RuntimeError in dataset {j * len(data_mode) + (k + 1)}')
-            plt.clf()
+        [function_dict[function](**kwargs) for function in functions]
+        # if 'plot' in kwargs and kwargs['plot']:
+        #     run.plot(functions, True if 'errors' in kwargs and kwargs['errors'] else False,
+        #              save=True if 'save' in kwargs and kwargs['save'] else False)
+        return data, run.results

@@ -1,6 +1,6 @@
 """
 Never commit anything like this! Only commit working stuff
-Also, put everything in main function, then use if __name__ == "__main__": main()
+Also, put everthing in main function, then use if __name__ == "__main__": main()
 TODO: make working, then commit
 """
 
@@ -83,7 +83,7 @@ def CNInterpol(z, Cn):
     return fun
 
 
-# TODO: fix and uncomment
+# TODO: fix and decomment
 # def integrand(z, fun, L, k):
 #     """
 #     :param z: Array of distance to Transmitter
@@ -97,7 +97,8 @@ def CNInterpol(z, Cn):
 
 #  2.25 * k ** (7 / 6) *
 
-# k is 2*pi/lambda, D is receiver diameter
+# k is 2*pi/lambda, D is reciever diameter
+
 
 def main():
     folder = Path('CSV')

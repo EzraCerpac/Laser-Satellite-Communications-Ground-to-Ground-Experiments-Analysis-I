@@ -1,10 +1,12 @@
-from scipy.optimize import curve_fit
 import numpy as np
-from Model.with_beta import combined_dist
 from matplotlib import pyplot as plt
-from plotting.norm_I_hist import norm_I_hist
+from scipy.optimize import curve_fit
+
 from Model.with_beta import combined_dist
-import pandas as pd
+from plotting.norm_I_hist import norm_I_hist
+
+
+# from Model.with_beta import combined_dist2  # TODO: not sure what this was referring to
 
 
 def full_fit_lognorm(I: np.ndarray, res: float, plot: bool):

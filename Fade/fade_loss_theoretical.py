@@ -22,9 +22,10 @@ def PDF_gamma(Ft): #gamma-gamma
     T_beta = special.gamma(beta)
     I = 1.0
     #gamma = np.empty(0)
+
     gamma = (2*(alpha * beta)**((alpha+beta)/2) / (T_alpha*T_beta*I)) * ((np.exp(-0.23*Ft))**((alpha+beta)/2)) * special.kv(
                 alpha - beta, 2 * np.sqrt(alpha * beta * np.exp(-0.23*Ft)))
-
+    print(sigma_R)
     return gamma
 
 def PDF_gamma_test():
@@ -34,6 +35,7 @@ def PDF_gamma_test():
     for i in range(11):
        ft.append(i)
        prob.append(PDF_gamma(i))
+
     print(prob)
     print(ft)
 

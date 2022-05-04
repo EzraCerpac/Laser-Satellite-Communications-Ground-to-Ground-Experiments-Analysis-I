@@ -6,6 +6,7 @@ from typing import Dict
 
 import numpy as np
 from matplotlib import pyplot as plt
+from progress.bar import Bar
 from scipy.stats import lognorm, invgamma
 
 from Model.with_beta import combined_dist, combined_dist_gamma

@@ -1,5 +1,5 @@
 import multiprocessing as mp
-from typing import Dict
+from typing import Dict, List
 
 import numpy as np
 import pandas as pd
@@ -13,6 +13,7 @@ from Reverse_fit.main import full_fit_lognorm
 from conf import plotting
 from conf.data import Data
 from misc.timing import timing
+from plotting.norm_I_hist import norm_I_hist
 
 Result = Dict[int, Dict[bool, Dict[int, Dict[str, float]]]]
 

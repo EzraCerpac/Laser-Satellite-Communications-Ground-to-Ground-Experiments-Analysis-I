@@ -19,7 +19,7 @@ def main(cfg=Config()):
         # 'lognormal',
         # 'inv gamma',
         'gamma full fit',
-        res=5,
+        res=2,
         plot=True,
         errors=False,
         save=False,

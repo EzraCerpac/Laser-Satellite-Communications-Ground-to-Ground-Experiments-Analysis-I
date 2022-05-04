@@ -1,10 +1,11 @@
+from functools import partial
+
 import numpy as np
 import pandas as pd
 from matplotlib import pyplot as plt
 from scipy.integrate import quad
 from scipy.optimize import curve_fit
 from scipy.stats import beta as beta_func
-from functools import partial
 
 from combined_fit.angular_jitter_fit_gamma import gamma_gamma, alphafun, betafun
 from combined_fit.indices import scintillation_index, rytov_index_const
@@ -12,7 +13,6 @@ from combined_fit.scintillation import probability_dist
 from formula.jitter import k, calc_sigma
 from formula.statistics import MSE
 from plotting.norm_I_hist import norm_I_hist
-
 
 Cn = pd.read_pickle('Data/DFs/Cn.pickle')
 zz = np.array(Cn['z-distance'])
@@ -47,9 +47,9 @@ def estimate_sigma(irradiance: np.ndarray, w_0: float, use_gamma: bool = False, 
     if not full_fit:
         return calc_sigma(beta, w_0), alpha, beta, MSE(scint_func, xx, yy, (alpha, beta))
     elif full_fit and use_gamma:
-        return calc_sigma(beta, w_0), alpha, beta, a, b, MSE(scint_func, xx, yy, (alpha, beta, a, b))
+        return calc_sigma(beta, w_0), alpha, beta, a, b, MSE(scint_func, xx, yy, (alpha, beta, a, b, True))
     else:
-        return calc_sigma(beta, w_0), alpha, beta, sigma_i, MSE(scint_func, xx, yy, (alpha, beta, sigma_i))
+        return calc_sigma(beta, w_0), alpha, beta, sigma_i, MSE(scint_func, xx, yy, (alpha, beta, sigma_i, True))
 
 
 def combined_dist(X: np.ndarray, alpha: float, beta: float, sigma_i: float = 0, full_fit: bool = False):

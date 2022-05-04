@@ -4,7 +4,6 @@ import warnings
 from scipy.integrate import IntegrationWarning
 
 from conf.config import Config
-from conf.plotting import plot_combined
 
 warnings.filterwarnings("ignore", category=RuntimeWarning)
 warnings.filterwarnings("ignore", category=IntegrationWarning)
@@ -16,14 +15,15 @@ def main(cfg=Config()):
     results = cfg.run_batch(18).run_parallel(
         # 'lognormal in beta',
         # 'gamma in beta',
-        # 'lognormal',
-        # 'inv gamma',
-        'gamma full fit',
-        res=2,
+        'lognormal',
+        'inv gamma',
+        # 'gamma full fit',
+        res=3,
         plot=True,
         errors=False,
         save=False,
-        results=True)
+        # results=True
+    )
 
     print(results)
     # store_results(results)

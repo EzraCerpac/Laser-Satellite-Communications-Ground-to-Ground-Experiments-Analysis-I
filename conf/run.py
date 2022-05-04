@@ -6,13 +6,15 @@ from typing import Dict, List
 import numpy as np
 import pandas as pd
 from matplotlib import pyplot as plt
+from scipy.stats import invgamma, lognorm
 
-from Model.inv_gamma import inv_gamma
-from Model.pure_lognormal import lognormal
+from Model.inv_gamma import inv_gamma, inv_gamma_curve_fit
+from Model.pure_lognormal import lognormal, lognormal_curve_fit
 from Model.with_beta import estimate_sigma as estimate_sigma_with_alpha
 from conf.data import Data
 from misc.timing import timing
 from plotting.norm_I_hist import norm_I_hist
+from Reverse_fit.main import full_fit_lognorm
 
 Result = Dict[int, Dict[bool, Dict[int, Dict[str, float]]]]
 
@@ -21,7 +23,7 @@ class Run:
     def __init__(self, data: Data):
         self.data = data
         self.results = {}
-        fig, self.ax = plt.subplots()
+        fig, self.ax = plt.subplots(figsize=(8, 5))
 
     def _label(self) -> str:
         text = ''
@@ -39,19 +41,25 @@ class Run:
             text += r'$\alpha_{gamma}$: ' + str(round(self.results['alpha gamma'], 2)) + '\n'
         if 'beta gamma' in self.results:
             text += r'$\beta_{gamma}$: ' + str(round(self.results['beta gamma'], 2)) + '\n'
-        text = text.strip('\n')
+        return text.strip('\n')
 
-    def plot(self, functions: List[str], save: bool = False):
+    def _label_error(self) -> str:
+        text = ''
+        for func, ress in self.results.items():
+            text += f'{func}: {ress["standard div"]:.2f}\n'
+        return text.strip('\n')
+
+    def plot(self, functions: List[str], errors: bool, save: bool = False):
         norm_I_hist(np.array(self.data.df), bins=100)
-        plt.title(f'Histograms and Probs of {self.data}')
+        plt.title(f'Histogram and Probs of {self.data}')
         plt.xlabel(r'$I_{norm}$')
         plt.ylabel(r'$p(I)$')
-        text = self._label(functions)
+        text = self._label_error() if errors else self._label()
         props = dict(boxstyle='round', facecolor='white')
         plt.legend()
-        self.ax.text(0.6, 0.7, text, fontsize=14, verticalalignment='top', transform=self.ax.transAxes, bbox=props)
+        self.ax.text(0.6, 0.7, text, fontsize=12, verticalalignment='top', transform=self.ax.transAxes, bbox=props)
         if save:
-            dir = f"Plots/{'_'.join(functions)}"
+            dir = f"Plots/{'_'.join(functions)}{'_errors' if errors else None}"
             if not path.exists(dir):
                 os.makedirs(dir)
             plt.savefig(f"{dir}/set{self.data.data_set}_{self.data.mode_rep}.pdf")
@@ -90,20 +98,34 @@ class Run:
         self.results['gamma in beta']['standard div'] = result[-1]
         return self.results
 
-    def fit_lognormal(self, res: int = 101, plot: bool = False, **unused):
+    def fit_lognormal(self, plot: bool = False, **unused):
         self.results['lognormal'] = {}
-        result = lognormal(np.array(self.data.df), res, plot)
+        result1 = lognormal(np.array(self.data.df), plot=False)
+        result2 = lognormal_curve_fit(np.array(self.data.df), plot=False)
+        result = result1 if result1[-1] < result2[-1] else result2
         self.results['lognormal']['skew'] = result[0]
         self.results['lognormal']['pos'] = result[1]
         self.results['lognormal']['standard div'] = result[-1]
+        if plot:
+            plt.plot(xx := np.linspace(1e-5, 1, 1001), lognorm.pdf(xx, result[0], result[1]), label='lognormal fitment')
         return self.results
 
-    def fit_inv_gamma(self, res: int = 101, plot: bool = False, **unused):
+    def fit_inv_gamma(self, plot: bool = False, **unused):
         self.results['inv gamma'] = {}
-        result = inv_gamma(np.array(self.data.df), res, plot)
+        result1 = inv_gamma(np.array(self.data.df), plot=False)
+        result2 = inv_gamma_curve_fit(np.array(self.data.df), plot=False)
+        result = result1 if result1[-1] < result2[-1] else result2
         self.results['inv gamma']['a'] = result[0]
         self.results['inv gamma']['pos'] = result[1]
         self.results['inv gamma']['standard div'] = result[-1]
+        if plot:
+            plt.plot(xx := np.linspace(1e-5, 1, 1001), invgamma.pdf(xx, result[0], result[1]),
+                     label='inverse gamma fitment')
+        return self.results
+
+    def calc_full_lognorm(self, res: int = 101, plot: bool = False):
+        result = full_fit_lognorm(np.array(self.data.df), res, plot)
+        self.results['full_results'] = result
         return self.results
 
 
@@ -180,11 +202,17 @@ class BatchRun:
             'gamma in beta': run.fit_gamma_in_beta,
             'lognormal': run.fit_lognormal,
             'inv gamma': run.fit_inv_gamma,
+            'sigma': run.calc_sigma,
+            'sigma gamma': run.calc_sigma_gamma,
+            'sigma_with_alpha': run.calc_sigma_with_alpha,
+            'sigma_gamma_with_alpha': run.calc_sigma_gamma_with_alpha,
+            'full_lognorm': run.calc_full_lognorm,
         }
         try:
             [function_dict[function](**kwargs) for function in functions]
             if 'plot' in kwargs and kwargs['plot']:
-                run.plot(functions, True if 'save' in kwargs and kwargs['save'] else False)
+                run.plot(functions, True if 'errors' in kwargs and kwargs['errors'] else False,
+                         save=True if 'save' in kwargs and kwargs['save'] else False)
             return data, run.results
         except RuntimeError:
             print(f'RuntimeError in dataset {j * len(data_mode) + (k + 1)}')

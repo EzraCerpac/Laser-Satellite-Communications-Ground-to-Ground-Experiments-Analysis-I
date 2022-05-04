@@ -1,3 +1,4 @@
+import logging
 import multiprocessing as mp
 import os
 import time
@@ -5,12 +6,14 @@ from os import path
 from typing import Dict
 
 import numpy as np
+from Plotting.norm_I_hist import norm_I_hist
 from matplotlib import pyplot as plt
 from scipy.stats import lognorm, invgamma
 
 from Model.with_beta import combined_dist, combined_dist_gamma
 from conf.data import Data
-from Plotting.norm_I_hist import norm_I_hist
+
+log = logging.getLogger(__name__)
 
 
 def plot_combined(
@@ -18,6 +21,7 @@ def plot_combined(
         save: bool = False,
         dir: str = time.strftime("%d/%m-%H:%M")
 ) -> None:
+    log.info("Starting plot sequence")
     pool = mp.Pool(mp.cpu_count())
     plottings = []
     for set, modes in results.items():
@@ -26,6 +30,7 @@ def plot_combined(
                 plottings.append(pool.apply_async(_plot_one, args=(funcs, mode, num, set, save)))
     [plot.get() for plot in plottings]
     pool.close()
+    log.info("Finished plots")
 
 
 def _plot_one(funcs: dict, mode: bool, num: int, set: int, save: bool) -> None:
@@ -33,7 +38,7 @@ def _plot_one(funcs: dict, mode: bool, num: int, set: int, save: bool) -> None:
     plt.title(f'Histogram and Probs of {set}urad, mode {"on" if mode else "off"}: {num}')
     norm_I_hist(np.array(Data(set, mode, num).df), bins=300)
     xx = np.linspace(0, 1, 101)
-    print(f'Plotting set {set}, modes {"on" if mode else "off"}, {num}')
+    log.info(f'Plotting set {set}, modes {"on" if mode else "off"}, {num}')
     for func, values in funcs.items():
         if func == 'lognormal in beta':
             ax.plot(

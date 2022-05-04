@@ -19,7 +19,7 @@ def SNR(data: np.ndarray, db: bool = False) -> float:
 
 
 def main():
-    data_folder = Path('../Data/CSV')
+    data_folder = Path('../../Data/CSV')
     data1, _ = import_data(data_folder)
     df_dict = split_data(data1)
 

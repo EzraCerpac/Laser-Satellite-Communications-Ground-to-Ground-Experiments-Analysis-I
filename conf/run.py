@@ -1,3 +1,4 @@
+import logging
 import multiprocessing as mp
 from typing import Dict
 
@@ -12,6 +13,8 @@ from Model.with_beta import estimate_sigma as estimate_sigma_with_alpha
 from conf import plotting
 from conf.data import Data
 from misc.timing import timing
+
+log = logging.getLogger(__name__)
 
 Result = Dict[int, Dict[bool, Dict[int, Dict[str, float]]]]
 
@@ -129,8 +132,8 @@ class BatchRun:
         :return: Result object (dict)
         """
         pool = mp.Pool(mp.cpu_count())
+        log.info(f'Running Programs on {mp.cpu_count()} processors: ' + ', '.join([function for function in functions]))
         results = []
-        print('Running Programs: ' + ', '.join([function for function in functions]))
         for i, data_set in enumerate(self.data):
             self.results[data_set[0][0].data_set] = {}
             for j, data_mode in enumerate(data_set):
@@ -168,4 +171,5 @@ class BatchRun:
             #'sigma_gamma_with_alpha': run.calc_sigma_gamma_with_alpha,
         }
         [function_dict[function](**kwargs) for function in functions]
+        log.info(f'Finished fitment of set{data.data_set} {data.mode} {data.number}')
         return data, run.results

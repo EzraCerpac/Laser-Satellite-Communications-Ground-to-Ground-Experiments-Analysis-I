@@ -38,18 +38,18 @@ def estimate_sigma(irradiance: np.ndarray, w_0: float, use_gamma: bool = False, 
         xx_for_plot = np.linspace(1e-10, 1, 1001)
         label = 'gamma fitment' if use_gamma else 'lognormal fitment'
         if full_fit and use_gamma is False:
-            plt.plot(xx_for_plot, scint_func(xx_for_plot, alpha, beta, sigma_i), label=label)
+            plt.plot(xx_for_plot, scint_func(xx_for_plot, alpha, beta, sigma_i, full_fit=full_fit), label=label)
         elif full_fit and use_gamma is True:
-            plt.plot(xx_for_plot, scint_func(xx_for_plot, alpha, beta, a, b), label=label)
+            plt.plot(xx_for_plot, scint_func(xx_for_plot, alpha, beta, a, b, full_fit=full_fit), label=label)
         else:
-            plt.plot(xx_for_plot, scint_func(xx_for_plot, alpha, beta), label=label)
+            plt.plot(xx_for_plot, scint_func(xx_for_plot, alpha, beta, full_fit=full_fit), label=label)
 
     if not full_fit:
         return calc_sigma(beta, w_0), alpha, beta, MSE(scint_func, xx, yy, (alpha, beta))
     elif full_fit and use_gamma:
-        return calc_sigma(beta, w_0), alpha, beta, a, b, MSE(scint_func, xx, yy, (alpha, beta, a, b))
+        return calc_sigma(beta, w_0), alpha, beta, a, b, MSE(scint_func, xx, yy, (alpha, beta, a, b, True))
     else:
-        return calc_sigma(beta, w_0), alpha, beta, sigma_i, MSE(scint_func, xx, yy, (alpha, beta, sigma_i))
+        return calc_sigma(beta, w_0), alpha, beta, sigma_i, MSE(scint_func, xx, yy, (alpha, beta, sigma_i, True))
 
 
 def combined_dist(X: np.ndarray, alpha: float, beta: float, sigma_i: float = 0, full_fit: bool = False):

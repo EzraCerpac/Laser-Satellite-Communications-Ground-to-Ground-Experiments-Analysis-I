@@ -13,22 +13,22 @@ warnings.filterwarnings("ignore", category=IntegrationWarning)
 def main(cfg=Config()):
     # print(lognormal(np.array(cfg.set_data(22, False, 4).df)))
 
-    # results = cfg.run_batch(18, 22).run_parallel(
-    #     'lognormal in beta',
-    #     'gamma in beta',
-    #     'lognormal',
-    #     'inv gamma',
-    #     res=100,
-    #     plot=True,
-    #     errors=True,
-    #     save=True,
-    #     results=True
-    # )
-    #
-    # print(results)
+    results = cfg.run_batch(18).run_parallel(
+        # 'lognormal in beta',
+        # 'gamma in beta',
+        # 'lognormal',
+        # 'inv gamma',
+        'gamma full fit',
+        res=5,
+        plot=True,
+        errors=False,
+        save=False,
+        results=True)
+
+    print(results)
     # store_results(results)
 
-    plot_combined(open_results(), save=True)
+    # plot_combined(open_results(), save=True)
 
     # results = open_results()
 

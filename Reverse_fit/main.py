@@ -20,7 +20,7 @@ def full_fit_lognorm(I: np.ndarray, res: float, plot: bool):
 
 
 def Jorensfit(I):
-    results = curve_fit(combined_dist2, I, np.histogram(I))
+    results = curve_fit(combined_dist, I, np.histogram(I))
 
     return results
 

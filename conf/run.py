@@ -41,6 +41,11 @@ class Run:
             text += r'$\alpha_{gamma}$: ' + str(round(self.results['alpha gamma'], 2)) + '\n'
         if 'beta gamma' in self.results:
             text += r'$\beta_{gamma}$: ' + str(round(self.results['beta gamma'], 2)) + '\n'
+        if 'lognormal full fit' in self.results:
+            text += r'$\sigma_i$: ' + str(round(self.results['lognormal full fit']['sigma_i'], 2)) + '\n'
+        if 'gamma full fit' in self.results:
+            text += r'$a_{full}$: ' + str(round(self.results['gamma full fit']['a'], 2)) + '\n'
+            text += r'$b_{full}$: ' + str(round(self.results['gamma full fit']['b'], 2)) + '\n'
         return text.strip('\n')
 
     def _label_error(self) -> str:
@@ -123,9 +128,25 @@ class Run:
                      label='inverse gamma fitment')
         return self.results
 
-    def calc_full_lognorm(self, res: int = 101, plot: bool = False):
-        result = full_fit_lognorm(np.array(self.data.df), res, plot)
-        self.results['full_results'] = result
+    def calc_full_lognorm(self, res: int = 101, plot: bool = False, **unused):
+        self.results['lognormal full fit'] = {}
+        result = estimate_sigma_with_alpha(np.array(self.data.df), self.data.w_0, False, res, plot, full_fit=True)
+        self.results['lognormal full fit']['sigma'] = result[0]
+        self.results['lognormal full fit']['alpha'] = result[1]
+        self.results['lognormal full fit']['beta'] = result[2]
+        self.results['lognormal full fit']['sigma_i'] = result[3]
+        self.results['lognormal full fit']['standard div'] = result[-1]
+        return self.results
+
+    def calc_full_gamma_in_beta(self, res: int = 101, plot: bool = False, **unused):
+        self.results['gamma full fit'] = {}
+        result = estimate_sigma_with_alpha(np.array(self.data.df), self.data.w_0, True, res, plot, full_fit=True)
+        self.results['gamma full fit']['sigma'] = result[0]
+        self.results['gamma full fit']['alpha'] = result[1]
+        self.results['gamma full fit']['beta'] = result[2]
+        self.results['gamma full fit']['a'] = result[3]
+        self.results['gamma full fit']['b'] = result[4]
+        self.results['gamma full fit']['standard div'] = result[-1]
         return self.results
 
 
@@ -202,11 +223,12 @@ class BatchRun:
             'gamma in beta': run.fit_gamma_in_beta,
             'lognormal': run.fit_lognormal,
             'inv gamma': run.fit_inv_gamma,
-            'sigma': run.calc_sigma,
-            'sigma gamma': run.calc_sigma_gamma,
-            'sigma_with_alpha': run.calc_sigma_with_alpha,
-            'sigma_gamma_with_alpha': run.calc_sigma_gamma_with_alpha,
-            'full_lognorm': run.calc_full_lognorm,
+            'lognormal full fit': run.calc_full_lognorm,
+            'gamma full fit': run.calc_full_gamma_in_beta,
+            #'sigma': run.calc_sigma,
+            #'sigma gamma': run.calc_sigma_gamma,
+            #'sigma_with_alpha': run.calc_sigma_with_alpha,
+            #'sigma_gamma_with_alpha': run.calc_sigma_gamma_with_alpha,
         }
         try:
             [function_dict[function](**kwargs) for function in functions]

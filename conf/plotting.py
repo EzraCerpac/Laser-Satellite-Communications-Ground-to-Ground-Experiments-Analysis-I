@@ -59,6 +59,16 @@ def _plot_one(funcs, mode, num, save, set):
                     label=f'{func} (α={values["a"]:.2f}, β={values["pos"]:.2f}, '
                           f'MSE={values["standard div"]:.2f})'
                 )
+            if func == 'lognormal full fit':
+                plt.plot(xx, combined_dist(xx, values['alpha'], values['beta'], values['sigma_i'], full_fit=True), label=f'{func} (α={values["alpha"]:.2f}, β={values["beta"]:.2f}, $\simga_i$={values["simga_i"]:.2f} '
+                          f'MSE={values["standard div"]:.2f})')
+            if func == 'gamma full fit':
+                ax.plot(
+                    xx,
+                    combined_dist_gamma(xx, values['alpha'], values['beta'], values['a'], values['b'], full_fit=True),
+                    label=f'{func} (α={values["alpha"]:.2f}, β={values["beta"]:.2f}, a={values["a"]:.2f}, b={values["b"]:.2f}'
+                          f'MSE={values["standard div"]:.2f})'
+                )
             bar.next()
     plt.legend()
     if save:

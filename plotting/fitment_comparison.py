@@ -1,16 +1,16 @@
 import logging
+import time
 from collections import Counter
 
 import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
 
-from Data.timeframe import time
-
 log = logging.getLogger(__name__)
 
 
 def comparison_plot(results_file: str = 'Results/results.pickle', save: bool = False):
+    log.info('Making comparison plot')
     results = pd.read_pickle(results_file)
     fig, axs = plt.subplots(nrows=4, figsize=(5, 20))
     # fig.suptitle('Fitment MSE Comparison', fontsize=22)
@@ -34,8 +34,13 @@ def comparison_plot(results_file: str = 'Results/results.pickle', save: bool = F
 
                 axs[i * 2 + j].bar(indexes, values, width)
                 axs[i * 2 + j].set_xticks(indexes, labels, rotation=45)
+                axs[i * 2 + j].set_ylabel('Mean Squared Error')
             except Exception as e:
                 log.error(f'Error plotting {set} {"on" if j else "off"}: {e}')
+
+    fig.tight_layout()
     if save:
-        plt.savefig(f'Plots/{time.strftime("%d-%m-%Y_%H:%M")}Fitment_Comparison.pdf')
+        path = f'Plots/{time.strftime("%d-%m-%Y_%H:%M")}Fitment_Comparison.pdf'
+        plt.savefig(path)
+        log.info(f'Saved comparison plot to: {path}')
     plt.show()

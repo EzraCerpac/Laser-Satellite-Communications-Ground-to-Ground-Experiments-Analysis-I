@@ -43,7 +43,7 @@ def _plot_one(funcs: dict, mode: bool, num: int, set: int, save: bool, dir: str)
         plt.ylabel(r'PDF')
         norm_I_hist(np.array(Data(set, mode, num).df), bins=300)
         xx = np.linspace(0, 1, 101)
-        log.info(f'Plotting set {set}, modes {"on" if mode else "off"}, {num}')
+        # log.info(f'Plotting set {set}, modes {"on" if mode else "off"}, {num}')
         for func, values in funcs.items():
             if func == 'lognormal in beta':
                 ax.plot(
@@ -88,7 +88,7 @@ def _plot_one(funcs: dict, mode: bool, num: int, set: int, save: bool, dir: str)
                     xx,
                     combined_dist_gamma(xx, values['alpha'], values['beta'], values['a'], values['b'], full_fit=True),
                     label=f'{func} (α={values["alpha"]:.2f}, β={values["beta"]:.2f}, a={values["a"]:.2f}, b={values["b"]:.2f}'
-                          f'MSE={values["standard div"]:.2f})',
+                          f', MSE={values["standard div"]:.2f})',
                     linewidth=LW
                 )
         plt.xlim(0, 1)
@@ -98,8 +98,8 @@ def _plot_one(funcs: dict, mode: bool, num: int, set: int, save: bool, dir: str)
             if not path.exists(dir):
                 os.makedirs(dir)
             plt.savefig(f"{dir}/set{set}_{mode}_{num}.pdf")
+            log.info(f"Saved plot to {dir}/set{set}_{mode}_{num}.pdf")
         else:
             plt.show()
     except Exception as e:
-        log.error(f'Failed to plot set{set} {mode} {num}')
-        log.error(e)
+        log.error(f'Failed to plot set{set} {mode} {num}: {e}')

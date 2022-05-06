@@ -30,7 +30,6 @@ log = logging.getLogger(__name__)
 
 def main(cfg=Config()):
     log.info('Starting main')
-    # print(lognormal(np.array(cfg.set_data(22, False, 4).df)))
 
     # results = cfg.run_batch(18, 22).run_parallel(
     #     'lognormal in beta',
@@ -49,8 +48,7 @@ def main(cfg=Config()):
     # store_results(results)
     #
     plot_combined(open_results(), save=True)
-    # comparison_plot('Results/06-05-2022.pickle')
-    # results = open_results()
+    # comparison_plot('Results/06-05-2022.pickle', save=True)
 
 
 def store_results(results: dict, file: str = 'Results/dict.pickle'):

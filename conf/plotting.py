@@ -15,6 +15,8 @@ from plotting.norm_I_hist import norm_I_hist
 
 log = logging.getLogger(__name__)
 
+LW = 2
+
 
 def plot_combined(
         results: Dict[int, Dict[bool, Dict[int, Dict[str, Dict[str, float]]]]],
@@ -34,8 +36,10 @@ def plot_combined(
 
 
 def _plot_one(funcs: dict, mode: bool, num: int, set: int, save: bool, dir) -> None:
-    fig, ax = plt.subplots(figsize=(10, 8))
-    plt.title(f'Histogram and Probs of {set}urad, mode {"on" if mode else "off"}: {num}')
+    fig, ax = plt.subplots(figsize=(7, 5))
+    # plt.title(f'Histogram and Probs of {set}urad, mode {"on" if mode else "off"}: {num}')
+    plt.xlabel(r'$I_{norm}$')
+    plt.ylabel(r'PDF')
     norm_I_hist(np.array(Data(set, mode, num).df), bins=300)
     xx = np.linspace(0, 1, 101)
     log.info(f'Plotting set {set}, modes {"on" if mode else "off"}, {num}')
@@ -45,39 +49,46 @@ def _plot_one(funcs: dict, mode: bool, num: int, set: int, save: bool, dir) -> N
                 xx,
                 combined_dist(xx, values['alpha'], values['beta']),
                 label=f'{func} (α={values["alpha"]:.2f}, β={values["beta"]:.2f}, '
-                      f'MSE={values["standard div"]:.2f})'
+                      f'MSE={values["standard div"]:.2f})',
+                linewidth=LW
             )
         if func == 'gamma in beta':
             ax.plot(
                 xx,
                 combined_dist_gamma(xx, values['alpha'], values['beta']),
                 label=f'{func} (α={values["alpha"]:.2f}, β={values["beta"]:.2f}, '
-                      f'MSE={values["standard div"]:.2f})'
+                      f'MSE={values["standard div"]:.2f})',
+                linewidth=LW
             )
         if func == 'lognormal':
             plt.plot(
                 xx,
                 lognorm.pdf(xx, values['skew'], values['pos']),
                 label=f'{func} (σ={values["skew"]:.2f}, μ={values["pos"]:.2f}, '
-                      f'MSE={values["standard div"]:.2f})'
+                      f'MSE={values["standard div"]:.2f})',
+                linewidth=LW
             )
         if func == 'inv gamma':
             plt.plot(
                 xx,
                 invgamma.pdf(xx, values['a'], values['pos']),
                 label=f'{func} (α={values["a"]:.2f}, β={values["pos"]:.2f}, '
-                      f'MSE={values["standard div"]:.2f})'
+                      f'MSE={values["standard div"]:.2f})',
+                linewidth=LW
             )
         if func == 'lognormal full fit':
             plt.plot(xx, combined_dist(xx, values['alpha'], values['beta'], values['sigma_i'], full_fit=True),
                      label=f'{func} (α={values["alpha"]:.2f}, β={values["beta"]:.2f}, $sigma_i$={values["sigma_i"]:.2f} '
-                           f'MSE={values["standard div"]:.2f})')
+                           f'MSE={values["standard div"]:.2f})',
+                     linewidth=LW
+                     )
         if func == 'gamma full fit':
             ax.plot(
                 xx,
                 combined_dist_gamma(xx, values['alpha'], values['beta'], values['a'], values['b'], full_fit=True),
                 label=f'{func} (α={values["alpha"]:.2f}, β={values["beta"]:.2f}, a={values["a"]:.2f}, b={values["b"]:.2f}'
-                      f'MSE={values["standard div"]:.2f})'
+                      f'MSE={values["standard div"]:.2f})',
+                linewidth=LW
             )
     plt.xlim(0, 1)
     plt.legend()

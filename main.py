@@ -8,7 +8,6 @@ import multiprocessing_logging
 from scipy.integrate import IntegrationWarning
 
 from conf.config import Config
-from conf.plotting import plot_combined
 
 warnings.filterwarnings("ignore", category=RuntimeWarning)
 warnings.filterwarnings("ignore", category=IntegrationWarning)
@@ -44,11 +43,11 @@ def main(cfg=Config()):
         results=True
     )
 
-    # print(results)
-    # store_results(results)
+    print(results)
+    store_results(results)
 
-    plot_combined(open_results(), save=False)
-
+    # plot_combined(open_results(), save=False)
+    # comparison_plot()
     # results = open_results()
 
 

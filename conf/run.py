@@ -162,6 +162,10 @@ class BatchRun:
             'lognormal full fit': run.calc_full_lognorm,
             'gamma full fit': run.calc_full_gamma_in_beta,
         }
-        [function_dict[function](**kwargs) for function in functions]
-        log.info(f'Finished fitment of set{data.data_set} {data.mode} {data.number}')
+        try:
+            [function_dict[function](**kwargs) for function in functions]
+            log.info(f'Finished fitment of set{data.data_set} {data.mode} {data.number}')
+        except Exception as e:
+            log.error(f'Failed to fit set{data.data_set} {data.mode} {data.number}')
+            log.error(e)
         return data, run.results

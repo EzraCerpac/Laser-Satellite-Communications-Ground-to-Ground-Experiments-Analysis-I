@@ -1,5 +1,6 @@
 import logging
 import multiprocessing as mp
+import time
 from typing import Dict
 
 import numpy as np
@@ -144,7 +145,7 @@ class BatchRun:
         for result in results:
             self.results[result[0].data_set][result[0].mode][result[0].number] = result[1]
         if 'results' in kwargs and kwargs['results']:
-            pd.DataFrame.from_dict(self.results).to_pickle('Results/results.pickle')
+            pd.DataFrame.from_dict(self.results).to_pickle(f'Results/{time.strftime("%d-%m-%Y")}.pickle')
         if 'plot' in kwargs and kwargs['plot']:
             plotting.plot_combined(self.results, save=True if 'save' in kwargs and kwargs['save'] else False)
         print("\nDone!")

@@ -19,7 +19,7 @@ log = logging.getLogger(__name__)
 def plot_combined(
         results: Dict[int, Dict[bool, Dict[int, Dict[str, Dict[str, float]]]]],
         save: bool = False,
-        dir: str = time.strftime("%d/%m-%H:%M")
+        dir: str = time.strftime("%d-%m-%Y")
 ) -> None:
     log.info("Starting plot sequence")
     pool = mp.Pool(mp.cpu_count())
@@ -27,13 +27,13 @@ def plot_combined(
     for set, modes in results.items():
         for mode, nums in modes.items():
             for num, funcs in nums.items():
-                plottings.append(pool.apply_async(_plot_one, args=(funcs, mode, num, set, save)))
+                plottings.append(pool.apply_async(_plot_one, args=(funcs, mode, num, set, save, dir)))
     [plot.get() for plot in plottings]
     pool.close()
     log.info("Finished plots")
 
 
-def _plot_one(funcs: dict, mode: bool, num: int, set: int, save: bool) -> None:
+def _plot_one(funcs: dict, mode: bool, num: int, set: int, save: bool, dir) -> None:
     fig, ax = plt.subplots(figsize=(10, 8))
     plt.title(f'Histogram and Probs of {set}urad, mode {"on" if mode else "off"}: {num}')
     norm_I_hist(np.array(Data(set, mode, num).df), bins=300)
@@ -82,7 +82,6 @@ def _plot_one(funcs: dict, mode: bool, num: int, set: int, save: bool) -> None:
     plt.xlim(0, 1)
     plt.legend()
     if save:
-        dir = "Plots/all"
         if not path.exists(dir):
             os.makedirs(dir)
         plt.savefig(f"{dir}/set{set}_{mode}_{num}.pdf")

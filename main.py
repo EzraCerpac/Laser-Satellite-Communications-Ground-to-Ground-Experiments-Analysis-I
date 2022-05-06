@@ -30,18 +30,19 @@ def main(cfg=Config()):
     log.info('Starting main')
     # print(lognormal(np.array(cfg.set_data(22, False, 4).df)))
 
-    # results = cfg.run_batch(18).run_parallel(
-    #     # 'lognormal in beta',
-    #     # 'gamma in beta',
-    #     'lognormal',
-    #     # 'inv gamma',
-    #     # 'gamma full fit',
-    #     res=3,
-    #     plot=True,
-    #     errors=False,
-    #     save=False,
-    #     # results=True
-    # )
+    results = cfg.run_batch(18).run_parallel(
+        'lognormal in beta',
+        'gamma in beta',
+        'lognormal',
+        'inv gamma',
+        'gamma full fit',
+        'lognormal full fit',
+        res=5,
+        plot=True,
+        errors=False,
+        save=True,
+        results=True
+    )
 
     # print(results)
     # store_results(results)

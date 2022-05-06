@@ -6,12 +6,12 @@ from os import path
 from typing import Dict
 
 import numpy as np
-from Plotting.norm_I_hist import norm_I_hist
 from matplotlib import pyplot as plt
 from scipy.stats import lognorm, invgamma
 
 from Model.with_beta import combined_dist, combined_dist_gamma
 from conf.data import Data
+from plotting.norm_I_hist import norm_I_hist
 
 log = logging.getLogger(__name__)
 

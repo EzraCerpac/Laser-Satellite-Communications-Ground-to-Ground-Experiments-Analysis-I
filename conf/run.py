@@ -23,7 +23,6 @@ class Run:
     def __init__(self, data: Data):
         self.data = data
         self.results = {}
-        fig, self.ax = plt.subplots(figsize=(8, 5))
 
     def fit_lognormal_in_beta(self, res: int = 101, plot: bool = False, **unused):
         self.results['lognormal in beta'] = {}
@@ -114,8 +113,7 @@ class BatchRun:
             for j, data_mode in enumerate(data_set):
                 number_results = {}
                 for k, data in enumerate(data_mode):
-                    number_results[data.number] = \
-                    self._run(data, data_mode, data_set, functions, j, k, kwargs, number_results)[1]
+                    number_results[data.number] = self._run(data, functions, kwargs)[1]
                 mode_results[data_mode[0].mode] = number_results
             self.results[data_set[0][0].data_set] = mode_results
         return self.results
@@ -140,8 +138,7 @@ class BatchRun:
                 self.results[data_set[0][0].data_set][data_mode[0].mode] = {}
                 for k, data in enumerate(data_mode):
                     self.results[data_set[0][0].data_set][data_mode[0].mode][data.number] = {}
-                    results.append(
-                        pool.apply_async(self._run, args=(data, functions, kwargs)))
+                    results.append(pool.apply_async(self._run, args=(data, functions, kwargs)))
         results = [result.get() for result in results]
         pool.close()
         for result in results:
@@ -157,18 +154,12 @@ class BatchRun:
     def _run(data, functions, kwargs) -> (Data, Result):
         run = Run(data)
         function_dict = {
-            # 'sigma': run.calc_sigma,
-            # 'sigma gamma': run.calc_sigma_gamma,
             'lognormal in beta': run.fit_lognormal_in_beta,
             'gamma in beta': run.fit_gamma_in_beta,
             'lognormal': run.fit_lognormal,
             'inv gamma': run.fit_inv_gamma,
             'lognormal full fit': run.calc_full_lognorm,
             'gamma full fit': run.calc_full_gamma_in_beta,
-            #'sigma': run.calc_sigma,
-            #'sigma gamma': run.calc_sigma_gamma,
-            #'sigma_with_alpha': run.calc_sigma_with_alpha,
-            #'sigma_gamma_with_alpha': run.calc_sigma_gamma_with_alpha,
         }
         [function_dict[function](**kwargs) for function in functions]
         log.info(f'Finished fitment of set{data.data_set} {data.mode} {data.number}')

@@ -9,7 +9,6 @@ from scipy.integrate import IntegrationWarning
 from scipy.optimize import OptimizeWarning
 
 from conf.config import Config
-from conf.plotting import plot_combined
 
 warnings.filterwarnings("ignore", category=RuntimeWarning)
 warnings.filterwarnings("ignore", category=IntegrationWarning)
@@ -30,27 +29,27 @@ log = logging.getLogger(__name__)
 
 def main(cfg=Config()):
     log.info('Starting main')
-    # print(lognormal(np.array(cfg.set_data(22, False, 4).df)))
 
-    # results = cfg.run_batch(18, 22).run_parallel(
+    # results = cfg.run_batch(18).run_parallel(
     #     'lognormal in beta',
     #     'gamma in beta',
     #     'lognormal',
     #     'inv gamma',
     #     'gamma full fit',
     #     'lognormal full fit',
-    #     res=3,
+    #     res=15,
     #     plot=True,
     #     save=True,
     #     results=True,
     # )
-    #
-    # print(results)
+
     # store_results(results)
-    #
-    plot_combined(open_results(), save=True)
-    # comparison_plot('Results/06-05-2022.pickle')
-    # results = open_results()
+
+    # plot_combined(open_results(), save=False)
+    # comparison_plot('Results/11-05-2022_to_use_full_fit.pickle', save=True)
+
+    # irradiance_plot(pd.read_csv('Data/CSV/data18urad.csv'), save=True)
+    # build_up_plots(open_results('Results/11-05-2022_to_use_full_fit.pickle'))
 
 
 def store_results(results: dict, file: str = 'Results/dict.pickle'):

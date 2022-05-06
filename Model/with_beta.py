@@ -32,10 +32,10 @@ def estimate_sigma(irradiance: np.ndarray, w_0: float, use_gamma: bool = False, 
     try:
         if full_fit and use_gamma is False:
             (alpha, beta, sigma_i), p_cov = curve_fit(partial(scint_func, full_fit=full_fit), xx, yy, p0=[2, 5, 0.2],
-                                                      bounds=((0.5, 0.5, 0), (20, 20, 10)))
+                                                      bounds=((0.5, 0.5, 0), (40, 40, 10)))
         elif full_fit and use_gamma is True:
-            (alpha, beta, a, b), p_cov = curve_fit(partial(scint_func, full_fit=full_fit), xx, yy, p0=[2, 5, 2, 8],
-                                                   bounds=((0.5, 0.5, 0, 0), (20, 20, 20, 20)))
+            (alpha, beta, a, b), p_cov = curve_fit(partial(scint_func, full_fit=full_fit), xx, yy, p0=[2, 5, 20, 20],
+                                                   bounds=((0.5, 0.5, 0, 0), (20, 20, 80, 80)))
         else:
             (alpha, beta), p_cov = curve_fit(partial(scint_func, full_fit=full_fit), xx, yy, p0=[2, 5],
                                              bounds=((0.5, 0.5), (20, 20)))

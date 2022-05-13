@@ -1,18 +1,16 @@
-import multiprocessing as mp
+import logging
 from typing import Dict
 
 import numpy as np
-import pandas as pd
 from matplotlib import pyplot as plt
 from scipy.stats import invgamma, lognorm
 
 from Model.inv_gamma import inv_gamma, inv_gamma_curve_fit
 from Model.pure_lognormal import lognormal, lognormal_curve_fit
 from Model.with_beta import estimate_sigma as estimate_sigma_with_alpha
-from Reverse_fit.main import full_fit_lognorm
-from conf import plotting
 from conf.data import Data
-from misc.timing import timing
+
+log = logging.getLogger(__name__)
 
 Result = Dict[int, Dict[bool, Dict[int, Dict[str, float]]]]
 
@@ -21,7 +19,6 @@ class Run:
     def __init__(self, data: Data):
         self.data = data
         self.results = {}
-        fig, self.ax = plt.subplots(figsize=(8, 5))
 
     def fit_lognormal_in_beta(self, res: int = 101, plot: bool = False, **unused):
         self.results['lognormal in beta'] = {}
@@ -66,89 +63,25 @@ class Run:
                      label='inverse gamma fitment')
         return self.results
 
-    def calc_full_lognorm(self, res: int = 101, plot: bool = False):
-        result = full_fit_lognorm(np.array(self.data.df), res, plot)
-        self.results['full_results'] = result
+    def calc_full_lognorm(self, res: int = 101, plot: bool = False, **unused):
+        self.results['lognormal full fit'] = {}
+        result = estimate_sigma_with_alpha(np.array(self.data.df), self.data.w_0, False, res, plot, full_fit=True)
+        self.results['lognormal full fit']['sigma'] = result[0]
+        self.results['lognormal full fit']['alpha'] = result[1]
+        self.results['lognormal full fit']['beta'] = result[2]
+        self.results['lognormal full fit']['sigma_i'] = result[3]
+        self.results['lognormal full fit']['standard div'] = result[-1]
+        return self.results
+
+    def calc_full_gamma_in_beta(self, res: int = 101, plot: bool = False, **unused):
+        self.results['gamma full fit'] = {}
+        result = estimate_sigma_with_alpha(np.array(self.data.df), self.data.w_0, True, res, plot, full_fit=True)
+        self.results['gamma full fit']['sigma'] = result[0]
+        self.results['gamma full fit']['alpha'] = result[1]
+        self.results['gamma full fit']['beta'] = result[2]
+        self.results['gamma full fit']['a'] = result[3]
+        self.results['gamma full fit']['b'] = result[4]
+        self.results['gamma full fit']['standard div'] = result[-1]
         return self.results
 
 
-class BatchRun:
-    def __init__(self, data_sets):
-        self.data = [[[Data(data_set, mode, number) for number in Data.mode_dict[mode]]
-                      for mode in Data.mode_dict.keys()] for data_set in data_sets]
-        self.results: Result = {}
-
-    @timing
-    def run(self, *functions: str, **kwargs) -> Result:
-        """
-        Run all functions on all data sets
-        :param functions: functions to run
-        :param kwargs:
-            res: int, resolution of the histogram
-            plot: bool, if True, plot the histogram
-            save: bool, if True, save the plots
-        :return: Result object (dict)
-        """
-        print('Running Programs: ' + ', '.join([function for function in functions]))
-        for i, data_set in enumerate(self.data):
-            print(f'Running experiment {i + 1} of {len(self.data)}')
-            mode_results = {}
-            for j, data_mode in enumerate(data_set):
-                number_results = {}
-                for k, data in enumerate(data_mode):
-                    number_results[data.number] = \
-                    self._run(data, data_mode, data_set, functions, j, k, kwargs, number_results)[1]
-                mode_results[data_mode[0].mode] = number_results
-            self.results[data_set[0][0].data_set] = mode_results
-        return self.results
-
-    @timing
-    def run_parallel(self, *functions: str, **kwargs) -> Dict[int, Dict[bool, Dict[int, Dict[str, float]]]]:
-        """
-        Run all functions on all data sets in parallel
-        :param functions: functions to run
-        :param kwargs:
-            res: int, resolution of the histogram
-            plot: bool, if True, plot the histogram
-            save: bool, if True, save the plots
-        :return: Result object (dict)
-        """
-        pool = mp.Pool(mp.cpu_count())
-        results = []
-        print('Running Programs: ' + ', '.join([function for function in functions]))
-        for i, data_set in enumerate(self.data):
-            self.results[data_set[0][0].data_set] = {}
-            for j, data_mode in enumerate(data_set):
-                self.results[data_set[0][0].data_set][data_mode[0].mode] = {}
-                for k, data in enumerate(data_mode):
-                    self.results[data_set[0][0].data_set][data_mode[0].mode][data.number] = {}
-                    results.append(
-                        pool.apply_async(self._run, args=(data, functions, kwargs)))
-        results = [result.get() for result in results]
-        pool.close()
-        for result in results:
-            self.results[result[0].data_set][result[0].mode][result[0].number] = result[1]
-        if 'results' in kwargs and kwargs['results']:
-            pd.DataFrame.from_dict(self.results).to_pickle('Results/results.pickle')
-        if 'plot' in kwargs and kwargs['plot']:
-            plotting.plot_combined(self.results, save=True if 'save' in kwargs and kwargs['save'] else False)
-        print("\nDone!")
-        return self.results
-
-    @staticmethod
-    def _run(data, functions, kwargs) -> (Data, Result):
-        run = Run(data)
-        function_dict = {
-            # 'sigma': run.calc_sigma,
-            # 'sigma gamma': run.calc_sigma_gamma,
-            'lognormal in beta': run.fit_lognormal_in_beta,
-            'gamma in beta': run.fit_gamma_in_beta,
-            'lognormal': run.fit_lognormal,
-            'inv gamma': run.fit_inv_gamma,
-            'full_lognorm': run.calc_full_lognorm,
-        }
-        [function_dict[function](**kwargs) for function in functions]
-        # if 'plot' in kwargs and kwargs['plot']:
-        #     run.plot(functions, True if 'errors' in kwargs and kwargs['errors'] else False,
-        #              save=True if 'save' in kwargs and kwargs['save'] else False)
-        return data, run.results

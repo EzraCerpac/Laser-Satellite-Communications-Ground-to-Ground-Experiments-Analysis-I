@@ -31,10 +31,11 @@ def plot_combined(
 def _plot_one(funcs: dict, mode: bool, num: int, set: int, save: bool) -> None:
     fig, ax = plt.subplots(figsize=(10, 8))
     plt.title(f'Histogram and Probs of {set}urad, mode {"on" if mode else "off"}: {num}')
-    norm_I_hist(np.array(Data(set, mode, num).df), bins=300)
+    # norm_I_hist(np.array(Data(set, mode, num).df), bins=300)
     xx = np.linspace(0, 1, 101)
     print(f'Plotting set {set}, modes {"on" if mode else "off"}, {num}')
     for func, values in funcs.items():
+        plt.xlim(0, 1)
         if func == 'lognormal in beta':
             ax.plot(
                 xx,
@@ -63,7 +64,30 @@ def _plot_one(funcs: dict, mode: bool, num: int, set: int, save: bool) -> None:
                 label=f'{func} (α={values["a"]:.2f}, β={values["pos"]:.2f}, '
                       f'MSE={values["standard div"]:.2f})'
             )
-    plt.xlim(0, 1)
+        if func == 'fade probability data':
+            plt.plot(
+                values['F_t'], values['Prob'],
+                label=f'{func}'
+            )
+            plt.xlim(values['Min'], values['Max'])
+            plt.yscale("log")
+
+        if func == 'fade count data':
+            plt.plot(
+                values['F_t'], values['Time'],
+                label=f'{func}'
+            )
+            plt.xlim(values['Min'], values['Max'])
+            plt.yscale("log")
+        if func == 'fade mean time data':
+            plt.plot(
+                values['F_t'], values['Time'],
+                label=f'{func}'
+            )
+            plt.xlim(values['Min'], values['Max'])
+            plt.yscale("log")
+
+
     plt.legend()
     if save:
         dir = "Plots/all"

@@ -4,7 +4,7 @@ import sys
 import time
 import warnings
 
-import multiprocessing_logging
+# import multiprocessing_logging
 from scipy.integrate import IntegrationWarning
 from scipy.optimize import OptimizeWarning
 
@@ -15,34 +15,36 @@ warnings.filterwarnings("ignore", category=RuntimeWarning)
 warnings.filterwarnings("ignore", category=IntegrationWarning)
 warnings.filterwarnings("ignore", category=OptimizeWarning)
 
-file_handler = logging.FileHandler(filename=f'logs/{time.strftime("%d-%m-%Y")}.log')
-stdout_handler = logging.StreamHandler(sys.stdout)
-handlers = [file_handler, stdout_handler]
 
-logging.basicConfig(
-    level=logging.INFO,
-    format="%(asctime)s %(name)-20s %(levelname)-8s %(message)s",
-    handlers=handlers,
-)
-multiprocessing_logging.install_mp_handler()
+# file_handler = logging.FileHandler(filename=f'logs/{time.strftime("%d-%m-%Y")}.log')
+# stdout_handler = logging.StreamHandler(sys.stdout)
+# handlers = [file_handler, stdout_handler]
+
+# logging.basicConfig(
+# level=logging.INFO,
+# format="%(asctime)s %(name)-20s %(levelname)-8s %(message)s",
+# handlers=handlers,
+# )
+# multiprocessing_logging.install_mp_handler()
 log = logging.getLogger(__name__)
 
 
 def main(cfg=Config()):
-    log.info('Starting main')
+    # log.info('Starting main')
 
-    # results = cfg.run_batch(18).run_parallel(
-    #     'lognormal in beta',
-    #     'gamma in beta',
-    #     'lognormal',
-    #     'inv gamma',
-    #     'gamma full fit',
-    #     'lognormal full fit',
-    #     res=15,
-    #     plot=True,
-    #     save=True,
-    #     results=True,
-    # )
+    results = cfg.run_batch(18).run_parallel(
+        #     'lognormal in beta',
+        #     'gamma in beta',
+        # 'lognormal',
+        #     'inv gamma',
+        #     'gamma full fit',
+        #     'lognormal full fit',
+        'fade mean time data',
+        res=150,
+        plot=True,
+        save=False,
+        results=False,
+    )
 
     # store_results(results)
 
@@ -50,7 +52,7 @@ def main(cfg=Config()):
     # comparison_plot('Results/11-05-2022_to_use_full_fit.pickle', save=True)
 
     # irradiance_plot(pd.read_csv('Data/CSV/data18urad.csv'), save=True)
-    build_up_plots(open_results('Results/11-05-2022_to_use_full_fit.pickle'))
+    # build_up_plots(open_results('Results/11-05-2022_to_use_full_fit.pickle'))
 
 
 def store_results(results: dict, file: str = 'Results/dict.pickle'):

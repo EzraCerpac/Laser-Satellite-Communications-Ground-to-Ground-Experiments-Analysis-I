@@ -81,6 +81,9 @@ class BatchRun:
             'inv gamma': run.fit_inv_gamma,
             'lognormal full fit': run.calc_full_lognorm,
             'gamma full fit': run.calc_full_gamma_in_beta,
+            'fade probability data': run.fade_prob_data,
+            'fade count data': run.fade_count_data,
+            'fade mean time data': run.fade_mean_data,
         }
         try:
             [function_dict[function](**kwargs) for function in functions]

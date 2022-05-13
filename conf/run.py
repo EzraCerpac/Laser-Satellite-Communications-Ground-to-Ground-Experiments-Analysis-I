@@ -9,10 +9,10 @@ from Model.inv_gamma import inv_gamma, inv_gamma_curve_fit
 from Model.pure_lognormal import lognormal, lognormal_curve_fit
 from Model.with_beta import estimate_sigma as estimate_sigma_with_alpha
 from conf.data import Data
-
 from Fade.data_fade import plot_fade_prob, plot_fade_count, plot_mean_time
 
 log = logging.getLogger(__name__)
+
 
 Result = Dict[int, Dict[bool, Dict[int, Dict[str, float]]]]
 

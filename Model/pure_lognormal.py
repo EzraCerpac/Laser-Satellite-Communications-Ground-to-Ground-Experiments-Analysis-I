@@ -16,6 +16,8 @@ def lognormal(irradiance: np.ndarray, plot: bool = True) -> Tuple[float, float, 
     xx = np.linspace(1e-8, 1 - 1e-8, 101)
     if plot:
         plt.plot(xx, lognorm.pdf(xx, *p), label='lognormal fitment')
+    yy = norm_I_hist(irradiance, bins=250, plot=False)
+    xx = np.linspace(1e-10, 1, len(yy))
     return p[0], p[1], MSE(lognorm.pdf, xx, np.histogram(I, bins=len(xx), density=True)[0], p)
 
 
@@ -25,4 +27,6 @@ def lognormal_curve_fit(irradiance: np.ndarray, res: int = 101, plot: bool = Tru
     p_opt, p_cov = curve_fit(lognorm.pdf, xx, yy, p0=[1, -0.001])
     if plot:
         plt.plot(xx, lognorm.pdf(xx, *p_opt), label='lognormal fitment')
+    yy = norm_I_hist(irradiance, bins=250, plot=False)
+    xx = np.linspace(1e-10, 1, len(yy))
     return *p_opt, MSE(lognorm.pdf, xx, yy, p_opt)

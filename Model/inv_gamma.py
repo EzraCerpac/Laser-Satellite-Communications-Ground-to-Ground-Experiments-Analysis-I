@@ -17,6 +17,8 @@ def inv_gamma_curve_fit(irradiance: np.ndarray, res: int = 101, plot: bool = Tru
                              p0=[3, -0.001])  # TODO: check if fscale=1 is correct
     if plot:
         plt.plot(xx, invgamma.pdf(xx, *p_opt), label='inverse gamma fitment')
+    yy = norm_I_hist(irradiance, bins=250, plot=False)
+    xx = np.linspace(1e-10, 1, len(yy))
     return *p_opt, MSE(invgamma.pdf, xx, yy, p_opt)
 
 
@@ -26,4 +28,6 @@ def inv_gamma(irradiance: np.ndarray, plot: bool = True) -> Tuple[float, float, 
     xx = np.linspace(1e-8, 1 - 1e-8, 101)
     if plot:
         plt.plot(xx, invgamma.pdf(xx, *p), label='inverse gamma fitment')
+    yy = norm_I_hist(irradiance, bins=250, plot=False)
+    xx = np.linspace(1e-10, 1, len(yy))
     return p[0], p[1], MSE(invgamma.pdf, xx, np.histogram(I, bins=len(xx), density=True)[0], p)

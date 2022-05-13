@@ -52,7 +52,11 @@ def estimate_sigma(irradiance: np.ndarray, w_0: float, use_gamma: bool = False, 
         else:
             plt.plot(xx_for_plot, scint_func(xx_for_plot, alpha, beta, full_fit=full_fit), label=label)
 
+    yy = norm_I_hist(irradiance, bins=250, plot=False)
+    xx = np.linspace(1e-10, 1, len(yy))
+
     if not full_fit:
+
         return calc_sigma(beta, w_0), alpha, beta, MSE(scint_func, xx, yy, (alpha, beta))
     elif full_fit and use_gamma:
         return calc_sigma(beta, w_0), alpha, beta, a, b, MSE(scint_func, xx, yy, (alpha, beta, a, b, True))

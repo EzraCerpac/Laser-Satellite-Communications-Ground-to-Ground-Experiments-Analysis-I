@@ -9,6 +9,7 @@ from scipy.integrate import IntegrationWarning
 from scipy.optimize import OptimizeWarning
 
 from conf.config import Config
+from plotting.build_up_plot import build_up_plots
 
 warnings.filterwarnings("ignore", category=RuntimeWarning)
 warnings.filterwarnings("ignore", category=IntegrationWarning)
@@ -49,7 +50,7 @@ def main(cfg=Config()):
     # comparison_plot('Results/11-05-2022_to_use_full_fit.pickle', save=True)
 
     # irradiance_plot(pd.read_csv('Data/CSV/data18urad.csv'), save=True)
-    # build_up_plots(open_results('Results/11-05-2022_to_use_full_fit.pickle'))
+    build_up_plots(open_results('Results/11-05-2022_to_use_full_fit.pickle'))
 
 
 def store_results(results: dict, file: str = 'Results/dict.pickle'):

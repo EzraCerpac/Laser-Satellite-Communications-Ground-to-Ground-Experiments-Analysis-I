@@ -48,7 +48,7 @@ def comparison_plot(results_file: str = 'Results/results.pickle', save: bool = F
                     #                         size=11, ha='center', va='center', transform=axs[i * 2 + j].transAxes)
                     fig.tight_layout()
                     if save:
-                        dir = f'Plots/{time.strftime("%d-%m-%Y_%H:%M")}Fitment_Comparison'
+                        dir = f'Plots/{time.strftime("%d-%m-%Y_%H-%M")}Fitment_Comparison'
                         if not os.path.exists(dir):
                             os.makedirs(dir)
                         path = f'{dir}/{set}urad_modes_{"on" if j else "off"}.pdf'

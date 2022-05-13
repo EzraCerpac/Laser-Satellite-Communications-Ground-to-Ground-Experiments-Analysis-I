@@ -39,18 +39,18 @@ def main(cfg=Config()):
     #     'gamma full fit',
     #     'lognormal full fit',
     #     res=15,
-    #     plot=True,
-    #     save=True,
+    #     # plot=True,
+    #     # save=True,
     #     results=True,
     # )
-
+    #
     # store_results(results)
 
     # plot_combined(open_results(), save=False)
     # comparison_plot('Results/11-05-2022_to_use_full_fit.pickle', save=True)
 
     # irradiance_plot(pd.read_csv('Data/CSV/data18urad.csv'), save=True)
-    build_up_plots(open_results('Results/11-05-2022_to_use_full_fit.pickle'))
+    build_up_plots(open_results('Results/13-05-2022.pickle'), 'lognormal in beta', save=False)
 
 
 def store_results(results: dict, file: str = 'Results/dict.pickle'):

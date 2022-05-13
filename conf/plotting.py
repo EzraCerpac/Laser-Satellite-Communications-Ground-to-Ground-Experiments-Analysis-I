@@ -21,7 +21,7 @@ LW = 2
 def plot_combined(
         results: Dict[int, Dict[bool, Dict[int, Dict[str, Dict[str, float]]]]],
         save: bool = False,
-        dir: str = time.strftime("%d-%m-%Y_%H:%M")
+        dir: str = time.strftime("%d-%m-%Y_%H-%M")
 ) -> None:
     log.info("Starting plot sequence")
     pool = mp.Pool(mp.cpu_count())

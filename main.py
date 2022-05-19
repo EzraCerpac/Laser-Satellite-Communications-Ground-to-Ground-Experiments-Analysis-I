@@ -32,7 +32,7 @@ log = logging.getLogger(__name__)
 def main(cfg=Config()):
     log.info('Starting main')
 
-    fourier_comparison(np.array(cfg.set_data(18, True, 16).df))
+    fourier_comparison(np.array(cfg.set_data(18, False, 4).df))
 
     """Fitting to generated data"""
     # data = Pcomb(

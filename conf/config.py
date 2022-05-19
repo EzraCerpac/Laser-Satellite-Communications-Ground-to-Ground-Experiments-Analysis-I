@@ -1,5 +1,6 @@
 from conf.data import Data
-from conf.run import Run, BatchRun
+from conf.run import Run
+from conf.run_batch import BatchRun
 
 
 class Config:

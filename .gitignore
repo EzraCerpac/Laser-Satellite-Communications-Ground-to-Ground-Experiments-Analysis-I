@@ -128,3 +128,6 @@ dmypy.json
 # Pyre type checker
 .pyre/
 /.idea/misc.xml
+!/Plots/
+!/Plots/BER_w_sigma.pdf
+!/Plots/optimum_ratio.pdf

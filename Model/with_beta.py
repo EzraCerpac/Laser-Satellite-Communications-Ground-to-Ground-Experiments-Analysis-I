@@ -1,3 +1,4 @@
+import logging
 from functools import partial
 
 import numpy as np
@@ -14,6 +15,8 @@ from formula.jitter import k, calc_sigma
 from formula.statistics import MSE
 from plotting.norm_I_hist import norm_I_hist
 
+log = logging.getLogger(__name__)
+
 Cn = pd.read_pickle('Data/DFs/Cn.pickle')
 zz = np.array(Cn['z-distance'])
 C_n2 = np.array(Cn['Cn^2'])
@@ -26,14 +29,19 @@ def estimate_sigma(irradiance: np.ndarray, w_0: float, use_gamma: bool = False, 
     scint_func = combined_dist_gamma if use_gamma else combined_dist
     yy = norm_I_hist(irradiance, bins=res, plot=False)
     xx = np.linspace(1e-10, 1, len(yy))
-    if full_fit and use_gamma is False:
-        (alpha, beta, sigma_i), p_cov = curve_fit(partial(scint_func, full_fit=full_fit), xx, yy, p0=[2, 5, 0.2],
-                                                  bounds=((0.5, 0.5, 0), (20, 20, 10)))
-    elif full_fit and use_gamma is True:
-        (alpha, beta, a, b), p_cov = curve_fit(partial(scint_func, full_fit=full_fit), xx, yy, p0=[2, 5, 2, 8],
-                                               bounds=((0.5, 0.5, 0, 0), (20, 20, 20, 20)))
-    else:
-        (alpha, beta), p_cov = curve_fit(partial(scint_func, full_fit=full_fit), xx, yy, p0=[2, 5], bounds=((0.5, 0.5), (20, 20)))
+    try:
+        if full_fit and use_gamma is False:
+            (alpha, beta, sigma_i), p_cov = curve_fit(partial(scint_func, full_fit=full_fit), xx, yy, p0=[2, 5, 0.2],
+                                                      bounds=((0.5, 0.5, 0), (40, 40, 10)))
+        elif full_fit and use_gamma is True:
+            (alpha, beta, a, b), p_cov = curve_fit(partial(scint_func, full_fit=full_fit), xx, yy, p0=[2, 5, 20, 20],
+                                                   bounds=((0.5, 0.5, 0, 0), (20, 20, 80, 80)))
+        else:
+            (alpha, beta), p_cov = curve_fit(partial(scint_func, full_fit=full_fit), xx, yy, p0=[2, 5],
+                                             bounds=((0.5, 0.5), (20, 20)))
+    except RuntimeError:
+        log.warning('Fit failed, setting all to values to 1')
+        (alpha, beta, a, b), p_cov = (1, 1, 1, 1), (0, 0, 0, 0)
     if plot:
         xx_for_plot = np.linspace(1e-10, 1, 1001)
         label = 'gamma fitment' if use_gamma else 'lognormal fitment'

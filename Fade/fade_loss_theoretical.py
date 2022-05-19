@@ -1,8 +1,8 @@
 import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
-from scipy import special
-
+from scipy import special, interpolate, integrate
+from Fade.fade_loss_theoretical2 import frac_fade_time_test, linestyles
 import combined_fit.indices
 from formula.jitter import k
 
@@ -31,18 +31,57 @@ def PDF_gamma(Ft):  # gamma-gamma
     print(sigma_R)
     return gamma
 
+def PDF_gamma_I(Z):  # gamma-gamma
+    # sigma_R = np.sqrt(1.23 * Cn_2 * k ** (7 / 6) * L ** (11 / 6))
+    I = 1.0
+    # gamma = np.empty(0)
+
+    gamma = (2 * (alpha * beta) ** ((alpha + beta) / 2) / (T_alpha * T_beta * I)) * (
+                (Z) ** ((alpha + beta) / 2)) * special.kv(
+        alpha - beta, 2 * np.sqrt(alpha * beta * Z))
+    print(sigma_R)
+    return gamma
+
 def PDF_gamma_test():
     prob = []
     ft = []
+    Z = []
+    probx = []
 
     for i in range(11):
-       ft.append(i)
-       prob.append(PDF_gamma(i))
+        Z.append(np.exp(-0.23*i))
+        probx.append(PDF_gamma_I(i))
 
-    print(prob)
-    print(ft)
+    for i in range(101):
+       ft.append(i/100)
+       prob.append(PDF_gamma(i/10))
 
-    plt.plot(ft, prob)
+    Gamma_Func = interpolate.interp1d(ft, prob, kind='cubic', fill_value="extrapolate")
+    def g(x):
+        return Gamma_Func(x)
+
+    int_prob = []
+    for i in range(0, 101, 1):
+        estimatef_2, errorf = integrate.quad(g, ft[i], 1.1)
+        int_prob.append(estimatef_2)
+
+    ft_2 = []
+    for i in range(101):
+        ft_2.append(ft[i] * 10)
+
+    #plt.plot(ft, prob)
+    return ft_2, int_prob
+
+
+def fade_loss():
+    ft_2, int_prob = PDF_gamma_test()
+    plt.plot(ft_2, int_prob, linestyles.pop(), markevery=10,label='gamma-gamma model')
+    frac_fade_time_test()
+    plt.legend()
+    plt.ylabel('Probability of Fade')
+    plt.xlabel('Threshold Level $F_T$ (dB)')
+    plt.yscale('log')
+    plt.savefig('Prob_of_Fade', format='pdf')
     plt.show()
 
 

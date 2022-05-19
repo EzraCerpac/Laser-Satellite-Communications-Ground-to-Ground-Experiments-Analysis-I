@@ -6,7 +6,7 @@ from os import path
 from typing import Dict
 
 import numpy as np
-from Plotting.norm_I_hist import norm_I_hist
+from plotting.norm_I_hist import norm_I_hist
 from matplotlib import pyplot as plt
 from scipy.stats import lognorm, invgamma
 

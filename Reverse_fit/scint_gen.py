@@ -14,12 +14,12 @@ def Psci(*, psi, cut_off_freq, lpf_slope, sampling_freq, vector_length, mean_rec
 
 
 if __name__ == '__main__':
-    P_sci = np.random.seed(0)
-    Psci(
-        psi=0.099725,
+    # np.random.seed(0)
+    P_sci = Psci(
+        psi=0.099725 * 4,
         cut_off_freq=0.9,
-        lpf_slope=0.9,
-        sampling_freq=80,
+        lpf_slope=90,
+        sampling_freq=10,
         vector_length=30,
         mean_received_power=1,
     )

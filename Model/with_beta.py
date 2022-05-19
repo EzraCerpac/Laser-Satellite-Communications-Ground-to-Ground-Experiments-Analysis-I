@@ -27,7 +27,7 @@ labda = 1550e-9
 def estimate_sigma(irradiance: np.ndarray, w_0: float, use_gamma: bool = False, res: int = 100, plot=False,
                    full_fit: bool = False):
     scint_func = combined_dist_gamma if use_gamma else combined_dist
-    yy = norm_I_hist(irradiance, bins=res, plot=False)
+    yy = norm_I_hist(irradiance, bins=res, plot=plot)
     xx = np.linspace(1e-10, 1, len(yy))
     try:
         if full_fit and use_gamma is False:

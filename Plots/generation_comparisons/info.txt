@@ -1,0 +1,27 @@
+fourier_comp_with_18_off_4.pdf:
+norm_I(Pcomb(
+            scint_psi=1.8,
+            mean_received_power=.749,
+            beam_divergence=10 ** -(4.7),
+            pointing_jitter=10**(-9),
+            scint_bandwith=10,
+            jit_bandwith=10,
+            scint_slope=20,
+            jit_slope=20,
+            sampling_freq=2478.9,
+            vector_length=30
+        ))
+
+four_comp_with_18_on_16.pdf:
+norm_I(Pcomb(
+            scint_psi=1.8 * 1.38,
+            mean_received_power=.749,  # np.mean(data),
+            beam_divergence=10 ** -(4.7),
+            pointing_jitter=10**(-8.5),
+            scint_bandwith=10,
+            jit_bandwith=10,
+            scint_slope=20,
+            jit_slope=20,
+            sampling_freq=2478.9,
+            vector_length=30
+        ))

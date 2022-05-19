@@ -17,6 +17,19 @@ class BatchRun:
         self.results: Result = {}
 
     @timing
+    def run_single(self, data, *functions, **kwargs):
+        self.results = self._run_parallel(data, functions, kwargs)[1]
+        if kwargs.get('plot', False):
+            # plt.hist(data.df, bins=100, density=True, label='P_comb')
+            plotting._plot_one(
+                self.results,
+                data=data.df,
+                save=True if 'save' in kwargs and kwargs['save'] else False,
+                dir=f'Plots/{time.strftime("%d-%m-%Y-%H-%M")}')
+        print("\nDone!")
+        return self.results
+
+    @timing
     def run(self, *functions: str, **kwargs) -> Result:
         """
         Run all functions on all data sets
@@ -72,7 +85,7 @@ class BatchRun:
         return self.results
 
     @staticmethod
-    def _run(data, functions, kwargs) -> (Data, Result):
+    def _run(data: Data, functions, kwargs) -> (Data, Result):
         run = Run(data)
         function_dict = {
             'lognormal in beta': run.fit_lognormal_in_beta,
@@ -91,3 +104,29 @@ class BatchRun:
         except Exception as e:
             log.error(f'Failed to fit set{data.data_set} {data.mode} {data.number}: {e}')
         return data, run.results
+
+    @staticmethod
+    def _run_parallel(data: Data, functions, kwargs) -> (Data, Result):
+        log.info(f'Running Programs on {mp.cpu_count()} processors: ' + ', '.join([function for function in functions]))
+        run = Run(data)
+        function_dict = {
+            'lognormal in beta': run.fit_lognormal_in_beta,
+            'gamma in beta': run.fit_gamma_in_beta,
+            'lognormal': run.fit_lognormal,
+            'inv gamma': run.fit_inv_gamma,
+            'lognormal full fit': run.calc_full_lognorm,
+            'gamma full fit': run.calc_full_gamma_in_beta,
+            'fade probability data': run.fade_prob_data,
+            'fade count data': run.fade_count_data,
+            'fade mean time data': run.fade_mean_data,
+        }
+        pool = mp.Pool(mp.cpu_count())
+        results = []
+        for function in functions:
+            results.append(pool.apply_async(function_dict[function]))
+        results_lst = [result.get() for result in results]
+        results = {list(result.keys())[0]: list(result.values())[0] for result in results_lst}
+        pool.close()
+        # except Exception as e:
+        #     log.error(f'Failed to fit set{data.data_set} {data.mode} {data.number}: {e}')
+        return data, results

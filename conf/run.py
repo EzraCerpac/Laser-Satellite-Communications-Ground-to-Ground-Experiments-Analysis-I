@@ -5,11 +5,11 @@ import numpy as np
 from matplotlib import pyplot as plt
 from scipy.stats import invgamma, lognorm
 
+from Fade.data_fade import plot_fade_prob, plot_fade_count, plot_mean_time
 from Model.inv_gamma import inv_gamma, inv_gamma_curve_fit
 from Model.pure_lognormal import lognormal, lognormal_curve_fit
 from Model.with_beta import estimate_sigma as estimate_sigma_with_alpha
 from conf.data import Data
-from Fade.data_fade import plot_fade_prob, plot_fade_count, plot_mean_time
 
 log = logging.getLogger(__name__)
 
@@ -22,7 +22,7 @@ class Run:
         self.data = data
         self.results = {}
 
-    def fit_lognormal_in_beta(self, res: int = 101, plot: bool = False, **unused):
+    def fit_lognormal_in_beta(self, res: int = 10, plot: bool = False, **unused):
         self.results['lognormal in beta'] = {}
         result = estimate_sigma_with_alpha(np.array(self.data.df), self.data.w_0, False, res, plot)
         self.results['lognormal in beta']['sigma'] = result[0]
@@ -31,7 +31,7 @@ class Run:
         self.results['lognormal in beta']['standard div'] = result[-1]
         return self.results
 
-    def fit_gamma_in_beta(self, res: int = 101, plot: bool = False, **unused):
+    def fit_gamma_in_beta(self, res: int = 10, plot: bool = False, **unused):
         self.results['gamma in beta'] = {}
         result = estimate_sigma_with_alpha(np.array(self.data.df), self.data.w_0, True, res, plot)
         self.results['gamma in beta']['sigma'] = result[0]
@@ -65,7 +65,7 @@ class Run:
                      label='inverse gamma fitment')
         return self.results
 
-    def calc_full_lognorm(self, res: int = 101, plot: bool = False, **unused):
+    def calc_full_lognorm(self, res: int = 10, plot: bool = False, **unused):
         self.results['lognormal full fit'] = {}
         result = estimate_sigma_with_alpha(np.array(self.data.df), self.data.w_0, False, res, plot, full_fit=True)
         self.results['lognormal full fit']['sigma'] = result[0]
@@ -75,7 +75,7 @@ class Run:
         self.results['lognormal full fit']['standard div'] = result[-1]
         return self.results
 
-    def calc_full_gamma_in_beta(self, res: int = 101, plot: bool = False, **unused):
+    def calc_full_gamma_in_beta(self, res: int = 10, plot: bool = False, **unused):
         self.results['gamma full fit'] = {}
         result = estimate_sigma_with_alpha(np.array(self.data.df), self.data.w_0, True, res, plot, full_fit=True)
         self.results['gamma full fit']['sigma'] = result[0]
@@ -86,7 +86,7 @@ class Run:
         self.results['gamma full fit']['standard div'] = result[-1]
         return self.results
 
-    def fade_prob_data(self, res: int = 101, plot: bool = False, **unused):
+    def fade_prob_data(self, res: int = 10, plot: bool = False, **unused):
         self.results['fade probability data'] = {}
         result = plot_fade_prob(np.array(self.data.df), res, plot)
         self.results['fade probability data']['F_t'] = result[0]
@@ -95,7 +95,7 @@ class Run:
         self.results['fade probability data']['Max'] = result[3]
         return self.results
 
-    def fade_count_data(self, res: int = 101, plot: bool = False, **unused):
+    def fade_count_data(self, res: int = 10, plot: bool = False, **unused):
         self.results['fade count data'] = {}
         result = plot_fade_count(np.array(self.data.df), res, plot)
         self.results['fade count data']['F_t'] = result[0]
@@ -104,7 +104,7 @@ class Run:
         self.results['fade count data']['Max'] = result[3]
         return self.results
 
-    def fade_mean_data(self, res: int = 101, plot: bool = False, **unused):
+    def fade_mean_data(self, res: int = 10, plot: bool = False, **unused):
         self.results['fade mean time data'] = {}
         result = plot_mean_time(np.array(self.data.df), res, plot)
         self.results['fade mean time data']['F_t'] = result[0]
@@ -112,5 +112,3 @@ class Run:
         self.results['fade mean time data']['Min'] = result[2]
         self.results['fade mean time data']['Max'] = result[3]
         return self.results
-
-

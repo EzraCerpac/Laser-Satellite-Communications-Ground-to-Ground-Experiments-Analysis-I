@@ -16,7 +16,7 @@ def Pjit(*, beam_divergence, pointing_jitter, cut_off_freq, lpf_slope, sampling_
     sigma = np.sqrt(2 / (4 - np.pi) * pointing_jitter)
     BW = sigma * np.sqrt(X1_n ** 2 + X2_n ** 2)
 
-    P_jit = np.exp(BW ** 2 / beam_divergence)
+    P_jit = np.exp(-BW ** 2 / beam_divergence ** 2)
 
     return P_jit
 
@@ -24,7 +24,7 @@ def Pjit(*, beam_divergence, pointing_jitter, cut_off_freq, lpf_slope, sampling_
 if __name__ == '__main__':
     np.random.seed(0)
     P_jit = Pjit(
-        beam_divergence=18e-9,
+        beam_divergence=18e-4,
         pointing_jitter=1e-9,
         cut_off_freq=0.9,
         lpf_slope=80,

@@ -3,7 +3,7 @@ import multiprocessing as mp
 import os
 import time
 from os import path
-from typing import Dict
+from typing import Dict, Optional
 
 import numpy as np
 from matplotlib import pyplot as plt
@@ -35,14 +35,18 @@ def plot_combined(
     log.info("Finished plots")
 
 
-def _plot_one(funcs: dict, mode: bool, num: int, set: int, save: bool, dir: str) -> None:
+def _plot_one(funcs: dict, mode: Optional[bool] = None, num: Optional[int] = None, set: Optional[int] = None,
+              data: Optional[np.ndarray] = None, save: bool = False, dir: str = 'Plots/date') -> None:
     linestyles = ['o-', 'D-', '^-', 's-', '*-', 'P-']
     try:
         fig, ax = plt.subplots(figsize=(7, 5))
         # plt.title(f'Histogram and Probs of {set}urad, mode {"on" if mode else "off"}: {num}')
         plt.xlabel(r'$I_{norm}$')
         plt.ylabel(r'PDF')
-        norm_I_hist(np.array(Data(set, mode, num).df), bins=300)
+        if mode is not None:
+            norm_I_hist(np.array(Data(set, mode, num).df), bins=300)
+        if data is not None:
+            norm_I_hist(data, bins=200)
         xx = np.linspace(0, 1, 101)
         # log.info(f'Plotting set {set}, modes {"on" if mode else "off"}, {num}')
         for func, values in funcs.items():

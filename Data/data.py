@@ -1,24 +1,24 @@
 from pathlib import Path
-import pandas as pd
-import pickle
+from typing import Dict
 
+import pandas as pd
 from matplotlib import pyplot as plt
 
-starting_values_11 = {
-    'off1': 31.8,
-    '2 modes': 55.4,
-    'off2': 96.9,
-    '28 modes': 135.4,
-    'off3': 180.2,
-    '4 modes': 215.5,
-    'off4': 258.0,
-    '8 modes': 296.7,
-    'off5': 343.6,
-    '16 modes': 275.1
+starting_values_18 = {
+    'off1': 38.,
+    '2 modes': 100.0,
+    'off2': 154.,
+    '28 modes': 270.,
+    'off3': 341.,
+    '4 modes': 416.,
+    'off4': 487.,
+    '8 modes': 564.,
+    'off5': 636.,
+    '16 modes': 668.
 }
 
 
-def split_data(data: pd.DataFrame, split_dict: dict[str, float] = starting_values_11) -> pd.DataFrame:
+def split_data(data: pd.DataFrame, split_dict: Dict[str, float]) -> pd.DataFrame:
     timestep = .0004034
     length = 30
     df_dict = {}
@@ -32,19 +32,19 @@ def split_data(data: pd.DataFrame, split_dict: dict[str, float] = starting_value
 if __name__ == '__main__':
     folder = Path('CSV')
 
-    data11 = pd.read_csv(folder / 'data_11.csv', names=['time', 'irradiance'], skiprows=1)
-    data11 = split_data(data11)
-    data22 = pd.read_csv(folder / 'data22urad.csv', names=['index', 'time', 'irradiance'], skiprows=1)
-    Cn_df = pd.read_csv(folder / 'Cnprofile.csv')
+    data18 = pd.read_csv(folder / 'data18urad.csv', names=['time', 'irradiance'], skiprows=1)
+    # data18 = split_data(data18, starting_values_18)
+    # data22 = pd.read_csv(folder / 'data22urad.csv', names=['index', 'time', 'irradiance'], skiprows=1)
+    # Cn_df = pd.read_csv(folder / 'Cnprofile.csv')
 
-    pickle_dir = Path('DFs')
-    # for mode in starting_values_11.keys():
-    #     print(mode)
-    #     with open(pickle_dir / f"data11/{mode}.pickle", 'wb') as f:
-    #         pickle.dump(data11[mode], f)
-
-    plt.plot(data22.time, data22.irradiance)
+    plt.plot(data18.time, data18.irradiance)
     plt.show()
+
+    # pickle_dir = Path('DFs')
+    # for mode in starting_values_18.keys():
+    #     print(mode)
+    #     with open(pickle_dir / f"data18/{mode}.pickle", 'wb') as f:
+    #         pickle.dump(data18[mode], f)
 
     # with open(pickle_dir / f"data18.pickle", 'wb') as f:
     #     pickle.dump(Cn_df, f)

@@ -17,18 +17,20 @@ def integrate_scint_index(I: np.ndarray, ii: np.ndarray | float):
 
 
 def calc_probs(I: np.ndarray, ii: np.ndarray | float, I_0: float = None) -> np.ndarray:
-    Cn = pd.read_pickle('Data/DFs/Cn.pickle')
+    try:
+        Cn = pd.read_pickle('../Data/DFs/Cn.pickle')
+    except FileNotFoundError:
+        Cn = pd.read_pickle('Data/DFs/Cn.pickle')
 
     zz = np.array(Cn['z-distance'])
     C_n2 = np.array(Cn['Cn^2'])
 
-    labda = 1e-6  # Wavelength (unknown)
+    labda = 1550e-9  # Wavelength
 
     sigma_R2 = rytov_index(k(labda), zz, C_n2)
     sigma_I2 = scintillation_index(sigma_R2)
 
-    I_0 = norm_I(I).mean() if not I_0 else I_0
-    I_0 = 0.02
+    I_0 = norm_I(I, True).mean() if I_0 is None else I_0
     return probability_dist(ii, I_0, sigma_I2)  # return array
 
 
@@ -39,7 +41,7 @@ def probability_dist(I: float | np.ndarray, I_0: float, sigma_I2: float) -> floa
 
 
 if __name__ == '__main__':
-    with open('../Data/DFs/data11/off1.pickle', 'rb') as f:
+    with open('../Data/DFs/data11_dont_use/off1.pickle', 'rb') as f:
         data = pickle.load(f)
     I = np.array(data)
     ii = np.linspace(0, 1, 101)[1:]

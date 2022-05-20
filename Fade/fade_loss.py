@@ -82,7 +82,7 @@ def CNInterpol(z, Cn):
     fun = interpolate.CubicSpline(z, Cn, bc_type='natural')
     return fun
 
-
+#
 # TODO: fix and decomment
 # def integrand(z, fun, L, k):
 #     """
@@ -98,6 +98,7 @@ def CNInterpol(z, Cn):
 #  2.25 * k ** (7 / 6) *
 
 # k is 2*pi/lambda, D is reciever diameter
+
 
 def main():
     folder = Path('CSV')

@@ -13,10 +13,10 @@ plt.style.use('seaborn-colorblind')
 def fourier_comparison(data):
     data = norm_I(data)
     pcomb = norm_I(Pcomb(
-        scint_psi=1.8,
-        mean_received_power=.749,
+        scint_psi=1.8 * 1.38,
+        mean_received_power=.749,  # np.mean(data),
         beam_divergence=10 ** -(4.7),
-        pointing_jitter=10 ** (-9),
+        pointing_jitter=10 ** (-8.5),
         scint_bandwith=10,
         jit_bandwith=10,
         scint_slope=20,
@@ -25,32 +25,61 @@ def fourier_comparison(data):
         vector_length=30
     ))
 
+    # fft_comp(data, pcomb)
+    # t_comp(data, pcomb)
+    # hist_comp(data, pcomb)
+
+    t = np.arange(0, 30, 1 / 2478.9)
+
+    def running_average(x, N: int, t):
+        cumsum = np.cumsum(np.insert(x, 0, 0))
+        return t[N - 1:], (cumsum[N:] - cumsum[:-N]) / N
+
+    plt.plot(t, pcomb, label='data')
+    plt.plot(t, spline_regression(t, pcomb), color='red', label='spline')
+    plt.xlabel(r'$t$ [s]')
+    plt.ylabel(r'$I_n$ [-]')
+    plt.legend()
+    plt.show()
+    plt.plot(t, data, label='data')
+    plt.plot(t, spline_regression(t, data), color='red', label='spline')
+    plt.xlabel(r'$t$ [s]')
+    plt.ylabel(r'$I_n$ [-]')
+    plt.legend()
+    plt.show()
+
+
+def spline_regression(t, y):
+    from scipy.interpolate import UnivariateSpline
+    spl = UnivariateSpline(t, y, s=len(t) // 60)
+    return spl(t)
+
+
+def hist_comp(data, pcomb):
+    plt.hist(data, bins=100, density=True, color='blue', histtype='stepfilled', alpha=0.5, label='real')
+    plt.hist(pcomb, bins=100, density=True, color='red', histtype='stepfilled', alpha=0.5, label='generated')
+    plt.legend(loc='upper right')
+    plt.xlabel(r'$I_n$ [-]')
+    plt.ylabel('PDF')
+    plt.show()
+
+
+def t_comp(data, pcomb):
+    t = np.arange(0, 30, 1 / 2478.9)
+    plt.plot(t, pcomb, color='red', label='generated', alpha=0.5)
+    plt.plot(t, data, color='blue', label='real', alpha=0.5)
+    plt.xlabel(r'$t$ [s]')
+    plt.ylabel(r'$I_n$ [-]')
+
+
+def fft_comp(data, pcomb):
     fft1 = fft(pcomb)
-
-    # [plt.hist(var[1], bins=100, density=True, histtype='step', label=var[0]) for var in bds]
+    fft2 = fft(data)
     plt.plot(fftfreq(fft1.size, d=1 / 2478.9), np.abs(fft1), color='red', label='PVGeT generated', alpha=0.5)
-
-    fft1 = fft(data)
-
-    # change transparency of plot
-    plt.plot(fftfreq(fft1.size, d=1 / 2478.9), np.abs(fft1), color='blue', label='low turbulance, modes off', alpha=0.5)
-    plt.ylim(0, 100)
+    plt.plot(fftfreq(fft2.size, d=1 / 2478.9), np.abs(fft2), color='blue', label='low turbulance, modes off', alpha=0.5)
+    plt.ylim(0, 50)
     plt.xlim(0, 1000)
     plt.legend(loc='upper right')
     plt.xlabel(r'$f$ [Hz]')
     plt.ylabel(r'$I_n$ [W/m$^2$]')
     plt.show()
-    # t = np.arange(0, 30, 1 / 2478.9)
-    #
-    # # plt.plot(pcomb, color='red', label='generated', alpha=0.5)
-    # # plt.plot(data, color='blue', label='real', alpha=0.5)
-    # plt.hist(data, bins=100, density=True, color='blue', histtype='stepfilled', alpha=0.5, label='real')
-    # plt.hist(pcomb, bins=100, density=True, color='red', histtype='stepfilled', alpha=0.5, label='generated')
-    # plt.legend(loc='upper right')
-    # plt.xlabel(r'$I_n$ [-]')
-    # plt.ylabel('PDF')
-    # plt.show()
-
-
-if __name__ == '__main__':
-    test()

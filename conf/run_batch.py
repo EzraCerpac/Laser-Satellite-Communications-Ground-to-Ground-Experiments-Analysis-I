@@ -21,6 +21,7 @@ class BatchRun:
         self.results = self._run_parallel(data, functions, kwargs)[1]
         if kwargs.get('plot', False):
             # plt.hist(data.df, bins=100, density=True, label='P_comb')
+            print(f"data type is: {type(data.df)}")
             plotting._plot_one(
                 self.results,
                 data=data.df,

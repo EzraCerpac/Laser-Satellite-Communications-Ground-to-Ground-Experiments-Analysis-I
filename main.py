@@ -6,11 +6,14 @@ import warnings
 
 import multiprocessing_logging
 import numpy as np
+from matplotlib import pyplot as plt
 from scipy.integrate import IntegrationWarning
 from scipy.optimize import OptimizeWarning
 
+from Reverse_fit.comb_gen import Pcomb
 from Reverse_fit.fourier_analysis import fourier_comparison
 from conf.config import Config
+from formula.normalize import norm_I
 
 warnings.filterwarnings("ignore", category=RuntimeWarning)
 warnings.filterwarnings("ignore", category=IntegrationWarning)
@@ -31,22 +34,23 @@ log = logging.getLogger(__name__)
 
 def main(cfg=Config()):
     log.info('Starting main')
+    np.random.seed(2)
 
-    fourier_comparison(np.array(cfg.set_data(18, False, 4).df))
+    # fourier_comparison(np.array(cfg.set_data(18, False, 4).df))
 
     """Fitting to generated data"""
-    # data = Pcomb(
-    #     scint_psi=0.18,
-    #     mean_received_power=.749,
-    #     beam_divergence=18e-6,
-    #     pointing_jitter=1e-9,
-    #     scint_bandwith=900,
-    #     jit_bandwith=900,
-    #     scint_slope=90,
-    #     jit_slope=80,
-    #     sampling_freq=8e3,
-    #     vector_length=100
-    # )
+    # data = norm_I(Pcomb(
+    #         scint_psi=1.8,
+    #         mean_received_power=.749,
+    #         beam_divergence=10 ** -4.7,
+    #         pointing_jitter=10**(-9),
+    #         scint_bandwith=10,
+    #         jit_bandwith=10,
+    #         scint_slope=20,
+    #         jit_slope=20,
+    #         sampling_freq=2478.9,
+    #         vector_length=30
+    #     ))
     # cfg.set_data()
     # cfg.data.df = data
     # plt.hist(data, bins=100, label='P_sci')
@@ -54,39 +58,39 @@ def main(cfg=Config()):
     # results = cfg.run_batch().run_single(cfg.data,
     #     'lognormal in beta',
     #     'gamma in beta',
-    #     'lognormal',
-    #     'inv gamma',
-    #     'gamma full fit',
-    #     'lognormal full fit',
-    #     res=16,
+    #     #'lognormal',
+    #     #'inv gamma',
+    #     #'gamma full fit',
+    #     #'lognormal full fit',
+    #     res=12,
     #     plot=True,
     #     # save=True,
     #     # results=True,
     # )
     # print(results)
-
+    #
     # plt.legend()
     # plt.show()
 
     """Fitting to given data"""
-    # results = cfg.run_batch(18).run_parallel(
-    #     'lognormal in beta',
-    #     'gamma in beta',
-    #     'lognormal',
-    #     'inv gamma',
-    #     'gamma full fit',
-    #     'lognormal full fit',
-    #     res=15,
-    #     # plot=True,
-    #     # save=True,
-    #     results=True,
-    # )
-    #
+    results = cfg.run_batch(18).run_parallel(
+        # 'lognormal in beta',
+        # 'gamma in beta',
+        'lognormal',
+        'inv gamma',
+        # 'gamma full fit',
+        # 'lognormal full fit',
+        res=2,
+        plot=True,
+        # save=True,
+        # results=True,
+    )
+
     # store_results(results)
 
     # plot_combined(open_results(), save=False)
     # comparison_plot('Results/11-05-2022_to_use_full_fit.pickle', save=True)
-
+    #
     # irradiance_plot(pd.read_csv('Data/CSV/data18urad.csv'), save=True)
     # build_up_plots(open_results('Results/13-05-2022.pickle'), 'lognormal in beta', save=False)
 

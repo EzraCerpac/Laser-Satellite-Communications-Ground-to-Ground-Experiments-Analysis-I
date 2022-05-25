@@ -45,7 +45,8 @@ def _plot_one(funcs: dict, mode: Optional[bool] = None, num: Optional[int] = Non
         plt.ylabel(r'PDF')
         if mode is not None:
             norm_I_hist(np.array(Data(set, mode, num).df), bins=300)
-        if data is not None:
+        elif data is not None:
+            log.info(f"data is type: {type(data)}")
             norm_I_hist(data, bins=200)
         xx = np.linspace(0, 1, 101)
         # log.info(f'Plotting set {set}, modes {"on" if mode else "off"}, {num}')
@@ -133,4 +134,4 @@ def _plot_one(funcs: dict, mode: Optional[bool] = None, num: Optional[int] = Non
         else:
             plt.show()
     except Exception as e:
-        log.error(f'Failed to plot set{set} {mode} {num}: {e}')
+        log.error(f'Failed to plot set{set} {mode} {num}: {e}', exc_info=True)

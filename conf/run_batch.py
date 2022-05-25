@@ -21,7 +21,6 @@ class BatchRun:
         self.results = self._run_parallel(data, functions, kwargs)[1]
         if kwargs.get('plot', False):
             # plt.hist(data.df, bins=100, density=True, label='P_comb')
-            print(f"data type is: {type(data.df)}")
             plotting._plot_one(
                 self.results,
                 data=data.df,
@@ -81,7 +80,7 @@ class BatchRun:
         if 'results' in kwargs and kwargs['results']:
             pd.DataFrame.from_dict(self.results).to_pickle(f'Results/{time.strftime("%d-%m-%Y")}.pickle')
         if 'plot' in kwargs and kwargs['plot']:
-            plotting.plot_combined(self.results, save=True if 'save' in kwargs and kwargs['save'] else False)
+            plotting.plot_combined(self.results, save=True if kwargs.get('save') else False)
         print("\nDone!")
         return self.results
 
@@ -124,7 +123,7 @@ class BatchRun:
         pool = mp.Pool(mp.cpu_count())
         results = []
         for function in functions:
-            results.append(pool.apply_async(function_dict[function]))
+            results.append(pool.apply_async(function_dict[function], kwds=kwargs))
         results_lst = [result.get() for result in results]
         results = {list(result.keys())[0]: list(result.values())[0] for result in results_lst}
         pool.close()

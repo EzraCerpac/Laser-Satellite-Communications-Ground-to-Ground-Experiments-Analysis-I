@@ -6,7 +6,7 @@ from scipy.optimize import curve_fit
 from scipy.stats import invgamma
 
 from formula.normalize import norm_I
-from formula.statistics import MSE
+from formula.statistics import cost
 from plotting.norm_I_hist import norm_I_hist
 
 
@@ -19,7 +19,7 @@ def inv_gamma_curve_fit(irradiance: np.ndarray, res: int = 101, plot: bool = Tru
         plt.plot(xx, invgamma.pdf(xx, *p_opt), label='inverse gamma fitment')
     yy = norm_I_hist(irradiance, bins=250, plot=False)
     xx = np.linspace(1e-10, 1, len(yy))
-    return *p_opt, MSE(invgamma.pdf, xx, yy, p_opt)
+    return *p_opt, cost(invgamma.pdf, xx, yy, p_opt)
 
 
 def inv_gamma(irradiance: np.ndarray, plot: bool = True) -> Tuple[float, float, float]:
@@ -30,4 +30,4 @@ def inv_gamma(irradiance: np.ndarray, plot: bool = True) -> Tuple[float, float, 
         plt.plot(xx, invgamma.pdf(xx, *p), label='inverse gamma fitment')
     yy = norm_I_hist(irradiance, bins=250, plot=False)
     xx = np.linspace(1e-10, 1, len(yy))
-    return p[0], p[1], MSE(invgamma.pdf, xx, np.histogram(I, bins=len(xx), density=True)[0], p)
+    return p[0], p[1], cost(invgamma.pdf, xx, np.histogram(I, bins=len(xx), density=True)[0], p)

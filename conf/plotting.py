@@ -36,7 +36,8 @@ def plot_combined(
 
 
 def _plot_one(funcs: dict, mode: Optional[bool] = None, num: Optional[int] = None, set: Optional[int] = None,
-              data: Optional[np.ndarray] = None, save: bool = False, dir: str = 'Plots/date') -> None:
+              save: bool = False, dir: str = time.strftime("%d-%m-%Y_%H-%M"),
+              data: Optional[np.ndarray] = None) -> None:
     linestyles = ['o-', 'D-', '^-', 's-', '*-', 'P-']
     try:
         fig, ax = plt.subplots(figsize=(7, 5))
@@ -46,7 +47,7 @@ def _plot_one(funcs: dict, mode: Optional[bool] = None, num: Optional[int] = Non
         if mode is not None:
             norm_I_hist(np.array(Data(set, mode, num).df), bins=300)
         elif data is not None:
-            log.info(f"data is type: {type(data)}")
+            # log.info(f"data is type: {type(data)}")
             norm_I_hist(data, bins=200)
         xx = np.linspace(0, 1, 101)
         # log.info(f'Plotting set {set}, modes {"on" if mode else "off"}, {num}')
@@ -57,7 +58,7 @@ def _plot_one(funcs: dict, mode: Optional[bool] = None, num: Optional[int] = Non
                     xx,
                     combined_dist(xx, values['alpha'], values['beta']), linestyles.pop(), markevery=7,
                     label=f'{func} (α={values["alpha"]:.3g}, β={values["beta"]:.3g}, '
-                          f'MSE={values["standard div"]:.3g})',
+                          f'cost={values["standard div"]:.3g})',
                     # linewidth=LW
                 )
             if func == 'gamma in beta':
@@ -65,7 +66,7 @@ def _plot_one(funcs: dict, mode: Optional[bool] = None, num: Optional[int] = Non
                     xx,
                     combined_dist_gamma(xx, values['alpha'], values['beta']), linestyles.pop(), markevery=7,
                     label=f'{func} (α={values["alpha"]:.3g}, β={values["beta"]:.3g}, '
-                          f'MSE={values["standard div"]:.3g})',
+                          f'cost={values["standard div"]:.3g})',
                     # linewidth=LW
                 )
             if func == 'lognormal':
@@ -73,7 +74,7 @@ def _plot_one(funcs: dict, mode: Optional[bool] = None, num: Optional[int] = Non
                     xx,
                     lognorm.pdf(xx, values['skew'], values['pos']), linestyles.pop(), markevery=7,
                     label=f'{func} (σ={values["skew"]:.3g}, μ={values["pos"]:.3g}, '
-                          f'MSE={values["standard div"]:.3g})',
+                          f'cost={values["standard div"]:.3g})',
                     # linewidth=LW
                 )
             if func == 'inv gamma':
@@ -81,14 +82,14 @@ def _plot_one(funcs: dict, mode: Optional[bool] = None, num: Optional[int] = Non
                     xx,
                     invgamma.pdf(xx, values['a'], values['pos']), linestyles.pop(), markevery=7,
                     label=f'{func} (α={values["a"]:.3g}, β={values["pos"]:.3g}, '
-                          f'MSE={values["standard div"]:.3g})',
+                          f'cost={values["standard div"]:.3g})',
                     # linewidth=LW
                 )
             if func == 'lognormal full fit':
                 plt.plot(xx, combined_dist(xx, values['alpha'], values['beta'], values['sigma_i'], full_fit=True),
                          linestyles.pop(), markevery=7,
                          label=f'{func} (α={values["alpha"]:.3g}, β={values["beta"]:.3g}, $\sigma_i$={values["sigma_i"]:.3g}'
-                               f', MSE={values["standard div"]:.3g})',
+                               f', cost={values["standard div"]:.3g})',
                          # linewidth=LW
                          )
             if func == 'gamma full fit':
@@ -97,7 +98,7 @@ def _plot_one(funcs: dict, mode: Optional[bool] = None, num: Optional[int] = Non
                     combined_dist_gamma(xx, values['alpha'], values['beta'], values['a'], values['b'], full_fit=True),
                     linestyles.pop(), markevery=7,
                     label=f'{func} (α={values["alpha"]:.3g}, β={values["beta"]:.3g}, a={values["a"]:.3g}, b={values["b"]:.3g}'
-                          f', MSE={values["standard div"]:.3g})',
+                          f', cost={values["standard div"]:.3g})',
                     # linewidth=LW
                 )
 

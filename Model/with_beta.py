@@ -12,7 +12,7 @@ from combined_fit.angular_jitter_fit_gamma import gamma_gamma, alphafun, betafun
 from combined_fit.indices import scintillation_index, rytov_index_const
 from combined_fit.scintillation import probability_dist
 from formula.jitter import k, calc_sigma
-from formula.statistics import MSE
+from formula.statistics import cost
 from plotting.norm_I_hist import norm_I_hist
 
 log = logging.getLogger(__name__)
@@ -57,11 +57,11 @@ def estimate_sigma(irradiance: np.ndarray, w_0: float, use_gamma: bool = False, 
 
     if not full_fit:
 
-        return calc_sigma(beta, w_0), alpha, beta, MSE(scint_func, xx, yy, (alpha, beta))
+        return calc_sigma(beta, w_0), alpha, beta, cost(scint_func, xx, yy, (alpha, beta))
     elif full_fit and use_gamma:
-        return calc_sigma(beta, w_0), alpha, beta, a, b, MSE(scint_func, xx, yy, (alpha, beta, a, b, True))
+        return calc_sigma(beta, w_0), alpha, beta, a, b, cost(scint_func, xx, yy, (alpha, beta, a, b, True))
     else:
-        return calc_sigma(beta, w_0), alpha, beta, sigma_i, MSE(scint_func, xx, yy, (alpha, beta, sigma_i, True))
+        return calc_sigma(beta, w_0), alpha, beta, sigma_i, cost(scint_func, xx, yy, (alpha, beta, sigma_i, True))
 
 
 def combined_dist(X: np.ndarray, alpha: float, beta: float, sigma_i: float = 0, full_fit: bool = False):

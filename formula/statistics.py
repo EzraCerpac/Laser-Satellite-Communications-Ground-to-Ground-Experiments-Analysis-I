@@ -1,5 +1,6 @@
 import numpy as np
 
 
-def MSE(func, x, y, popt) -> float:
-    return np.mean((y - func(x, *popt)) ** 2)
+def cost(func, x, y, popt) -> float:
+    f = func(x, *popt)
+    return np.sum((y - f) ** 2) / max(f)

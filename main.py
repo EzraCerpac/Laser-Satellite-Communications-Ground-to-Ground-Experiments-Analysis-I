@@ -78,16 +78,16 @@ def main(cfg=Config()):
 
     """Fitting to given data"""
     results = cfg.run_batch(22).run_parallel(
-        'lognormal in beta',
-        'gamma in beta',
-        'lognormal',
-        'inv gamma',
-        # 'gamma full fit',
+        # 'lognormal in beta',
+        # 'gamma in beta',
+        # 'lognormal',
+        # 'inv gamma',
+        'gamma full fit',
         # 'lognormal full fit',
-        res=30,
+        res=2,
         plot=True,
-        save=True,
-        results=True,
+        # save=True,
+        # results=True,
     )
 
     store_results(results)

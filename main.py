@@ -3,6 +3,7 @@ import pickle
 import sys
 import time
 import warnings
+from pprint import pprint
 
 import multiprocessing_logging
 import numpy as np
@@ -77,20 +78,35 @@ def main(cfg=Config()):
     # print(results)
 
     """Fitting to given data"""
-    results = cfg.run_batch(22).run_parallel(
-        # 'lognormal in beta',
-        # 'gamma in beta',
-        # 'lognormal',
-        # 'inv gamma',
+    results = cfg.run_batch(18, 22).run_parallel(
+        'lognormal in beta',
+        'gamma in beta',
+        'lognormal',
+        'inv gamma',
         'gamma full fit',
-        # 'lognormal full fit',
-        res=2,
+        'lognormal full fit',
+        res=30,
         plot=True,
-        # save=True,
-        # results=True,
+        save=True,
+        results=True,
     )
+    # results = cfg.run_batch().run_single(
+    #     cfg.set_data(18, False, 4),
+    #     'lognormal in beta',
+    #     'gamma in beta',
+    #     'lognormal',
+    #     'inv gamma',
+    #     'gamma full fit',
+    #     'lognormal full fit',
+    #     res=8,
+    #     plot=True,
+    #     # save=True,
+    #     # results=True,
+    # )
+    pprint(results)
 
     store_results(results)
+    # pprint(open_results())
 
     # plot_combined(open_results(), save=False)
     # comparison_plot('Results/11-05-2022_to_use_full_fit.pickle', save=True)

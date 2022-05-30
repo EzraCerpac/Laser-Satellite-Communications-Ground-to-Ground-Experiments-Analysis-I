@@ -17,6 +17,15 @@ log = logging.getLogger(__name__)
 
 LW = 2
 
+name_convert = {
+    'lognormal in beta': 'lib',
+    'gamma in beta': 'gib',
+    'lognormal': 'ln',
+    'inv gamma': 'ig',
+    'gamma full fit': 'gff',
+    'lognormal full fit': 'lff',
+}
+
 
 def plot_combined(
         results: Dict[int, Dict[bool, Dict[int, Dict[str, Dict[str, float]]]]],
@@ -57,39 +66,34 @@ def _plot_one(funcs: dict, mode: Optional[bool] = None, num: Optional[int] = Non
                 ax.plot(
                     xx,
                     combined_dist(xx, values['alpha'], values['beta']), linestyles.pop(), markevery=7,
-                    label=f'{func} (α={values["alpha"]:.3g}, β={values["beta"]:.3g}, '
-                          f'cost={values["standard div"]:.3g})',
+                    label=f'{name_convert[func]} (α={values["alpha"]:.3g}, β={values["beta"]:.3g})'
                     # linewidth=LW
                 )
             if func == 'gamma in beta':
                 ax.plot(
                     xx,
                     combined_dist_gamma(xx, values['alpha'], values['beta']), linestyles.pop(), markevery=7,
-                    label=f'{func} (α={values["alpha"]:.3g}, β={values["beta"]:.3g}, '
-                          f'cost={values["standard div"]:.3g})',
+                    label=f'{name_convert[func]} (α={values["alpha"]:.3g}, β={values["beta"]:.3g})'
                     # linewidth=LW
                 )
             if func == 'lognormal':
                 plt.plot(
                     xx,
                     lognorm.pdf(xx, values['skew'], values['pos']), linestyles.pop(), markevery=7,
-                    label=f'{func} (σ={values["skew"]:.3g}, μ={values["pos"]:.3g}, '
-                          f'cost={values["standard div"]:.3g})',
+                    label=f'{name_convert[func]} (σ={values["skew"]:.3g}, μ={values["pos"]:.3g})'
                     # linewidth=LW
                 )
             if func == 'inv gamma':
                 plt.plot(
                     xx,
                     invgamma.pdf(xx, values['a'], values['pos']), linestyles.pop(), markevery=7,
-                    label=f'{func} (α={values["a"]:.3g}, β={values["pos"]:.3g}, '
-                          f'cost={values["standard div"]:.3g})',
+                    label=f'{name_convert[func]} (α={values["a"]:.3g}, β={values["pos"]:.3g})'
                     # linewidth=LW
                 )
             if func == 'lognormal full fit':
                 plt.plot(xx, combined_dist(xx, values['alpha'], values['beta'], values['sigma_i'], full_fit=True),
                          linestyles.pop(), markevery=7,
-                         label=f'{func} (α={values["alpha"]:.3g}, β={values["beta"]:.3g}, $\sigma_i$={values["sigma_i"]:.3g}'
-                               f', cost={values["standard div"]:.3g})',
+                         label=f'{name_convert[func]} (α={values["alpha"]:.3g}, β={values["beta"]:.3g}, $\sigma_i$={values["sigma_i"]:.3g})'
                          # linewidth=LW
                          )
             if func == 'gamma full fit':
@@ -97,15 +101,16 @@ def _plot_one(funcs: dict, mode: Optional[bool] = None, num: Optional[int] = Non
                     xx,
                     combined_dist_gamma(xx, values['alpha'], values['beta'], values['a'], values['b'], full_fit=True),
                     linestyles.pop(), markevery=7,
-                    label=f'{func} (α={values["alpha"]:.3g}, β={values["beta"]:.3g}, a={values["a"]:.3g}, b={values["b"]:.3g}'
-                          f', cost={values["standard div"]:.3g})',
+                    label=f'{name_convert[func]} (α={values["alpha"]:.3g}, β={values["beta"]:.3g},'
+                          '\n'
+                          f'        a={values["a"]:.3g}, b={values["b"]:.3g})'
                     # linewidth=LW
                 )
 
             if func == 'fade probability data':
                 plt.plot(
                     values['F_t'], values['Prob'],
-                    label=f'{func}'
+                    label=f'{name_convert[func]}'
                 )
                 plt.xlim(values['Min'], values['Max'])
                 plt.yscale("log")
@@ -113,14 +118,14 @@ def _plot_one(funcs: dict, mode: Optional[bool] = None, num: Optional[int] = Non
             if func == 'fade count data':
                 plt.plot(
                     values['F_t'], values['Time'],
-                    label=f'{func}'
+                    label=f'{name_convert[func]}'
                 )
                 plt.xlim(values['Min'], values['Max'])
                 plt.yscale("log")
             if func == 'fade mean time data':
                 plt.plot(
                     values['F_t'], values['Time'],
-                    label=f'{func}'
+                    label=f'{name_convert[func]}'
                 )
                 plt.xlim(values['Min'], values['Max'])
                 plt.yscale("log")

@@ -1,3 +1,5 @@
+from __future__ import annotations
+
 import multiprocessing as mp
 import time
 from typing import Dict
@@ -63,6 +65,8 @@ class BatchRun:
             save: bool, if True, save the plots
         :return: Result object (dict)
         """
+        functions_22 = [function for function in functions if
+                        function != 'lognormal full fit' and function != 'gamma full fit']
         pool = mp.Pool(mp.cpu_count())
         log.info(f'Running Programs on {mp.cpu_count()} processors: ' + ', '.join([function for function in functions]))
         results = []
@@ -72,7 +76,8 @@ class BatchRun:
                 self.results[data_set[0][0].data_set][data_mode[0].mode] = {}
                 for k, data in enumerate(data_mode):
                     self.results[data_set[0][0].data_set][data_mode[0].mode][data.number] = {}
-                    results.append(pool.apply_async(self._run, args=(data, functions, kwargs)))
+                    results.append(
+                        pool.apply_async(self._run, args=(data, functions if i == 0 else functions_22, kwargs)))
         results = [result.get() for result in results]
         pool.close()
         for result in results:

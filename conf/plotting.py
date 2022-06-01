@@ -9,6 +9,7 @@ import numpy as np
 from matplotlib import pyplot as plt
 from scipy.stats import lognorm, invgamma, beta
 
+from Model.lognormal_paper_based import lognormal_paper
 from Model.pure_combined import func as comb_func
 from Model.with_beta import combined_dist, combined_dist_gamma
 from conf.data import Data
@@ -27,6 +28,7 @@ name_convert = {
     'inv gamma': 'ig',
     'gamma full fit': 'gff',
     'lognormal full fit': 'lff',
+    'lognormal paper': 'ln p',
 }
 
 
@@ -93,6 +95,13 @@ def _plot_one(funcs: dict, mode: Optional[bool] = None, num: Optional[int] = Non
                     label=f'{name_convert[func]} (σ={values["skew"]:.3g}, μ={values["pos"]:.3g})'
                     # linewidth=LW
                 )
+            if func == 'lognormal paper':
+                plt.plot(
+                    xx,
+                    lognormal_paper(xx, values['sigma_i'], values['mu'], values['I_0']), linestyles.pop(), markevery=7,
+                    label=f'{name_convert[func]} ($\sigma_i^2$={values["sigma_i"]:.3g}, μ={values["mu"]:.3g})'
+                    # linewidth=LW
+                )
             if func == 'combined':
                 plt.plot(
                     xx,
@@ -147,7 +156,7 @@ def _plot_one(funcs: dict, mode: Optional[bool] = None, num: Optional[int] = Non
                 plt.xlim(values['Min'], values['Max'])
                 plt.yscale("log")
 
-        plt.legend()
+        plt.legend(loc='upper right')
         if save:
             dir = 'Plots/' + dir
             if not path.exists(dir):

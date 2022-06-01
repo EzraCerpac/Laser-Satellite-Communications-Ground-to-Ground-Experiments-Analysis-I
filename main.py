@@ -33,7 +33,7 @@ log = logging.getLogger(__name__)
 
 def main(cfg=Config()):
     log.info('Starting main')
-    np.random.seed(2)
+    np.random.seed(985)
 
     # fourier_comparison(np.array(cfg.set_data(18, False, 4).df))
     # fourier_comparison(np.array(cfg.set_data(18, True, 16).df)[:-1])
@@ -64,21 +64,22 @@ def main(cfg=Config()):
     #     sampling_freq=2478.9,
     #     vector_length=30
     # ))
-    # cfg.set_data()
-    # cfg.data.df = data[1]
-    # results = cfg.run_batch().run_single(cfg.data,
-    #                                      # 'lognormal in beta',
-    #                                      # 'gamma in beta',
-    #                                      # 'beta',
-    #                                      'lognormal',
-    #                                      'inv gamma',
-    #                                      # 'gamma full fit',
-    #                                      # 'lognormal full fit',
-    #                                      res=10,
-    #                                      plot=True,
-    #                                      # save=True,
-    #                                      # results=True,
-    #                                      )
+    cfg.set_data()
+    cfg.data.df = data[1]
+    results = cfg.run_batch().run_single(cfg.data,
+                                         # 'lognormal in beta',
+                                         # 'gamma in beta',
+                                         # 'beta',
+                                         'lognormal',
+                                         # 'inv gamma',
+                                         # 'gamma full fit',
+                                         # 'lognormal full fit',
+                                         'lognormal paper',
+                                         res=100,
+                                         plot=True,
+                                         # save=True,
+                                         # results=True,
+                                         )
     # cfg.set_data()
     # cfg.data.df = data[2]
     # results = cfg.run_batch().run_single(cfg.data,
@@ -94,23 +95,23 @@ def main(cfg=Config()):
     #                                      # save=True,
     #                                      # results=True,
     #                                      )
-    cfg.set_data()
-    cfg.data.df = data[0]
-    results = cfg.run_batch().run_single(cfg.data,
-                                         # 'lognormal in beta',
-                                         # 'gamma in beta',
-                                         # 'beta',
-                                         # 'lognormal',
-                                         # 'inv gamma',
-                                         # 'gamma full fit',
-                                         # 'lognormal full fit',
-                                         'combined',
-                                         res=3,
-                                         plot=True,
-                                         # save=True,
-                                         # results=True,
-                                         )
-    print(results)
+    # cfg.set_data()
+    # cfg.data.df = data[0]
+    # results = cfg.run_batch().run_single(cfg.data,
+    #                                      # 'lognormal in beta',
+    #                                      # 'gamma in beta',
+    #                                      # 'beta',
+    #                                      # 'lognormal',
+    #                                      # 'inv gamma',
+    #                                      # 'gamma full fit',
+    #                                      # 'lognormal full fit',
+    #                                      'combined',
+    #                                      res=3,
+    #                                      plot=True,
+    #                                      # save=True,
+    #                                      # results=True,
+    #                                      )
+    # print(results)
 
     """Fitting to given data"""
     # results = cfg.run_batch(18, 22).run_parallel(
@@ -141,7 +142,7 @@ def main(cfg=Config()):
     # )
     pprint(results)
     #
-    store_results(results)
+    # store_results(results)
     # pprint(open_results())
 
     # plot_combined(open_results(), save=False)

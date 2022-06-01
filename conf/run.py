@@ -7,6 +7,7 @@ from scipy.stats import invgamma, lognorm, beta
 
 from Fade.data_fade import plot_fade_prob, plot_fade_count, plot_mean_time
 from Model.inv_gamma import inv_gamma, inv_gamma_curve_fit
+from Model.lognormal_paper_based import lognormal_paper_curve_fit, lognormal_paper
 from Model.pure_beta import beta_curve_fit
 from Model.pure_combined import combined_curve_fit
 from Model.pure_lognormal import lognormal, lognormal_curve_fit
@@ -76,6 +77,17 @@ class Run:
         self.results['lognormal']['standard div'] = result[-1]
         if plot:
             plt.plot(xx := np.linspace(1e-5, 1, 1001), lognorm.pdf(xx, result[0], result[1]), label='lognormal fitment')
+        return self.results
+
+    def fit_lognormal_paper(self, plot: bool = False, **unused):
+        self.results['lognormal paper'] = {}
+        result = lognormal_paper_curve_fit(np.array(self.data.df), plot=False)
+        self.results['lognormal paper']['sigma_i'] = result[0]
+        self.results['lognormal paper']['mu'] = result[1]
+        self.results['lognormal paper']['I_0'] = result[2]
+        self.results['lognormal paper']['standard div'] = result[-1]
+        if plot:
+            plt.plot(xx := np.linspace(1e-5, 1, 1001), lognormal_paper(xx, result[0], result[1]), label='lognormal paper fitment')
         return self.results
 
     def fit_inv_gamma(self, plot: bool = False, **unused):

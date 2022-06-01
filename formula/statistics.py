@@ -1,3 +1,4 @@
+from pprint import pprint
 from typing import Callable
 
 import numpy as np
@@ -6,7 +7,8 @@ import numpy as np
 def cost(func: Callable, x: np.ndarray, y: np.ndarray, popt) -> float:
     f = func(x, *popt)
     # f = fix_NaN(f)
-    return np.sum((y - f) ** 2) / (max(f) if max(f) > 0 else 1)
+    val = np.sum(np.square(np.subtract(y, f))) / (max(y) if max(y) > 0 else 1)
+    return val
 
 
 def fix_NaN(x: np.ndarray) -> np.ndarray:

@@ -11,6 +11,7 @@ from scipy.stats import lognorm, invgamma, beta
 
 from Model.lognormal_paper_based import lognormal_paper, lognormal_paper_true
 from Model.pure_combined import func as comb_func
+from Model.pure_combined import func_paper as comb_func_paper
 from Model.with_beta import combined_dist, combined_dist_gamma
 from conf.data import Data
 from plotting.norm_I_hist import norm_I_hist
@@ -29,7 +30,8 @@ name_convert = {
     'gamma full fit': 'gff',
     'lognormal full fit': 'lff',
     'lognormal paper': 'lognorm definition',
-    'lognormal paper true': 'lognorm Andrews'
+    'lognormal paper true': 'lognorm Andrews',
+    'combined paper': 'comb pap'
 }
 
 
@@ -117,6 +119,15 @@ def _plot_one(funcs: dict, mode: Optional[bool] = None, num: Optional[int] = Non
                     label=f'{name_convert[func]} (β={values["a"]:.3g}, σ={values["b"]:.3g}, μ={values["c"]:.3g})'
                     # linewidth=LW
                 )
+
+            if func == 'combined paper':
+                plt.plot(
+                    xx,
+                    comb_func_paper(xx, values['sigma_i2'], values['mu'], values['beta_b']), linestyles.pop(), markevery=7,
+                    label=f'{name_convert[func]} ($\sigma_i^2$={values["sigma_i2"]:.3g}, $\mu$={values["mu"]:.3g}, $b$={values["beta_b"]:.3g})'
+                    # linewidth=LW
+                )
+
             if func == 'inv gamma':
                 plt.plot(
                     xx,

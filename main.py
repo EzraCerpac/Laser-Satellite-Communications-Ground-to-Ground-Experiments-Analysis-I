@@ -33,7 +33,7 @@ log = logging.getLogger(__name__)
 
 def main(cfg=Config()):
     log.info('Starting main')
-    np.random.seed(985)
+    np.random.seed(345)
 
     # fourier_comparison(np.array(cfg.set_data(18, False, 4).df))
     # fourier_comparison(np.array(cfg.set_data(18, True, 16).df)[:-1])
@@ -70,11 +70,12 @@ def main(cfg=Config()):
                                          # 'lognormal in beta',
                                          # 'gamma in beta',
                                          # 'beta',
-                                         'lognormal',
+                                         # 'lognormal',
                                          # 'inv gamma',
                                          # 'gamma full fit',
                                          # 'lognormal full fit',
                                          'lognormal paper',
+                                         'lognormal paper true',
                                          res=100,
                                          plot=True,
                                          # save=True,
@@ -128,16 +129,18 @@ def main(cfg=Config()):
     #     results=True,
     # )
     # results = cfg.run_batch().run_single(
-    #     cfg.set_data(18, False, 4),
-    #     'lognormal in beta',
-    #     'gamma in beta',
-    #     'lognormal',
-    #     'inv gamma',
-    #     'gamma full fit',
-    #     'lognormal full fit',
-    #     res=8,
+    #     cfg.set_data(18, True, 28),
+    #     # 'lognormal in beta',
+    #     # 'gamma in beta',
+    #     # 'lognormal',
+    #     # 'inv gamma',
+    #     # 'gamma full fit',
+    #     # 'lognormal full fit',
+    #     'lognormal paper',
+    #     'lognormal paper true',
+    #     res=30,
     #     plot=True,
-    #     # save=True,
+    #     save=True,
     #     # results=True,
     # )
     pprint(results)

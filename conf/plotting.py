@@ -9,7 +9,7 @@ import numpy as np
 from matplotlib import pyplot as plt
 from scipy.stats import lognorm, invgamma, beta
 
-from Model.lognormal_paper_based import lognormal_paper
+from Model.lognormal_paper_based import lognormal_paper, lognormal_paper_true
 from Model.pure_combined import func as comb_func
 from Model.with_beta import combined_dist, combined_dist_gamma
 from conf.data import Data
@@ -28,7 +28,8 @@ name_convert = {
     'inv gamma': 'ig',
     'gamma full fit': 'gff',
     'lognormal full fit': 'lff',
-    'lognormal paper': 'ln p',
+    'lognormal paper': 'lognorm definition',
+    'lognormal paper true': 'lognorm Andrews'
 }
 
 
@@ -62,7 +63,7 @@ def _plot_one(funcs: dict, mode: Optional[bool] = None, num: Optional[int] = Non
             norm_I_hist(np.array(Data(set, mode, num).df), bins=300)
         elif data is not None:
             # log.info(f"data is type: {type(data)}")
-            norm_I_hist(data, bins=200)
+            norm_I_hist(data, bins=300)
         xx = np.linspace(0, 1, 101)
         # log.info(f'Plotting set {set}, modes {"on" if mode else "off"}, {num}')
         for func, values in funcs.items():
@@ -99,7 +100,14 @@ def _plot_one(funcs: dict, mode: Optional[bool] = None, num: Optional[int] = Non
                 plt.plot(
                     xx,
                     lognormal_paper(xx, values['sigma_i'], values['mu'], values['I_0']), linestyles.pop(), markevery=7,
-                    label=f'{name_convert[func]} ($\sigma_i^2$={values["sigma_i"]:.3g}, μ={values["mu"]:.3g})'
+                    label=f'{name_convert[func]}''\n' f'($\sigma_i^2$={values["sigma_i"]:.3g}, $\mu$={values["mu"]:.3g})'
+                    # linewidth=LW
+                )
+            if func == 'lognormal paper true':
+                plt.plot(
+                    xx,
+                    lognormal_paper_true(xx, values['sigma_i'], values['I_0']), linestyles.pop(), markevery=7,
+                    label=f'{name_convert[func]}''\n' f'($\sigma_i^2$={values["sigma_i"]:.3g}, $\mu^*$={-0.5 * (values["sigma_i"]):.3g})'
                     # linewidth=LW
                 )
             if func == 'combined':
@@ -156,7 +164,7 @@ def _plot_one(funcs: dict, mode: Optional[bool] = None, num: Optional[int] = Non
                 plt.xlim(values['Min'], values['Max'])
                 plt.yscale("log")
 
-        plt.legend(loc='upper right')
+        plt.legend()
         if save:
             dir = 'Plots/' + dir
             if not path.exists(dir):

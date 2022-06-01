@@ -12,7 +12,19 @@ plt.style.use('seaborn-colorblind')
 
 def fourier_comparison(data):
     data = norm_I(data)
-    pcomb = norm_I(Pcomb(
+    # pcomb = norm_I(Pcomb(  # 18 off 4
+    #     scint_psi=1.8,
+    #     mean_received_power=.749,
+    #     beam_divergence=10 ** -(4.7),
+    #     pointing_jitter=10 ** (-9),
+    #     scint_bandwith=10,
+    #     jit_bandwith=10,
+    #     scint_slope=20,
+    #     jit_slope=20,
+    #     sampling_freq=2478.9,
+    #     vector_length=30
+    # ))
+    pcomb = norm_I(Pcomb(  # 18 on 16
         scint_psi=1.8 * 1.38,
         mean_received_power=.749,  # np.mean(data),
         beam_divergence=10 ** -(4.7),
@@ -25,16 +37,14 @@ def fourier_comparison(data):
         vector_length=30
     ))
 
-    # fft_comp(data, pcomb)
     # t_comp(data, pcomb)
+    fft_comp(data, pcomb)
     # hist_comp(data, pcomb)
+    # memory_check(data, pcomb)
 
+
+def memory_check(data, pcomb):
     t = np.arange(0, 30, 1 / 2478.9)
-
-    def running_average(x, N: int, t):
-        cumsum = np.cumsum(np.insert(x, 0, 0))
-        return t[N - 1:], (cumsum[N:] - cumsum[:-N]) / N
-
     plt.plot(t, pcomb, label='data')
     plt.plot(t, spline_regression(t, pcomb), color='red', label='spline')
     plt.xlabel(r'$t$ [s]')
@@ -70,15 +80,18 @@ def t_comp(data, pcomb):
     plt.plot(t, data, color='blue', label='real', alpha=0.5)
     plt.xlabel(r'$t$ [s]')
     plt.ylabel(r'$I_n$ [-]')
+    plt.legend(loc='upper right')
+    plt.show()
 
 
 def fft_comp(data, pcomb):
     fft1 = fft(pcomb)
     fft2 = fft(data)
-    plt.plot(fftfreq(fft1.size, d=1 / 2478.9), np.abs(fft1), color='red', label='PVGeT generated', alpha=0.5)
-    plt.plot(fftfreq(fft2.size, d=1 / 2478.9), np.abs(fft2), color='blue', label='low turbulance, modes off', alpha=0.5)
-    plt.ylim(0, 50)
-    plt.xlim(0, 1000)
+    plt.loglog(fftfreq(fft1.size, d=1 / 2478.9), np.abs(fft1), color='red', label='PVGeT generated', alpha=0.5)
+    plt.loglog(fftfreq(fft2.size, d=1 / 2478.9), np.abs(fft2), color='blue', label='low turbulance, modes off',
+               alpha=0.5)
+    # plt.ylim(0, 50)
+    # plt.xlim(0, 1000)
     plt.legend(loc='upper right')
     plt.xlabel(r'$f$ [Hz]')
     plt.ylabel(r'$I_n$ [W/m$^2$]')

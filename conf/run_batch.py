@@ -95,7 +95,9 @@ class BatchRun:
         function_dict = {
             'lognormal in beta': run.fit_lognormal_in_beta,
             'gamma in beta': run.fit_gamma_in_beta,
+            'beta': run.fit_beta,
             'lognormal': run.fit_lognormal,
+            'combined': run.fit_combined,
             'inv gamma': run.fit_inv_gamma,
             'lognormal full fit': run.calc_full_lognorm,
             'gamma full fit': run.calc_full_gamma_in_beta,
@@ -117,7 +119,9 @@ class BatchRun:
         function_dict = {
             'lognormal in beta': run.fit_lognormal_in_beta,
             'gamma in beta': run.fit_gamma_in_beta,
+            'beta': run.fit_beta,
             'lognormal': run.fit_lognormal,
+            'combined': run.fit_combined,
             'inv gamma': run.fit_inv_gamma,
             'lognormal full fit': run.calc_full_lognorm,
             'gamma full fit': run.calc_full_gamma_in_beta,

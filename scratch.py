@@ -1,5 +1,19 @@
-from Model.with_beta import labda, zz, C_n2
-from combined_fit.indices import scintillation_index, rytov_index_const
-from formula.jitter import k
+import numpy as np
+from lets_plot import *
 
-print(scintillation_index(rytov_index_const(k(labda), zz[-1], C_n2.mean())))
+# %%
+
+# Generate random data-points for the demo.
+np.random.seed(12)
+data = dict(
+    cond=np.repeat(['A', 'B'], 200),
+    rating=np.concatenate((np.random.normal(0, 1, 200), np.random.normal(1, 1.5, 200)))
+)
+
+# Create plot specification.
+p = ggplot(data, aes(x='rating', fill='cond')) + ggsize(500, 250) \
+    + geom_density(color='dark_green', alpha=.7) + scale_fill_brewer(type='seq') \
+    + theme(axis_line_y='blank')
+
+# Display plot in 'SciView'.
+p.show()

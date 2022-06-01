@@ -7,8 +7,9 @@ from typing import Dict, Optional
 
 import numpy as np
 from matplotlib import pyplot as plt
-from scipy.stats import lognorm, invgamma
+from scipy.stats import lognorm, invgamma, beta
 
+from Model.pure_combined import func as comb_func
 from Model.with_beta import combined_dist, combined_dist_gamma
 from conf.data import Data
 from plotting.norm_I_hist import norm_I_hist
@@ -20,7 +21,9 @@ LW = 2
 name_convert = {
     'lognormal in beta': 'lib',
     'gamma in beta': 'gib',
+    'beta': 'beta',
     'lognormal': 'ln',
+    'combined': 'comb',
     'inv gamma': 'ig',
     'gamma full fit': 'gff',
     'lognormal full fit': 'lff',
@@ -76,11 +79,25 @@ def _plot_one(funcs: dict, mode: Optional[bool] = None, num: Optional[int] = Non
                     label=f'{name_convert[func]} (α={values["alpha"]:.3g}, β={values["beta"]:.3g})'
                     # linewidth=LW
                 )
+            if func == 'beta':
+                plt.plot(
+                    xx,
+                    beta.pdf(xx, values['a'], values['b']), linestyles.pop(), markevery=7,
+                    label=f'{name_convert[func]} (β={values["a"]:.3g})'
+                    # linewidth=LW
+                )
             if func == 'lognormal':
                 plt.plot(
                     xx,
                     lognorm.pdf(xx, values['skew'], values['pos']), linestyles.pop(), markevery=7,
                     label=f'{name_convert[func]} (σ={values["skew"]:.3g}, μ={values["pos"]:.3g})'
+                    # linewidth=LW
+                )
+            if func == 'combined':
+                plt.plot(
+                    xx,
+                    comb_func(xx, values['a'], values['b'], values['c']), linestyles.pop(), markevery=7,
+                    label=f'{name_convert[func]} (β={values["a"]:.3g}, σ={values["b"]:.3g}, μ={values["c"]:.3g})'
                     # linewidth=LW
                 )
             if func == 'inv gamma':

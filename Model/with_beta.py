@@ -73,6 +73,8 @@ def combined_dist(X: np.ndarray, alpha: float, beta: float, sigma_i: float = 0, 
     return [quad(lambda I: beta_func.pdf(I, alpha, beta) * probability_dist(
         i, I, sigma_i), 0, 1)[0] for i in X]
 
+    # return beta_func.pdf(X, alpha) * lognorm.pdf(X, *p)
+
 
 def combined_dist_gamma(X: np.ndarray, alpha: float, beta: float, a: float = 0, b: float = 0, full_fit: bool = False):
     if not full_fit:

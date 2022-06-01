@@ -10,7 +10,9 @@ import numpy as np
 from scipy.integrate import IntegrationWarning
 from scipy.optimize import OptimizeWarning
 
+from Reverse_fit.comb_gen import Pcomb
 from conf.config import Config
+from formula.normalize import norm_I
 
 warnings.filterwarnings("ignore", category=RuntimeWarning)
 warnings.filterwarnings("ignore", category=IntegrationWarning)
@@ -34,20 +36,22 @@ def main(cfg=Config()):
     np.random.seed(2)
 
     # fourier_comparison(np.array(cfg.set_data(18, False, 4).df))
+    # fourier_comparison(np.array(cfg.set_data(18, True, 16).df)[:-1])
 
     """Fitting to generated data"""
-    # data = norm_I(Pcomb(
-    #         scint_psi=1.8,
-    #         mean_received_power=.749,
-    #         beam_divergence=10 ** -(4.7),
-    #         pointing_jitter=10**(-9),
-    #         scint_bandwith=10,
-    #         jit_bandwith=10,
-    #         scint_slope=20,
-    #         jit_slope=20,
-    #         sampling_freq=2478.9,
-    #         vector_length=30
-    #     ))
+    data = [norm_I(i) for i in Pcomb(
+        scint_psi=1.8,
+        mean_received_power=.749,
+        beam_divergence=10 ** -(4.7),
+        pointing_jitter=10 ** (-9),
+        scint_bandwith=10,
+        jit_bandwith=10,
+        scint_slope=20,
+        jit_slope=20,
+        sampling_freq=2478.9,
+        vector_length=30,
+        return_scint_sub=True,
+    )]
     # data = norm_I(Pcomb(
     #     scint_psi=1.8 * 1.38,
     #     mean_received_power=.749,  # np.mean(data),
@@ -61,35 +65,67 @@ def main(cfg=Config()):
     #     vector_length=30
     # ))
     # cfg.set_data()
-    # cfg.data.df = data
-    # plt.hist(data, bins=100, label='P_sci')
+    # cfg.data.df = data[1]
     # results = cfg.run_batch().run_single(cfg.data,
-    #     'lognormal in beta',
-    #     'gamma in beta',
-    #     'lognormal',
-    #     'inv gamma',
-    #     # 'gamma full fit',
-    #     'lognormal full fit',
-    #     res=10,
-    #     plot=True,
-    #     # save=True,
-    #     # results=True,
-    # )
-    # print(results)
+    #                                      # 'lognormal in beta',
+    #                                      # 'gamma in beta',
+    #                                      # 'beta',
+    #                                      'lognormal',
+    #                                      'inv gamma',
+    #                                      # 'gamma full fit',
+    #                                      # 'lognormal full fit',
+    #                                      res=10,
+    #                                      plot=True,
+    #                                      # save=True,
+    #                                      # results=True,
+    #                                      )
+    # cfg.set_data()
+    # cfg.data.df = data[2]
+    # results = cfg.run_batch().run_single(cfg.data,
+    #                                      # 'lognormal in beta',
+    #                                      # 'gamma in beta',
+    #                                      'beta',
+    #                                      # 'lognormal',
+    #                                      # 'inv gamma',
+    #                                      # 'gamma full fit',
+    #                                      # 'lognormal full fit',
+    #                                      res=10,
+    #                                      plot=True,
+    #                                      # save=True,
+    #                                      # results=True,
+    #                                      )
+    cfg.set_data()
+    cfg.data.df = data[0]
+    results = cfg.run_batch().run_single(cfg.data,
+                                         # 'lognormal in beta',
+                                         # 'gamma in beta',
+                                         # 'beta',
+                                         # 'lognormal',
+                                         # 'inv gamma',
+                                         # 'gamma full fit',
+                                         # 'lognormal full fit',
+                                         'combined',
+                                         res=3,
+                                         plot=True,
+                                         # save=True,
+                                         # results=True,
+                                         )
+    print(results)
 
     """Fitting to given data"""
-    results = cfg.run_batch(18, 22).run_parallel(
-        'lognormal in beta',
-        'gamma in beta',
-        'lognormal',
-        'inv gamma',
-        'gamma full fit',
-        'lognormal full fit',
-        res=30,
-        plot=True,
-        save=True,
-        results=True,
-    )
+    # results = cfg.run_batch(18, 22).run_parallel(
+    #     # 'lognormal in beta',
+    #     # 'gamma in beta',
+    #     # 'lognormal',
+    #     # 'inv gamma',
+    #     # 'gamma full fit',
+    #     # 'lognormal full fit',
+    #     'combined',
+    #     res=300,
+    #     plot=True,
+    #     # save=True,
+    #     results=True,
+    # )
     # results = cfg.run_batch().run_single(
     #     cfg.set_data(18, False, 4),
     #     'lognormal in beta',
@@ -104,7 +140,7 @@ def main(cfg=Config()):
     #     # results=True,
     # )
     pprint(results)
-
+    #
     store_results(results)
     # pprint(open_results())
 

@@ -11,8 +11,8 @@ def Pcomb(*, scint_psi, mean_received_power, beam_divergence, pointing_jitter, s
           scint_slope, jit_slope, sampling_freq, vector_length, return_scint_sub=False) -> np.ndarray | tuple[
     np.ndarray, np.ndarray, np.ndarray]:
     """
-    beam_divergence between 1e-4.5 and 1e-4.8 is the best, lower for peak to right
-    4.5875 is very interesting
+    Generates the combined power spectrum of the scintillator and jitter.
+
     """
     P_sci = Psci(
         psi=scint_psi,

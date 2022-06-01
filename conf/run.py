@@ -3,16 +3,17 @@ from typing import Dict
 
 import numpy as np
 from matplotlib import pyplot as plt
-from scipy.stats import invgamma, lognorm
+from scipy.stats import invgamma, lognorm, beta
 
 from Fade.data_fade import plot_fade_prob, plot_fade_count, plot_mean_time
 from Model.inv_gamma import inv_gamma, inv_gamma_curve_fit
+from Model.pure_beta import beta_curve_fit
+from Model.pure_combined import combined_curve_fit
 from Model.pure_lognormal import lognormal, lognormal_curve_fit
 from Model.with_beta import estimate_sigma as estimate_sigma_with_alpha
 from conf.data import Data
 
 log = logging.getLogger(__name__)
-
 
 Result = Dict[int, Dict[bool, Dict[int, Dict[str, float]]]]
 
@@ -38,6 +39,31 @@ class Run:
         self.results['gamma in beta']['alpha'] = result[1]
         self.results['gamma in beta']['beta'] = result[2]
         self.results['gamma in beta']['standard div'] = result[-1]
+        return self.results
+
+    def fit_beta(self, plot: bool = False, **unused):
+        self.results['beta'] = {}
+        # result1 = beta_fit(np.array(self.data.df), plot=False)
+        result = beta_curve_fit(np.array(self.data.df), plot=False)
+        # result = result1 if result1[-1] < result2[-1] else result2
+        self.results['beta']['a'] = result[0]
+        self.results['beta']['b'] = result[1]
+        self.results['beta']['standard div'] = result[-1]
+        if plot:
+            plt.plot(xx := np.linspace(1e-5, 1, 1001), beta.pdf(xx, result[0], result[1]), label='beta fitment')
+        return self.results
+
+    def fit_combined(self, plot: bool = False, **unused):
+        self.results['combined'] = {}
+        # result1 = beta_fit(np.array(self.data.df), plot=False)
+        result = combined_curve_fit(np.array(self.data.df), plot=False)
+        # result = result1 if result1[-1] < result2[-1] else result2
+        self.results['combined']['a'] = result[0]
+        self.results['combined']['b'] = result[1]
+        self.results['combined']['c'] = result[2]
+        self.results['combined']['standard div'] = result[-1]
+        if plot:
+            plt.plot(xx := np.linspace(1e-5, 1, 1001), beta.pdf(xx, result[0], result[1]), label='beta fitment')
         return self.results
 
     def fit_lognormal(self, plot: bool = False, **unused):

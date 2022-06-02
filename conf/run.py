@@ -74,11 +74,12 @@ class Run:
         result = combined_paper_curve_fit(np.array(self.data.df), plot=False)
         # result = result1 if result1[-1] < result2[-1] else result2
         self.results['combined paper']['sigma_i2'] = result[0]
-        self.results['combined paper']['mu'] = result[1]
-        self.results['combined paper']['beta_b'] = result[2]
+        # self.results['combined paper']['mu'] = result[1]
+        self.results['combined paper']['beta_b'] = result[1]
         self.results['combined paper']['standard div'] = result[-1]
         if plot:
-            plt.plot(xx := np.linspace(1e-5, 1, 1001), func_paper(xx, result[0], result[1], result[2]), label='combined paper fitment')
+            plt.plot(xx := np.linspace(1e-5, 1, 1001), func_paper(xx, result[0], result[1]),
+                     label='combined paper fitment')
         return self.results
 
     def fit_lognormal(self, plot: bool = False, **unused):

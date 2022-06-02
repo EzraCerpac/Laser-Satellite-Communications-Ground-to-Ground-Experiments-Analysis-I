@@ -30,3 +30,14 @@ def lognormal_curve_fit(irradiance: np.ndarray, res: int = 101, plot: bool = Tru
     yy = norm_I_hist(irradiance, bins=250, plot=False)
     xx = np.linspace(1e-10, 1, len(yy))
     return *p_opt, cost(lognorm.pdf, xx, yy, p_opt)
+
+# def lognormal_curve_fit_fixed(irradiance: np.ndarray, res: int = 101, plot: bool = True) -> Tuple[float, float]:
+#     yy = norm_I_hist(irradiance, bins=res, plot=False)
+#     xx = np.linspace(1e-10, 1, len(yy))
+#     func = lambda x, sigma: lognorm.pdf(x, sigma, -sigma/2)
+#     p_opt, p_cov = curve_fit(func, xx, yy, p0=[0.05**(1/2)])
+#     if plot:
+#         plt.plot(xx, lognorm.pdf(xx, *p_opt), label='lognormal fitment')
+#     yy = norm_I_hist(irradiance, bins=250, plot=False)
+#     xx = np.linspace(1e-10, 1, len(yy))
+#     return p_opt[0], -p_opt[0]/2, cost(func, xx, yy, p_opt)

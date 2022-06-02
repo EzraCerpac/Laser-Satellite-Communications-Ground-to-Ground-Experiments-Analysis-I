@@ -25,13 +25,13 @@ name_convert = {
     'gamma in beta': 'gib',
     'beta': 'beta',
     'lognormal': 'ln',
-    'combined': 'comb',
+    'combined': 'combined',
     'inv gamma': 'ig',
     'gamma full fit': 'gff',
     'lognormal full fit': 'lff',
-    'lognormal paper': 'lognorm definition',
-    'lognormal paper true': 'lognorm Andrews',
-    'combined paper': 'comb pap'
+    'lognormal paper': 'lognormal',
+    'lognormal paper true': 'lognormal Andrews',
+    'combined paper': 'combined Andrews',
 }
 
 
@@ -95,7 +95,7 @@ def _plot_one(funcs: dict, mode: Optional[bool] = None, num: Optional[int] = Non
                 plt.plot(
                     xx,
                     lognorm.pdf(xx, values['skew'], values['pos']), linestyles.pop(), markevery=7,
-                    label=f'{name_convert[func]} (σ={values["skew"]:.3g}, μ={values["pos"]:.3g})'
+                    label=f'{name_convert[func]}''\n'f'(σ={values["skew"]:.3g}, μ={values["pos"]:.3g})'
                     # linewidth=LW
                 )
             if func == 'lognormal paper':
@@ -116,15 +116,15 @@ def _plot_one(funcs: dict, mode: Optional[bool] = None, num: Optional[int] = Non
                 plt.plot(
                     xx,
                     comb_func(xx, values['a'], values['b'], values['c']), linestyles.pop(), markevery=7,
-                    label=f'{name_convert[func]} (β={values["a"]:.3g}, σ={values["b"]:.3g}, μ={values["c"]:.3g})'
+                    label=f'{name_convert[func]}''\n'f'($\sigma_i^2$={values["b"]:.3g}, μ={values["c"]:.3g}, β={values["a"]:.3g})'
                     # linewidth=LW
                 )
 
             if func == 'combined paper':
                 plt.plot(
                     xx,
-                    comb_func_paper(xx, values['sigma_i2'], values['mu'], values['beta_b']), linestyles.pop(), markevery=7,
-                    label=f'{name_convert[func]} ($\sigma_i^2$={values["sigma_i2"]:.3g}, $\mu$={values["mu"]:.3g}, $b$={values["beta_b"]:.3g})'
+                    comb_func_paper(xx, values['sigma_i2'], values['beta_b']), linestyles.pop(), markevery=7,
+                    label=f'{name_convert[func]}' '\n' f'($\sigma_i^2$={values["sigma_i2"]:.3g}, β={values["beta_b"]:.3g})'
                     # linewidth=LW
                 )
 

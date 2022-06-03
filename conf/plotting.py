@@ -69,7 +69,7 @@ def _plot_one(funcs: dict, mode: Optional[bool] = None, num: Optional[int] = Non
         xx = np.linspace(1e-10, 1, 601)
         # log.info(f'Plotting set {set}, modes {"on" if mode else "off"}, {num}')
         for func, values in funcs.items():
-            #plt.xlim(0, 1)
+            plt.xlim(0, 1)
             if func == 'lognormal in beta':
                 ax.plot(
                     xx,
@@ -128,7 +128,7 @@ def _plot_one(funcs: dict, mode: Optional[bool] = None, num: Optional[int] = Non
                     label=f'{name_convert[func]}' '\n' f'($\sigma_i^2$={values["sigma_i2"]:.3g}, β={values["beta_b"]:.3g})'
                     # linewidth=LW
                 )
-                plt.xlim(0, 0.5)
+
 
             if func == 'inv gamma':
                 plt.plot(

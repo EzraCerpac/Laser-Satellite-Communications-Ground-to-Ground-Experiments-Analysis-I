@@ -3,6 +3,7 @@ from typing import Tuple
 
 import numpy as np
 from matplotlib import pyplot as plt
+from scipy.integrate import quad
 from scipy.optimize import curve_fit
 from scipy.stats import lognorm, beta
 
@@ -19,9 +20,9 @@ def func(X, beta_b, log_a, log_b):
 
 
 def func_paper(X, sigma_i2, beta_b, irradiance_avg):
-    return lognormal_paper_true(X, sigma_i2, irradiance_avg) * beta.pdf(X, beta_b, 1)
-    # return [quad(lambda I0: lognormal_paper(x, sigma_i2, mu, irradiance_avg=I0) * beta.pdf(x, beta_b, 1), 0, 1)[0] for x
-    #         in X]
+    # return lognormal_paper_true(X, sigma_i2, irradiance_avg) * beta.pdf(X, beta_b, 1)
+    return [quad(lambda I0: lognormal_paper_true(x, sigma_i2, irradiance_avg) * beta.pdf(x, beta_b, 1), 0, 1)[0] for x
+             in X]
 
 
 def combined_curve_fit(irradiance: np.ndarray, res: int = 101, plot: bool = True) -> Tuple[float, float, float, float]:
@@ -41,7 +42,7 @@ def combined_paper_curve_fit(irradiance: np.ndarray, res: int = 101, plot: bool 
     xx = np.linspace(1e-10, 1, len(yy))
     I0 = np.mean(norm_I(irradiance))
     func = partial(func_paper, irradiance_avg=I0)
-    p_opt, p_cov = curve_fit(func, xx, yy, p0=[.5, 1])
+    p_opt, p_cov = curve_fit(func, xx, yy, p0=[1, 1])
     if plot:
         plt.plot(xx, beta.pdf(xx, *p_opt), label='beta fitment')
     yy = norm_I_hist(irradiance, bins=250, plot=False)

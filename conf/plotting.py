@@ -66,10 +66,10 @@ def _plot_one(funcs: dict, mode: Optional[bool] = None, num: Optional[int] = Non
         elif data is not None:
             # log.info(f"data is type: {type(data)}")
             norm_I_hist(data, bins=300)
-        xx = np.linspace(0, 1, 101)
+        xx = np.linspace(1e-10, 1, 601)
         # log.info(f'Plotting set {set}, modes {"on" if mode else "off"}, {num}')
         for func, values in funcs.items():
-            plt.xlim(0, 1)
+            #plt.xlim(0, 1)
             if func == 'lognormal in beta':
                 ax.plot(
                     xx,
@@ -109,13 +109,14 @@ def _plot_one(funcs: dict, mode: Optional[bool] = None, num: Optional[int] = Non
                 plt.plot(
                     xx,
                     lognormal_paper_true(xx, values['sigma_i'], values['I_0']), linestyles.pop(), markevery=7,
-                    label=f'{name_convert[func]}''\n' f'($\sigma_i^2$={values["sigma_i"]:.3g}, $\mu^*$={-0.5 * (values["sigma_i"]):.3g})'
+                    # label=f'{name_convert[func]}''\n' f'($\sigma_i^2$={values["sigma_i"]:.3g}, $\mu^*$={-0.5 * (values["sigma_i"]):.3g}, I0 = {values["I_0"]:.3g})'
+                    label=f'{name_convert[func]}''\n' f'($\sigma_i^2$={values["sigma_i"]:.3g}, $I_0$ = {values["I_0"]:.3g})'
                     # linewidth=LW
                 )
             if func == 'combined':
                 plt.plot(
                     xx,
-                    comb_func(xx, values['a'], values['b'], values['c']), linestyles.pop(), markevery=7,
+                    comb_func(xx, values['a'], values['b'], values['c']), linestyles.pop(), markevery=14,
                     label=f'{name_convert[func]}''\n'f'($\sigma_i^2$={values["b"]:.3g}, μ={values["c"]:.3g}, β={values["a"]:.3g})'
                     # linewidth=LW
                 )
@@ -123,10 +124,11 @@ def _plot_one(funcs: dict, mode: Optional[bool] = None, num: Optional[int] = Non
             if func == 'combined paper':
                 plt.plot(
                     xx,
-                    comb_func_paper(xx, values['sigma_i2'], values['beta_b']), linestyles.pop(), markevery=7,
+                    comb_func_paper(xx, values['sigma_i2'], values['beta_b'], values['I_0']), linestyles.pop(), markevery=14,
                     label=f'{name_convert[func]}' '\n' f'($\sigma_i^2$={values["sigma_i2"]:.3g}, β={values["beta_b"]:.3g})'
                     # linewidth=LW
                 )
+                plt.xlim(0, 0.5)
 
             if func == 'inv gamma':
                 plt.plot(

@@ -1,3 +1,4 @@
+from functools import partial
 from typing import Tuple
 
 import numpy as np
@@ -6,6 +7,7 @@ from scipy.optimize import curve_fit
 from scipy.stats import lognorm, beta
 
 from Model.lognormal_paper_based import lognormal_paper_true
+from formula.normalize import norm_I
 from formula.statistics import cost
 from plotting.norm_I_hist import norm_I_hist
 
@@ -16,8 +18,8 @@ def func(X, beta_b, log_a, log_b):
     # return [quad(lambda I0: beta.pdf(I0, beta_b, 1) * lognorm.pdf(x, log_a, log_b), 0, 1)[0] for x in X]
 
 
-def func_paper(X, sigma_i2, beta_b):
-    return lognormal_paper_true(X, sigma_i2) * beta.pdf(X, beta_b, 1)
+def func_paper(X, sigma_i2, beta_b, irradiance_avg):
+    return lognormal_paper_true(X, sigma_i2, irradiance_avg) * beta.pdf(X, beta_b, 1)
     # return [quad(lambda I0: lognormal_paper(x, sigma_i2, mu, irradiance_avg=I0) * beta.pdf(x, beta_b, 1), 0, 1)[0] for x
     #         in X]
 
@@ -37,9 +39,11 @@ def combined_paper_curve_fit(irradiance: np.ndarray, res: int = 101, plot: bool 
     float, float, float, float]:
     yy = norm_I_hist(irradiance, bins=res, plot=False)
     xx = np.linspace(1e-10, 1, len(yy))
-    p_opt, p_cov = curve_fit(func_paper, xx, yy, p0=[0.05, 1])
+    I0 = np.mean(norm_I(irradiance))
+    func = partial(func_paper, irradiance_avg=I0)
+    p_opt, p_cov = curve_fit(func, xx, yy, p0=[.5, 1])
     if plot:
         plt.plot(xx, beta.pdf(xx, *p_opt), label='beta fitment')
     yy = norm_I_hist(irradiance, bins=250, plot=False)
     xx = np.linspace(1e-10, 1, len(yy))
-    return *p_opt, cost(func_paper, xx, yy, p_opt)
+    return *p_opt, I0, cost(func, xx, yy, p_opt)

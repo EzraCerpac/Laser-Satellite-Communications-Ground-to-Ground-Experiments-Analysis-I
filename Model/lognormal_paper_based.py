@@ -10,7 +10,6 @@ from formula.statistics import cost
 from plotting.norm_I_hist import norm_I_hist
 
 
-# TODO: Check if the square of the scintillation index is correct
 def lognormal_paper(irradiance: np.ndarray, sigma_i2: float, mu: float, irradiance_avg: float = None) -> np.ndarray:
     if irradiance_avg is None: irradiance_avg = np.mean(irradiance)
 

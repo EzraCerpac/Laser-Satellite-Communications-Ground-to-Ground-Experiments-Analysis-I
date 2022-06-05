@@ -10,7 +10,8 @@ from Model.inv_gamma import inv_gamma, inv_gamma_curve_fit
 from Model.lognormal_paper_based import lognormal_paper_curve_fit, lognormal_paper, lognormal_paper_true_curve_fit, \
     lognormal_paper_true
 from Model.pure_beta import beta_curve_fit
-from Model.pure_combined import combined_curve_fit, combined_paper_curve_fit, func_paper
+from Model.pure_combined import combined_curve_fit, combined_paper_curve_fit, func_paper, combined_paper_gamma_curve_fit
+from Model.pure_gamma_gamma import gamma_gamma_paper, gamma_gamma_paper_curve_fit
 from Model.pure_lognormal import lognormal, lognormal_curve_fit
 from Model.with_beta import estimate_sigma as estimate_sigma_with_alpha
 from conf.data import Data
@@ -82,6 +83,20 @@ class Run:
                      label='combined paper fitment')
         return self.results
 
+    def fit_combined_paper_gamma(self, plot: bool = False, **unused):
+        self.results['combined paper gamma'] = {}
+        # result1 = beta_fit(np.array(self.data.df), plot=False)
+        result = combined_paper_gamma_curve_fit(np.array(self.data.df), plot=False)
+        # result = result1 if result1[-1] < result2[-1] else result2
+        self.results['combined paper gamma']['sigma_r2'] = result[0]
+        self.results['combined paper gamma']['I_0'] = result[2]
+        self.results['combined paper gamma']['beta_b'] = result[1]
+        self.results['combined paper gamma']['standard div'] = result[-1]
+        if plot:
+            plt.plot(xx := np.linspace(1e-5, 1, 1001), func_paper(xx, result[0], result[1], result[2]),
+                     label='combined paper fitment')
+        return self.results
+
     def fit_lognormal(self, plot: bool = False, **unused):
         self.results['lognormal'] = {}
         result1 = lognormal(np.array(self.data.df), plot=False)
@@ -115,6 +130,16 @@ class Run:
         self.results['lognormal paper true']['standard div'] = result[-1]
         if plot:
             plt.plot(xx := np.linspace(1e-5, 1, 1001), lognormal_paper_true(xx, result[0], result[1]), label='lognormal paper true fitment')
+        return self.results
+
+    def fit_gamma_gamma_paper(self, plot: bool = False, **unused):
+        self.results['gamma gamma paper'] = {}
+        result = gamma_gamma_paper_curve_fit(np.array(self.data.df), plot=False)
+        self.results['gamma gamma paper']['sigma_r'] = result[0]
+        self.results['gamma gamma paper']['I_0'] = result[1]
+        self.results['gamma gamma paper']['standard div'] = result[-1]
+        if plot:
+            plt.plot(xx := np.linspace(1e-5, 1, 1001), gamma_gamma_paper(xx, result[0], result[1]), label='lognormal paper fitment')
         return self.results
 
     def fit_inv_gamma(self, plot: bool = False, **unused):

@@ -12,6 +12,8 @@ from scipy.stats import lognorm, invgamma, beta
 from Model.lognormal_paper_based import lognormal_paper, lognormal_paper_true
 from Model.pure_combined import func as comb_func
 from Model.pure_combined import func_paper as comb_func_paper
+from Model.pure_combined import func_paper_gamma as comb_func_paper_gamma
+from Model.pure_gamma_gamma import gamma_gamma_paper
 from Model.with_beta import combined_dist, combined_dist_gamma
 from conf.data import Data
 from plotting.norm_I_hist import norm_I_hist
@@ -30,8 +32,10 @@ name_convert = {
     'gamma full fit': 'gff',
     'lognormal full fit': 'lff',
     'lognormal paper': 'lognormal',
-    'lognormal paper true': 'lognormal Andrews',
-    'combined paper': 'combined Andrews',
+    'lognormal paper true': 'lognormal',
+    'gamma gamma paper': 'gamma gamma',
+    'combined paper': 'combined lognormal',
+    'combined paper gamma': 'combined gamma gamma',
 }
 
 
@@ -50,6 +54,7 @@ def plot_combined(
     [plot.get() for plot in plottings]
     pool.close()
     log.info("Finished plots")
+
 
 
 def _plot_one(funcs: dict, mode: Optional[bool] = None, num: Optional[int] = None, set: Optional[int] = None,
@@ -113,6 +118,16 @@ def _plot_one(funcs: dict, mode: Optional[bool] = None, num: Optional[int] = Non
                     label=f'{name_convert[func]}''\n' f'($\sigma_i^2$={values["sigma_i"]:.3g}, $I_0$ = {values["I_0"]:.3g})'
                     # linewidth=LW
                 )
+
+            if func == 'gamma gamma paper':
+                plt.plot(
+                    xx,
+                    gamma_gamma_paper(xx, values['sigma_r'], values['I_0']), linestyles.pop(), markevery=7,
+                    # label=f'{name_convert[func]}''\n' f'($\sigma_i^2$={values["sigma_i"]:.3g}, $\mu^*$={-0.5 * (values["sigma_i"]):.3g}, I0 = {values["I_0"]:.3g})'
+                    label=f'{name_convert[func]}''\n' f'($\sigma_r^2$={values["sigma_r"]:.3g}, $I_0$ = {values["I_0"]:.3g})'
+                    # linewidth=LW
+                )
+
             if func == 'combined':
                 plt.plot(
                     xx,
@@ -126,6 +141,14 @@ def _plot_one(funcs: dict, mode: Optional[bool] = None, num: Optional[int] = Non
                     xx,
                     comb_func_paper(xx, values['sigma_i2'], values['beta_b'], values['I_0']), linestyles.pop(), markevery=14,
                     label=f'{name_convert[func]}' '\n' f'($\sigma_i^2$={values["sigma_i2"]:.3g}, β={values["beta_b"]:.3g})'
+                    # linewidth=LW
+                )
+
+            if func == 'combined paper gamma':
+                plt.plot(
+                    xx,
+                    comb_func_paper_gamma(xx, values['sigma_r2'], values['beta_b'], values['I_0']), linestyles.pop(), markevery=14,
+                    label=f'{name_convert[func]}' '\n' f'($\sigma_r^2$={values["sigma_r2"]:.3g}, β={values["beta_b"]:.3g})'
                     # linewidth=LW
                 )
 

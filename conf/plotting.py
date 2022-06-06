@@ -78,42 +78,42 @@ def _plot_one(funcs: dict, mode: Optional[bool] = None, num: Optional[int] = Non
             if func == 'lognormal in beta':
                 ax.plot(
                     xx,
-                    combined_dist(xx, values['alpha'], values['beta']), linestyles.pop(), markevery=7,
+                    combined_dist(xx, values['alpha'], values['beta']), linestyles.pop(), markevery=14,
                     label=f'{name_convert[func]} (α={values["alpha"]:.3g}, β={values["beta"]:.3g})'
                     # linewidth=LW
                 )
             if func == 'gamma in beta':
                 ax.plot(
                     xx,
-                    combined_dist_gamma(xx, values['alpha'], values['beta']), linestyles.pop(), markevery=7,
+                    combined_dist_gamma(xx, values['alpha'], values['beta']), linestyles.pop(), markevery=14,
                     label=f'{name_convert[func]} (α={values["alpha"]:.3g}, β={values["beta"]:.3g})'
                     # linewidth=LW
                 )
             if func == 'beta':
                 plt.plot(
                     xx,
-                    beta.pdf(xx, values['a'], values['b']), linestyles.pop(), markevery=7,
+                    beta.pdf(xx, values['a'], values['b']), linestyles.pop(), markevery=14,
                     label=f'{name_convert[func]} (β={values["a"]:.3g})'
                     # linewidth=LW
                 )
             if func == 'lognormal':
                 plt.plot(
                     xx,
-                    lognorm.pdf(xx, values['skew'], values['pos']), linestyles.pop(), markevery=7,
+                    lognorm.pdf(xx, values['skew'], values['pos']), linestyles.pop(), markevery=14,
                     label=f'{name_convert[func]}''\n'f'(σ={values["skew"]:.3g}, μ={values["pos"]:.3g})'
                     # linewidth=LW
                 )
             if func == 'lognormal paper':
                 plt.plot(
                     xx,
-                    lognormal_paper(xx, values['sigma_i'], values['mu'], values['I_0']), linestyles.pop(), markevery=7,
+                    lognormal_paper(xx, values['sigma_i'], values['mu'], values['I_0']), linestyles.pop(), markevery=14,
                     label=f'{name_convert[func]}''\n' f'($\sigma_i^2$={values["sigma_i"]:.3g}, $\mu$={values["mu"]:.3g})'
                     # linewidth=LW
                 )
             if func == 'lognormal paper true':
                 plt.plot(
                     xx,
-                    lognormal_paper_true(xx, values['sigma_i'], values['I_0']), linestyles.pop(), markevery=7,
+                    lognormal_paper_true(xx, values['sigma_i'], values['I_0']), linestyles.pop(), markevery=14,
                     # label=f'{name_convert[func]}''\n' f'($\sigma_i^2$={values["sigma_i"]:.3g}, $\mu^*$={-0.5 * (values["sigma_i"]):.3g}, I0 = {values["I_0"]:.3g})'
                     label=f'{name_convert[func]}''\n' f'($\sigma_i^2$={values["sigma_i"]:.3g}, $I_0$ = {values["I_0"]:.3g})'
                     # linewidth=LW
@@ -122,7 +122,7 @@ def _plot_one(funcs: dict, mode: Optional[bool] = None, num: Optional[int] = Non
             if func == 'gamma gamma paper':
                 plt.plot(
                     xx,
-                    gamma_gamma_paper(xx, values['sigma_r'], values['I_0']), linestyles.pop(), markevery=7,
+                    gamma_gamma_paper(xx, values['sigma_r'], values['I_0']), linestyles.pop(), markevery=14,
                     # label=f'{name_convert[func]}''\n' f'($\sigma_i^2$={values["sigma_i"]:.3g}, $\mu^*$={-0.5 * (values["sigma_i"]):.3g}, I0 = {values["I_0"]:.3g})'
                     label=f'{name_convert[func]}''\n' f'($\sigma_r^2$={values["sigma_r"]:.3g}, $I_0$ = {values["I_0"]:.3g})'
                     # linewidth=LW
@@ -156,7 +156,7 @@ def _plot_one(funcs: dict, mode: Optional[bool] = None, num: Optional[int] = Non
             if func == 'inv gamma':
                 plt.plot(
                     xx,
-                    invgamma.pdf(xx, values['a'], values['pos']), linestyles.pop(), markevery=7,
+                    invgamma.pdf(xx, values['a'], values['pos']), linestyles.pop(), markevery=14,
                     label=f'{name_convert[func]} (α={values["a"]:.3g}, β={values["pos"]:.3g})'
                     # linewidth=LW
                 )
@@ -170,7 +170,7 @@ def _plot_one(funcs: dict, mode: Optional[bool] = None, num: Optional[int] = Non
                 ax.plot(
                     xx,
                     combined_dist_gamma(xx, values['alpha'], values['beta'], values['a'], values['b'], full_fit=True),
-                    linestyles.pop(), markevery=7,
+                    linestyles.pop(), markevery=14,
                     label=f'{name_convert[func]} (α={values["alpha"]:.3g}, β={values["beta"]:.3g},'
                           '\n'
                           f'        a={values["a"]:.3g}, b={values["b"]:.3g})'
